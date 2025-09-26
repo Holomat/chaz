@@ -104,7 +104,13 @@
             height: 27.5px;
             width: auto;
             object-fit: contain;
-            filter: brightness(0) saturate(100%) sepia(1) hue-rotate(250deg) brightness(0.9) contrast(1.1); /* Color #CCCBE3 */
+            /* Técnica alternativa para color exacto #D2D0E9 */
+            filter: brightness(0) invert(1);
+            background-color: #D2D0E9;
+            -webkit-mask: url('https://i.imgur.com/9gFD9c3.png') no-repeat center;
+            -webkit-mask-size: contain;
+            mask: url('https://i.imgur.com/9gFD9c3.png') no-repeat center;
+            mask-size: contain;
         }
 
         .cta-btn {
@@ -208,7 +214,13 @@
             height: 27.5px;
             width: auto;
             object-fit: contain;
-            filter: brightness(0) saturate(100%) sepia(1) hue-rotate(230deg) brightness(0.6) contrast(1.2); /* Color #8C8AA9 */
+            /* Técnica alternativa para color exacto #93A4B4 */
+            filter: brightness(0) invert(1);
+            background-color: #93A4B4;
+            -webkit-mask: url('https://i.imgur.com/9gFD9c3.png') no-repeat center;
+            -webkit-mask-size: contain;
+            mask: url('https://i.imgur.com/9gFD9c3.png') no-repeat center;
+            mask-size: contain;
         }
 
         .hero-top-content {
@@ -317,7 +329,7 @@
         }
 
         .stock-bar-progress {
-            width: 13.33%; /* Invertido: 2/15 = 13.33% */
+            width: 3%; /* CAMBIADO A 3% */
             height: 6px; /* Alto reducido a 6px */
             background-color: #4B45BF;
             border-radius: 3px; /* Ajustado proporcionalmente */
@@ -1222,4 +1234,4 @@
         });
     </script>
 </body>
-</html>)
+</html>
