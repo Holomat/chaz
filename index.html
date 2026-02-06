@@ -7,112 +7,87 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-page: #FFFFFF;
-            --sidebar-bg: #FFFFFF;
-            --accent: #007AFF;
+            --bg-global: #F9F9F9;
+            --accent: #0C4754;
+            --accent-hover: #08323B;
             --text-main: #1D1D1F;
             --text-mute: #86868B;
-            --input-bg: #F5F5F7;
-            --border-color: #E5E5E7;
-            --radius: 12px;
+            --input-bg: #EEEEF0;
+            --card-bg: #FFFFFF;
+            --radius-main: 28px;
+            --radius-ui: 12px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background: var(--bg-page); 
+            background: var(--bg-global); 
             height: 100vh; 
-            display: flex; 
+            display: flex; /* Cambiamos a flex para mejor control del espacio restante */
+            align-items: center; 
             color: var(--text-main); 
             overflow: hidden; 
         }
         
-        /* SIDEBAR ESTILO NOTION/CLEAN */
+        /* TERCIO IZQUIERDO: CONTENEDOR DEL PANEL */
+        .sidebar-column {
+            width: 33.33vw; /* Ocupa exactamente un tercio del ancho de pantalla */
+            height: 100%;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* PANEL IZQUIERDO FLOTANTE */
         .sidebar { 
-            width: 380px; 
-            background: var(--sidebar-bg); 
-            padding: 48px 40px; 
+            width: 340px; 
+            max-height: 90vh; 
+            background: var(--card-bg); 
+            padding: 32px 24px; 
             display: flex; 
             flex-direction: column; 
-            gap: 28px; 
+            gap: 18px; 
             overflow-y: auto; 
-            border-right: 1px solid var(--border-color);
+            border-radius: var(--radius-main);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
         .sidebar::-webkit-scrollbar { display: none; }
         
-        header { margin-bottom: 8px; }
-        h2 { 
-            font-family: 'Inter', sans-serif;
-            font-size: 18px; 
-            font-weight: 700; 
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-        }
-        .tagline { 
-            font-size: 11px; 
-            color: var(--text-mute); 
-            text-transform: uppercase; 
-            letter-spacing: 0.05em; 
-            font-weight: 600;
-            margin-top: 2px;
-        }
+        header { margin-bottom: 8px; padding: 0 8px; }
+        .brand-logo { width: 100%; max-width: 180px; height: auto; display: block; }
         
-        /* FORMULARIOS REFINADOS */
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; padding: 0 8px; }
         
         label { 
-            font-size: 11px; 
-            font-weight: 600; 
+            font-size: 10px; 
+            font-weight: 700; 
             color: var(--text-mute);
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.05em;
         }
         
         .ui-card {
-            height: 42px;
-            padding: 0 14px;
-            border: 1px solid transparent;
-            border-radius: var(--radius);
-            background: var(--input-bg);
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            color: var(--text-main);
-            appearance: none;
+            height: 38px; padding: 0 14px; border: 1px solid transparent;
+            border-radius: var(--radius-ui); background: var(--input-bg);
+            display: flex; align-items: center; transition: all 0.2s ease;
+            width: 100%; font-family: 'Inter', sans-serif; font-size: 13px;
+            color: var(--text-main); appearance: none;
         }
 
-        .ui-card:hover { background: #EBEBEF; }
+        .ui-card:hover { background: #E5E5E7; }
         input[type="text"].ui-card:focus, select.ui-card:focus {
-            outline: none;
-            background: #FFFFFF;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-        }
-
-        select.ui-card {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 3 3 3 3-3'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
+            outline: none; background: #FFFFFF; border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(12, 71, 84, 0.08);
         }
 
         .file-label { 
-            background: var(--text-main); 
-            color: #FFFFFF; 
-            cursor: pointer; 
-            justify-content: center; 
-            font-weight: 500; 
-            font-size: 13px;
+            background: var(--text-main); color: #FFFFFF; cursor: pointer; 
+            justify-content: center; font-weight: 600;
         }
-        .file-label:hover { background: #000; transform: translateY(-1px); }
 
-        /* SLIDER APPLE STYLE */
         .scale-slider {
             -webkit-appearance: none; width: 100%; height: 4px;
             background: #D2D2D7; border-radius: 2px; outline: none;
@@ -123,33 +98,36 @@
             border-radius: 50%; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* PALETA DE COLOR */
         .color-row { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .color-dot { 
-            width: 22px; height: 22px; border-radius: 50%; cursor: pointer; 
-            transition: transform 0.2s; border: 2px solid transparent; 
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
-        }
+        .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; border: 2px solid transparent; }
         .color-dot.active { border-color: var(--text-main); transform: scale(1.1); }
 
         .download-btn { 
             background: var(--accent); color: white; border: none; 
-            height: 48px; min-height: 48px; border-radius: var(--radius); 
-            font-weight: 600; font-size: 14px; cursor: pointer; 
-            margin-top: 10px; transition: all 0.2s;
+            height: 46px; min-height: 46px; border-radius: var(--radius-ui); 
+            font-weight: 700; font-size: 14px; cursor: pointer; 
+            margin-top: 10px; transition: all 0.2s ease;
         }
-        .download-btn:hover { background: #0066D6; box-shadow: 0 4px 12px rgba(0,122,255,0.2); }
+        .download-btn:hover { 
+            background: var(--accent-hover); 
+            box-shadow: 0 8px 16px rgba(12, 71, 84, 0.2);
+            transform: translateY(-2px);
+        }
 
-        /* AREA DE TRABAJO */
+        /* ÁREA DEL POSTER: CENTRADA EN EL ESPACIO RESTANTE (2/3) */
         .canvas-container { 
-            flex: 1; display: flex; align-items: center; justify-content: center; 
-            padding: 40px; background: #FBFBFB; 
+            flex: 1; /* Toma todo el espacio disponible a la derecha del panel */
+            height: 100%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding-right: 2vw; /* Un pequeño respiro respecto al borde derecho */
         }
 
         .poster { 
             width: 540px; height: 675px; background: #FFFFFF; position: relative; 
-            overflow: hidden; border-radius: 2px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            overflow: hidden; border-radius: 4px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.1);
         }
 
         #bgWrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
@@ -168,67 +146,68 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <header>
-            <h2>MEC STUDIO</h2>
-            <p class="tagline">Editorial Engine v2</p>
-        </header>
-        
-        <div class="form-group">
-            <label>Imagen de Fondo</label>
-            <label for="bgInput" class="ui-card file-label">Cargar archivo</label>
-            <input type="file" id="bgInput" accept="image/*" style="display: none;">
-        </div>
-
-        <div class="form-group">
-            <label>Escala de imagen</label>
-            <div class="ui-card" style="background: transparent; padding: 0;">
-                <input type="range" id="scaleInput" class="scale-slider" min="0.1" max="3" step="0.01" value="1">
+    <div class="sidebar-column">
+        <div class="sidebar">
+            <header>
+                <img src="https://i.imgur.com/FakCT9f.png" alt="MEC Studio" class="brand-logo">
+            </header>
+            
+            <div class="form-group">
+                <label>Imagen de Fondo</label>
+                <label for="bgInput" class="ui-card file-label">Cargar archivo</label>
+                <input type="file" id="bgInput" accept="image/*" style="display: none;">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>Categoría</label>
-            <input type="text" id="etiquetaIn" class="ui-card" placeholder="Ej: Taller [Virtual]" spellcheck="false">
-        </div>
-
-        <div class="form-group">
-            <label>Título Principal</label>
-            <input type="text" id="titleIn" class="ui-card" placeholder="Ej: Dirección de [Educación]" spellcheck="false">
-        </div>
-
-        <div class="form-group">
-            <label>Subtítulo / Bajada</label>
-            <input type="text" id="subtitleIn" class="ui-card" placeholder="Opcional" spellcheck="false">
-        </div>
-        
-        <div class="form-group">
-            <label>Color tipográfico</label>
-            <div class="ui-card" style="background: transparent; border: 1px solid var(--border-color);">
-                <div class="color-row">
-                    <div class="color-dot active" style="background: #E8E0FF;" data-color="#E8E0FF"></div>
-                    <div class="color-dot" style="background: #FFD0EF;" data-color="#FFD0EF"></div>
-                    <div class="color-dot" style="background: #D1FFC0;" data-color="#D1FFC0"></div>
-                    <div class="color-dot" style="background: #D2FFE8;" data-color="#D2FFE8"></div>
-                    <div class="color-dot" style="background: #DDFF9D;" data-color="#DDFF9D"></div>
-                    <div class="color-dot" style="background: #C0FFCA;" data-color="#C0FFCA"></div>
+            <div class="form-group">
+                <label>Escala de imagen</label>
+                <div class="ui-card" style="background: transparent; padding: 0;">
+                    <input type="range" id="scaleInput" class="scale-slider" min="0.1" max="3" step="0.01" value="1">
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>Programa</label>
-            <select id="programaIn" class="ui-card">
-                <option value="">General</option>
-                <option value="Cecap">Cecap</option>
-                <option value="Pas">Pas</option>
-                <option value="Pnec">Pnec</option>
-                <option value="Cultura científica">Cultura científica</option>
-                <option value="DNE" selected>DNE</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <input type="text" id="etiquetaIn" class="ui-card" placeholder="Ej: Taller [Virtual]">
+            </div>
 
-        <button class="download-btn" onclick="downloadPoster()">Descargar</button>
+            <div class="form-group">
+                <label>Título Principal</label>
+                <input type="text" id="titleIn" class="ui-card" placeholder="Ej: Dirección de [Educación]">
+            </div>
+
+            <div class="form-group">
+                <label>Subtítulo / Bajada</label>
+                <input type="text" id="subtitleIn" class="ui-card" placeholder="Opcional">
+            </div>
+            
+            <div class="form-group">
+                <label>Tono de Marca</label>
+                <div class="ui-card" style="background: transparent; border: 1px solid #EEEEF0; padding: 0 10px;">
+                    <div class="color-row">
+                        <div class="color-dot active" style="background: #E8E0FF;" data-color="#E8E0FF"></div>
+                        <div class="color-dot" style="background: #FFD0EF;" data-color="#FFD0EF"></div>
+                        <div class="color-dot" style="background: #D1FFC0;" data-color="#D1FFC0"></div>
+                        <div class="color-dot" style="background: #D2FFE8;" data-color="#D2FFE8"></div>
+                        <div class="color-dot" style="background: #DDFF9D;" data-color="#DDFF9D"></div>
+                        <div class="color-dot" style="background: #C0FFCA;" data-color="#C0FFCA"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Unidad Ejecutora</label>
+                <select id="programaIn" class="ui-card">
+                    <option value="">General</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Pas">Pas</option>
+                    <option value="Pnec">Pnec</option>
+                    <option value="Cultura científica">Cultura científica</option>
+                    <option value="DNE" selected>DNE</option>
+                </select>
+            </div>
+
+            <button class="download-btn" onclick="downloadPoster()">Descargar Afiche</button>
+        </div>
     </div>
 
     <div class="canvas-container">
