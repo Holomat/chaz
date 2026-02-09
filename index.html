@@ -24,31 +24,31 @@
             font-family: 'Inter', sans-serif; 
             background: var(--bg-global); 
             height: 100vh; 
-            display: flex; /* Cambiamos a flex para mejor control del espacio restante */
+            display: flex; 
             align-items: center; 
             color: var(--text-main); 
             overflow: hidden; 
         }
         
-        /* TERCIO IZQUIERDO: CONTENEDOR DEL PANEL */
+        /* COLUMNA PANEL IZQUIERDO */
         .sidebar-column {
-            width: 33.33vw; /* Ocupa exactamente un tercio del ancho de pantalla */
+            width: 33.33vw; 
             height: 100%;
             display: flex;
             justify-content: center; 
             align-items: center;
             padding: 20px;
+            z-index: 10;
         }
 
-        /* PANEL IZQUIERDO FLOTANTE */
         .sidebar { 
             width: 340px; 
-            max-height: 90vh; 
+            max-height: 92vh; 
             background: var(--card-bg); 
-            padding: 32px 24px; 
+            padding: 28px 24px; 
             display: flex; 
             flex-direction: column; 
-            gap: 18px; 
+            gap: 16px;
             overflow-y: auto; 
             border-radius: var(--radius-main);
             box-shadow: 0 10px 40px rgba(0,0,0,0.05);
@@ -56,21 +56,18 @@
         }
         .sidebar::-webkit-scrollbar { display: none; }
         
-        header { margin-bottom: 8px; padding: 0 8px; }
-        .brand-logo { width: 100%; max-width: 180px; height: auto; display: block; }
+        header { margin-bottom: 4px; padding: 0 8px; }
+        .brand-logo { width: 100%; max-width: 170px; height: auto; display: block; }
         
-        .form-group { display: flex; flex-direction: column; gap: 6px; padding: 0 8px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; padding: 0 8px; }
         
         label { 
-            font-size: 10px; 
-            font-weight: 700; 
-            color: var(--text-mute);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-size: 10px; font-weight: 700; color: var(--text-mute);
+            text-transform: uppercase; letter-spacing: 0.05em;
         }
         
         .ui-card {
-            height: 38px; padding: 0 14px; border: 1px solid transparent;
+            height: 36px; padding: 0 14px; border: 1px solid transparent;
             border-radius: var(--radius-ui); background: var(--input-bg);
             display: flex; align-items: center; transition: all 0.2s ease;
             width: 100%; font-family: 'Inter', sans-serif; font-size: 13px;
@@ -85,7 +82,7 @@
 
         .file-label { 
             background: var(--text-main); color: #FFFFFF; cursor: pointer; 
-            justify-content: center; font-weight: 600;
+            justify-content: center; font-weight: 600; font-size: 12px;
         }
 
         .scale-slider {
@@ -93,35 +90,31 @@
             background: #D2D2D7; border-radius: 2px; outline: none;
         }
         .scale-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 18px; height: 18px;
+            -webkit-appearance: none; width: 16px; height: 16px;
             background: #FFFFFF; border: 0.5px solid rgba(0,0,0,0.1);
             border-radius: 50%; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
         .color-row { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; border: 2px solid transparent; }
+        .color-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; border: 2px solid transparent; }
         .color-dot.active { border-color: var(--text-main); transform: scale(1.1); }
 
         .download-btn { 
             background: var(--accent); color: white; border: none; 
-            height: 46px; min-height: 46px; border-radius: var(--radius-ui); 
-            font-weight: 700; font-size: 14px; cursor: pointer; 
-            margin-top: 10px; transition: all 0.2s ease;
+            height: 44px; min-height: 44px; border-radius: var(--radius-ui); 
+            font-weight: 700; font-size: 13px; cursor: pointer; 
+            margin-top: 8px; transition: all 0.2s ease;
         }
-        .download-btn:hover { 
-            background: var(--accent-hover); 
-            box-shadow: 0 8px 16px rgba(12, 71, 84, 0.2);
-            transform: translateY(-2px);
-        }
+        .download-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-        /* ÁREA DEL POSTER: CENTRADA EN EL ESPACIO RESTANTE (2/3) */
+        /* CANVAS CONTAINER */
         .canvas-container { 
-            flex: 1; /* Toma todo el espacio disponible a la derecha del panel */
+            flex: 1; 
             height: 100%;
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding-right: 2vw; /* Un pequeño respiro respecto al borde derecho */
+            z-index: 5;
         }
 
         .poster { 
@@ -142,6 +135,101 @@
         .title { font-family: 'Sora'; font-size: 40px; font-weight: 300; line-height: 0.95; white-space: pre-line; letter-spacing: -0.05em; }
         .title.has-subtitle { margin-bottom: 16px; }
         .bold-part { font-weight: 800 !important; }
+
+        /* COLUMNA DERECHA (GUÍA) */
+        .guide-column {
+            width: 33.33vw;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .guide-toggle {
+            width: 340px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
+            border-radius: var(--radius-ui);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(12, 71, 84, 0.15);
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+
+        .right-sidebar {
+            width: 340px;
+            max-height: 0; 
+            opacity: 0;
+            background: var(--card-bg);
+            border-radius: var(--radius-main);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-sidebar.active {
+            max-height: 85vh;
+            opacity: 1;
+            padding: 28px 24px;
+            overflow-y: auto;
+        }
+        .right-sidebar::-webkit-scrollbar { display: none; }
+
+        /* ICONO EJE DEL MES */
+        .objective-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--accent);
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: scale(0.8) translateY(10px);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
+        }
+        .right-sidebar.active .objective-icon {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .guide-content h2 { font-family: 'Sora'; font-size: 18px; color: var(--accent); margin-bottom: 4px; }
+        .guide-date { font-size: 11px; font-weight: 700; color: var(--text-mute); text-transform: uppercase; margin-bottom: 12px; display: block; }
+        
+        .guide-section { margin-bottom: 22px; }
+        .guide-section h3 { font-size: 10px; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; letter-spacing: 0.05em; }
+        .guide-section p { font-size: 13px; line-height: 1.5; color: var(--text-main); }
+        
+        .narrative-strategy {
+            background: #fdfdfd;
+            border: 1px solid #ededed;
+            border-radius: var(--radius-ui);
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .narrative-item { margin-bottom: 8px; font-size: 12px; }
+        .narrative-label { font-weight: 700; font-size: 9px; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .n-antes { color: #bcbcbc; text-decoration: line-through; }
+        .n-despues { color: var(--accent); font-weight: 500; }
+        .n-despues::before { content: "→ "; font-weight: 800; }
+
+        .tips-list { list-style: none; }
+        .tips-list li { font-size: 12.5px; line-height: 1.4; margin-bottom: 10px; padding-left: 15px; position: relative; color: var(--text-main); }
+        .tips-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+
+        .checklist { background: #F0F9FA; padding: 14px; border-radius: var(--radius-ui); }
+        .checklist li { font-size: 12px; margin-bottom: 6px; list-style: none; display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 500; }
+        .checklist li::before { content: "☐"; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -167,17 +255,17 @@
 
             <div class="form-group">
                 <label>Categoría</label>
-                <input type="text" id="etiquetaIn" class="ui-card" placeholder="Ej: Taller [Virtual]">
+                <input type="text" id="etiquetaIn" class="ui-card" placeholder="Ej: Taller [Virtual]" spellcheck="false">
             </div>
 
             <div class="form-group">
                 <label>Título Principal</label>
-                <input type="text" id="titleIn" class="ui-card" placeholder="Ej: Dirección de [Educación]">
+                <input type="text" id="titleIn" class="ui-card" placeholder="Ej: Dirección de [Educación]" spellcheck="false">
             </div>
 
             <div class="form-group">
                 <label>Subtítulo / Bajada</label>
-                <input type="text" id="subtitleIn" class="ui-card" placeholder="Opcional">
+                <input type="text" id="subtitleIn" class="ui-card" placeholder="Opcional" spellcheck="false">
             </div>
             
             <div class="form-group">
@@ -229,8 +317,71 @@
         </div>
     </div>
 
+    <div class="guide-column">
+        <div class="guide-toggle" onclick="toggleGuide()">Eje del Mes</div>
+        <div class="right-sidebar" id="rightSidebar">
+            <div class="guide-content">
+                <svg class="objective-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                    <path d="M22 2l-6 6"></path>
+                    <path d="M12 2v2"></path>
+                    <path d="M12 20v2"></path>
+                    <path d="M2 12h2"></path>
+                    <path d="M20 12h2"></path>
+                </svg>
+
+                <span class="guide-date">Mayo 2026</span>
+                <h2>Acompañamiento Pedagógico</h2>
+                
+                <div class="guide-section" style="margin-top: 12px;">
+                    <h3>Definición Académica</h3>
+                    <p>Proceso de mediación estratégica para fortalecer prácticas de aprendizaje, basado en el intercambio horizontal y el apoyo sostenido.</p>
+                </div>
+
+                <div class="guide-section">
+                    <h3>Aplicación Narrativa</h3>
+                    <div class="narrative-strategy">
+                        <div class="narrative-item">
+                            <span class="narrative-label">Transformación del Título:</span>
+                            <div class="n-antes">Taller de Capacitación Técnica</div>
+                            <div class="n-despues">Herramientas para potenciar tu aula</div>
+                        </div>
+                        <div class="narrative-item" style="margin-bottom:0;">
+                            <span class="narrative-label">Concepto Clave:</span>
+                            <span style="font-style: italic;">"El MEC sostiene el camino de quien aprende."</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>Tips de Comunicación</h3>
+                    <ul class="tips-list">
+                        <li><strong>Acción:</strong> Caminar, fortalecer, potenciar.</li>
+                        <li><strong>Imagen:</strong> Prioriza interacción humana real.</li>
+                        <li><strong>Título:</strong> Enmarca el beneficio, no lo técnico.</li>
+                    </ul>
+                </div>
+
+                <div class="guide-section">
+                    <h3>Checklist Visual</h3>
+                    <div class="checklist">
+                        <li>¿Se ve interacción humana?</li>
+                        <li>¿El título invita a participar?</li>
+                        <li>¿El tono de color es cálido?</li>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+        function toggleGuide() {
+            document.getElementById('rightSidebar').classList.toggle('active');
+        }
+
         const inputs = {
             etiqueta: document.getElementById('etiquetaIn'),
             title: document.getElementById('titleIn'),
@@ -251,11 +402,8 @@
             let labelText = inputs.etiqueta.value;
             if(inputs.programa.value) labelText += ` | [${inputs.programa.value}]`;
             document.getElementById('etiquetaShow').innerHTML = processHTML(labelText);
-            const hasSubtitle = inputs.subtitle.value.trim() !== "";
             const titleEl = document.getElementById('titleShow');
             titleEl.innerHTML = processHTML(inputs.title.value);
-            if(hasSubtitle) titleEl.classList.add('has-subtitle');
-            else titleEl.classList.remove('has-subtitle');
             document.getElementById('subtitleShow').innerHTML = processHTML(inputs.subtitle.value);
         }
 
@@ -295,7 +443,6 @@
                     const imgAspect = bgPreview.naturalWidth / bgPreview.naturalHeight;
                     if (imgAspect > (540/675)) { bgPreview.style.height = '675px'; bgPreview.style.width = 'auto'; }
                     else { bgPreview.style.width = '540px'; bgPreview.style.height = 'auto'; }
-                    posX = 0; posY = 0; currentScale = 1; scaleInput.value = 1;
                     updateTransform();
                 }
             };
@@ -310,8 +457,7 @@
         async function downloadPoster() {
             const poster = document.getElementById('posterArea');
             const canvas = await html2canvas(poster, {
-                scale: 3, useCORS: true, allowTaint: true, backgroundColor: "#FFFFFF",
-                onclone: (clonedDoc) => { clonedDoc.getElementById('logoSvg').style.color = currentColor; }
+                scale: 3, useCORS: true, allowTaint: true, backgroundColor: "#FFFFFF"
             });
             const link = document.createElement('a');
             link.download = 'afiche-mec.png';
