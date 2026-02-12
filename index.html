@@ -7,15 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-global: #F9F9F9;
-            --accent: #0C4754;
-            --accent-hover: #08323B;
-            --text-main: #1D1D1F;
+            --bg-global: #FFFFFF;
+            --card-bg: #F6F5F4;
+            --input-bg: #FFFFFF;
+            --input-border: #E5E3E1;
+            --text-main: #1C1C1E;
             --text-mute: #86868B;
-            --input-bg: #EEEEF0;
-            --card-bg: #FFFFFF;
-            --radius-main: 28px;
+            --accent-primary: #0097b5;   
+            --accent-secondary: #dda906; 
+            --accent-success: #27AE60;
+            --accent-tips: #f39c12;
+            --radius-main: 12px;
             --radius-ui: 12px;
+            --gap-ui: 7px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --hover-lift: translateY(-2px);
+            --hover-shadow: 0 6px 12px rgba(0,0,0,0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
@@ -25,276 +32,182 @@
             background: var(--bg-global); 
             height: 100vh; 
             display: flex; 
+            justify-content: space-between; 
             align-items: center; 
             color: var(--text-main); 
             overflow: hidden; 
         }
-        
-        /* COLUMNA PANEL IZQUIERDO */
-        .sidebar-column {
-            width: 33.33vw; 
-            height: 100%;
-            display: flex;
-            justify-content: center; 
-            align-items: center;
-            padding: 20px;
-            z-index: 10;
-        }
 
-        .sidebar { 
-            width: 340px; 
-            max-height: 92vh; 
-            background: var(--card-bg); 
-            padding: 28px 24px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 16px;
-            overflow-y: auto; 
-            border-radius: var(--radius-main);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            scrollbar-width: none;
-        }
-        .sidebar::-webkit-scrollbar { display: none; }
+        /* --- UI ELEMENTS --- */
+        .side-column { width: 33.33vw; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; }
+        .sidebar-base { width: 340px; background: var(--card-bg); border-radius: var(--radius-main); border: 1px solid #EBEBEB; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .sidebar-left { padding: 24px 8px; gap: var(--gap-ui); max-height: 95vh; overflow-y: auto; scrollbar-width: none; }
         
-        header { margin-bottom: 4px; padding: 0 8px; }
-        .brand-logo { width: 100%; max-width: 170px; height: auto; display: block; }
-        
-        .form-group { display: flex; flex-direction: column; gap: 5px; padding: 0 8px; }
-        
-        label { 
-            font-size: 10px; font-weight: 700; color: var(--text-mute);
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-        
-        .ui-card {
-            height: 36px; padding: 0 14px; border: 1px solid transparent;
+        header { margin-bottom: 8px; padding: 0 8px; }
+        .brand-logo { width: 100%; max-width: 140px; height: auto; }
+
+        /* --- ANIMACIÓN MEMORABLE --- */
+        .ui-card, .ui-select, .file-label, .color-card {
+            height: 44px; padding: 0 14px; border: 1px solid var(--input-border);
             border-radius: var(--radius-ui); background: var(--input-bg);
-            display: flex; align-items: center; transition: all 0.2s ease;
-            width: 100%; font-family: 'Inter', sans-serif; font-size: 13px;
-            color: var(--text-main); appearance: none;
+            display: flex; align-items: center; transition: var(--transition-smooth);
+            width: 100%; font-family: 'Inter', sans-serif; font-size: 16px; color: var(--text-main); outline: none;
+            position: relative;
         }
 
-        .ui-card:hover { background: #E5E5E7; }
-        input[type="text"].ui-card:focus, select.ui-card:focus {
-            outline: none; background: #FFFFFF; border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(12, 71, 84, 0.08);
+        /* Hover states */
+        .ui-card:hover, .ui-select:hover, .file-label:hover {
+            transform: var(--hover-lift);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--accent-primary);
         }
 
-        .file-label { 
-            background: var(--text-main); color: #FFFFFF; cursor: pointer; 
-            justify-content: center; font-weight: 600; font-size: 12px;
+        .ui-card:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 151, 181, 0.1);
+            transform: translateY(-1px);
         }
 
-        .scale-slider {
-            -webkit-appearance: none; width: 100%; height: 4px;
-            background: #D2D2D7; border-radius: 2px; outline: none;
-        }
-        .scale-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 16px; height: 16px;
-            background: #FFFFFF; border: 0.5px solid rgba(0,0,0,0.1);
-            border-radius: 50%; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
+        .ui-card, .ui-select, .file-label { cursor: pointer; }
+        .label-style { font-size: 10px; font-weight: 700; color: var(--accent-primary); opacity: 0.8; text-transform: uppercase; padding-left: 8px; margin-bottom: 2px; margin-top: 4px; letter-spacing: 0.05em; }
 
+        .color-card { padding: 0 14px; justify-content: space-between; cursor: default !important; }
         .color-row { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .color-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; border: 2px solid transparent; }
-        .color-dot.active { border-color: var(--text-main); transform: scale(1.1); }
-
-        .download-btn { 
-            background: var(--accent); color: white; border: none; 
-            height: 44px; min-height: 44px; border-radius: var(--radius-ui); 
-            font-weight: 700; font-size: 13px; cursor: pointer; 
-            margin-top: 8px; transition: all 0.2s ease;
-        }
-        .download-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
-
-        /* CANVAS CONTAINER */
-        .canvas-container { 
-            flex: 1; 
-            height: 100%;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 5;
-        }
-
-        .poster { 
-            width: 540px; height: 675px; background: #FFFFFF; position: relative; 
-            overflow: hidden; border-radius: 4px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.1);
-        }
-
-        #bgWrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
-        #bgPreview { position: absolute; transform-origin: center center; pointer-events: none; }
         
-        #logoContainer { position: absolute; left: 36px; bottom: 32px; width: 42px; z-index: 50; }
-        .logo { width: 100%; height: auto; display: block; }
+        .color-dot { 
+            width: 24px; height: 24px; border-radius: 50%; cursor: pointer; 
+            border: 2px solid transparent; transition: var(--transition-smooth); 
+        }
+        .color-dot:hover {
+            transform: scale(1.2);
+        }
+        .color-dot.active { 
+            transform: scale(1.1); 
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor; 
+        }
 
-        .text-container { position: absolute; left: 40px; right: 58px; bottom: 88px; z-index: 40; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; min-height: 200px; }
-        .etiqueta, .subtitle { font-family: 'Sora'; font-size: 20px; font-weight: 400; letter-spacing: -0.04em; }
-        .etiqueta { margin-bottom: 12px; text-transform: uppercase; }
+        .scale-slider { -webkit-appearance: none; width: 100%; height: 4px; background: #D2D2D7; border-radius: 2px; margin: 12px 8px; transition: var(--transition-smooth); }
+        .scale-slider:hover { background: #b4b4b9; }
+        .scale-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #FFFFFF; border: 1px solid #D2D2D7; border-radius: 50%; cursor: pointer; transition: 0.2s;}
+        .scale-slider::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        .download-btn { background: var(--accent-primary); color: #fff; border: none; height: 48px; border-radius: var(--radius-ui); font-weight: 600; cursor: pointer; margin-top: 4px; transition: var(--transition-smooth); }
+        .download-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 151, 181, 0.2); }
+        .download-btn.ready { background: var(--accent-success) !important; transform: scale(1.02); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
+
+        /* --- CANVAS --- */
+        .poster { width: 540px; height: 675px; background: #FFFFFF; position: relative; overflow: hidden; border-radius: 4px; border: 1px solid #F0F0F0; box-shadow: 0 30px 60px rgba(0,0,0,0.06); }
+        #bgWrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
+        #bgPreview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: center center; pointer-events: none; display: none; }
+        #logoContainer { position: absolute; left: 36px; bottom: 32px; width: 42px; z-index: 50; pointer-events: none; }
+        
+        .text-container { 
+            position: absolute; left: 40px; right: 58px; bottom: 88px; z-index: 40; 
+            pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; 
+            gap: 12px;
+        }
+        .etiqueta, .subtitle { font-family: 'Sora'; font-size: 20px; font-weight: 400; letter-spacing: -0.04em; line-height: 1; }
+        .etiqueta { text-transform: uppercase; }
         .title { font-family: 'Sora'; font-size: 40px; font-weight: 300; line-height: 0.95; white-space: pre-line; letter-spacing: -0.05em; }
-        .title.has-subtitle { margin-bottom: 16px; }
         .bold-part { font-weight: 800 !important; }
 
-        /* COLUMNA DERECHA (GUÍA) */
-        .guide-column {
-            width: 33.33vw;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 10;
-        }
-
-        .guide-toggle {
-            width: 340px;
-            height: 40px;
-            background: var(--accent);
-            color: white;
-            border-radius: var(--radius-ui);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(12, 71, 84, 0.15);
-            transition: all 0.3s ease;
-            margin-bottom: 12px;
-        }
-
-        .right-sidebar {
-            width: 340px;
-            max-height: 0; 
-            opacity: 0;
-            background: var(--card-bg);
-            border-radius: var(--radius-main);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .right-sidebar.active {
-            max-height: 85vh;
-            opacity: 1;
-            padding: 28px 24px;
-            overflow-y: auto;
-        }
-        .right-sidebar::-webkit-scrollbar { display: none; }
-
-        /* ICONO EJE DEL MES */
-        .objective-icon {
-            width: 48px;
-            height: 48px;
-            color: var(--accent);
-            margin-bottom: 16px;
-            opacity: 0;
-            transform: scale(0.8) translateY(10px);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
-        }
-        .right-sidebar.active .objective-icon {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        .guide-content h2 { font-family: 'Sora'; font-size: 18px; color: var(--accent); margin-bottom: 4px; }
-        .guide-date { font-size: 11px; font-weight: 700; color: var(--text-mute); text-transform: uppercase; margin-bottom: 12px; display: block; }
+        /* --- SIDEBAR DERECHA --- */
+        .sidebar-right { padding: 24px 8px; max-height: 0; opacity: 0; transition: var(--transition-smooth); overflow-y: auto; scrollbar-width: none; visibility: hidden; }
+        .sidebar-right.active { max-height: 88vh; opacity: 1; visibility: visible; }
         
-        .guide-section { margin-bottom: 22px; }
-        .guide-section h3 { font-size: 10px; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; letter-spacing: 0.05em; }
-        .guide-section p { font-size: 13px; line-height: 1.5; color: var(--text-main); }
+        .sidebar-right-title { font-family: 'Inter'; font-size: 16px; font-weight: 700; color: var(--text-main); padding: 10px 8px; border-bottom: 2px solid var(--accent-tips); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .info-card { background: #FFFFFF; border: 1px solid var(--input-border); border-radius: 10px; padding: 14px; font-family: 'Inter'; font-size: 14px; line-height: 1.4; margin-bottom: 10px; color: var(--text-main); }
+        .info-card h4 { font-size: 11px; color: var(--accent-primary); text-transform: uppercase; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
+        .narrative-badge { background: #fff9e6; color: #b08700; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px; display: inline-block; margin-bottom: 5px; }
         
-        .narrative-strategy {
-            background: #fdfdfd;
-            border: 1px solid #ededed;
-            border-radius: var(--radius-ui);
-            padding: 12px;
-            margin-top: 8px;
+        .tip-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 5px; }
+        .tip-table th { text-align: left; color: var(--text-mute); padding: 4px; font-weight: 700; }
+        .tip-table td { padding: 8px 4px; border-top: 1px solid #eee; }
+
+        .checklist-box { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; margin-bottom: 16px; padding: 0 8px; }
+        .check-btn { display: flex; align-items: center; gap: 10px; padding: 12px; background: #fff; border: 1px solid var(--input-border); border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .check-btn:hover { transform: translateX(5px); background: #fdfdfd; }
+        .check-btn.checked { background: #E8F5E9; border-color: var(--accent-success); }
+        .dot { width: 16px; height: 16px; border: 2px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; }
+        .checked .dot { background: var(--accent-success); border-color: var(--accent-success); }
+        .checked .dot::after { content: '✓'; }
+        .check-btn span { font-size: 14px; font-weight: 500; color: var(--text-main); }
+
+        /* --- NAVBAR ESTILO FIGMA --- */
+        .bottom-nav-container {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            background: var(--card-bg); padding: 4px; border-radius: 16px;
+            border: 1px solid var(--input-border); display: flex; align-items: center; z-index: 100;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         }
-        .narrative-item { margin-bottom: 8px; font-size: 12px; }
-        .narrative-label { font-weight: 700; font-size: 9px; text-transform: uppercase; display: block; margin-bottom: 2px; }
-        .n-antes { color: #bcbcbc; text-decoration: line-through; }
-        .n-despues { color: var(--accent); font-weight: 500; }
-        .n-despues::before { content: "→ "; font-weight: 800; }
+        
+        .nav-group { display: flex; align-items: center; gap: 4px; position: relative; }
+        
+        .nav-item { 
+            padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--text-mute); 
+            cursor: pointer; position: relative; z-index: 2; transition: var(--transition-smooth); 
+            border-radius: 12px;
+        }
+        .nav-item.active { color: #fff; }
+        
+        .nav-slider { 
+            position: absolute; height: 100%; top: 0; left: 0; 
+            background: var(--accent-primary); border-radius: 12px; 
+            z-index: 1; transition: var(--transition-smooth); pointer-events: none; 
+        }
 
-        .tips-list { list-style: none; }
-        .tips-list li { font-size: 12.5px; line-height: 1.4; margin-bottom: 10px; padding-left: 15px; position: relative; color: var(--text-main); }
-        .tips-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+        .nav-divider {
+            width: 1px; height: 24px; background: var(--input-border); margin: 0 8px;
+        }
 
-        .checklist { background: #F0F9FA; padding: 14px; border-radius: var(--radius-ui); }
-        .checklist li { font-size: 12px; margin-bottom: 6px; list-style: none; display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 500; }
-        .checklist li::before { content: "☐"; font-size: 14px; }
+        .nav-toggle-btn {
+            padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--text-main);
+            cursor: pointer; border-radius: 8px; transition: 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-toggle-btn:hover { background: rgba(0,0,0,0.04); }
+        .nav-toggle-btn.on { background: #E8E8E8; color: var(--accent-primary); }
+        .nav-toggle-btn.tips-on { background: #FFF4E5; color: var(--accent-tips); }
     </style>
 </head>
 <body>
 
-    <div class="sidebar-column">
-        <div class="sidebar">
-            <header>
-                <img src="https://i.imgur.com/FakCT9f.png" alt="MEC Studio" class="brand-logo">
-            </header>
+    <div class="side-column">
+        <div class="sidebar-base sidebar-left">
+            <header><img src="https://i.imgur.com/FakCT9f.png" class="brand-logo"></header>
             
-            <div class="form-group">
-                <label>Imagen de Fondo</label>
-                <label for="bgInput" class="ui-card file-label">Cargar archivo</label>
-                <input type="file" id="bgInput" accept="image/*" style="display: none;">
-            </div>
-
-            <div class="form-group">
-                <label>Escala de imagen</label>
-                <div class="ui-card" style="background: transparent; padding: 0;">
-                    <input type="range" id="scaleInput" class="scale-slider" min="0.1" max="3" step="0.01" value="1">
+            <div class="label-style">Programa MEC</div>
+            <select id="programSelector" class="ui-select" onchange="updateProgram(this.value)">
+                <option value="General">General</option>
+                <option value="Cultura Científica">Cultura Científica</option>
+                <option value="PAS">PAS</option>
+                <option value="PNEC">PNEC</option>
+                <option value="Cecap">Cecap</option>
+            </select>
+            
+            <div class="label-style">Imagen de Fondo</div>
+            <label for="bgInput" class="ui-card file-label"><span>+</span> Cargar foto</label>
+            <input type="file" id="bgInput" accept="image/*" style="display: none;">
+            <input type="range" id="scaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
+            
+            <div class="label-style">Textos</div>
+            <input type="text" id="etiquetaIn" class="ui-card" value="La educación va a estar [buena]">
+            <input type="text" id="titleIn" class="ui-card" value="Dirección Nacional de [Educación]">
+            <input type="text" id="subtitleIn" class="ui-card" value="Educación de [oportunidades]">
+            
+            <div class="label-style">Color</div>
+            <div class="color-card">
+                <div class="color-row">
+                    <div class="color-dot" style="background: #E8E0FF;" data-color="#E8E0FF" data-border="#7B61FF"></div>
+                    <div class="color-dot" style="background: #FFD0EF;" data-color="#FFD0EF" data-border="#FF61C6"></div>
+                    <div class="color-dot" style="background: #D1FFC0;" data-color="#D1FFC0" data-border="#4CAF50"></div>
+                    <div class="color-dot" style="background: #D2FFE8;" data-color="#D2FFE8" data-border="#00BFA5"></div>
+                    <div class="color-dot" style="background: #DDFF9D;" data-color="#DDFF9D" data-border="#9E9D24"></div>
+                    <div class="color-dot" style="background: #C0FFCA;" data-color="#C0FFCA" data-border="#2E7D32"></div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label>Categoría</label>
-                <input type="text" id="etiquetaIn" class="ui-card" placeholder="Ej: Taller [Virtual]" spellcheck="false">
-            </div>
-
-            <div class="form-group">
-                <label>Título Principal</label>
-                <input type="text" id="titleIn" class="ui-card" placeholder="Ej: Dirección de [Educación]" spellcheck="false">
-            </div>
-
-            <div class="form-group">
-                <label>Subtítulo / Bajada</label>
-                <input type="text" id="subtitleIn" class="ui-card" placeholder="Opcional" spellcheck="false">
-            </div>
             
-            <div class="form-group">
-                <label>Tono de Marca</label>
-                <div class="ui-card" style="background: transparent; border: 1px solid #EEEEF0; padding: 0 10px;">
-                    <div class="color-row">
-                        <div class="color-dot active" style="background: #E8E0FF;" data-color="#E8E0FF"></div>
-                        <div class="color-dot" style="background: #FFD0EF;" data-color="#FFD0EF"></div>
-                        <div class="color-dot" style="background: #D1FFC0;" data-color="#D1FFC0"></div>
-                        <div class="color-dot" style="background: #D2FFE8;" data-color="#D2FFE8"></div>
-                        <div class="color-dot" style="background: #DDFF9D;" data-color="#DDFF9D"></div>
-                        <div class="color-dot" style="background: #C0FFCA;" data-color="#C0FFCA"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Unidad Ejecutora</label>
-                <select id="programaIn" class="ui-card">
-                    <option value="">General</option>
-                    <option value="Cecap">Cecap</option>
-                    <option value="Pas">Pas</option>
-                    <option value="Pnec">Pnec</option>
-                    <option value="Cultura científica">Cultura científica</option>
-                    <option value="DNE" selected>DNE</option>
-                </select>
-            </div>
-
-            <button class="download-btn" onclick="downloadPoster()">Descargar Afiche</button>
+            <button id="mainDownloadBtn" class="download-btn" onclick="downloadPoster()">Descargar Afiche</button>
         </div>
     </div>
 
@@ -317,159 +230,180 @@
         </div>
     </div>
 
-    <div class="guide-column">
-        <div class="guide-toggle" onclick="toggleGuide()">Eje del Mes</div>
-        <div class="right-sidebar" id="rightSidebar">
-            <div class="guide-content">
-                <svg class="objective-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <circle cx="12" cy="12" r="6"></circle>
-                    <circle cx="12" cy="12" r="2"></circle>
-                    <path d="M22 2l-6 6"></path>
-                    <path d="M12 2v2"></path>
-                    <path d="M12 20v2"></path>
-                    <path d="M2 12h2"></path>
-                    <path d="M20 12h2"></path>
-                </svg>
+    <nav class="bottom-nav-container">
+        <div class="nav-group">
+            <div id="navSlider" class="nav-slider"></div>
+            <div class="nav-item active" onclick="switchTab(this)">Redes Sociales</div>
+            <div class="nav-item" onclick="switchTab(this)">Certificados</div>
+            <div class="nav-item" onclick="switchTab(this)">Invitaciones</div>
+        </div>
+        
+        <div class="nav-divider"></div>
+        
+        <div class="nav-group">
+            <div class="nav-toggle-btn" id="ejeToggle" onclick="toggleSidebar('left')">
+                Eje del mes
+            </div>
+            <div class="nav-toggle-btn" id="tipsToggle" onclick="toggleSidebar('right')">
+                💡 Tips de Comunicación
+            </div>
+        </div>
+    </nav>
 
-                <span class="guide-date">Mayo 2026</span>
-                <h2>Acompañamiento Pedagógico</h2>
+    <div class="side-column">
+        <div class="sidebar-base sidebar-right" id="rightSidebar">
+            <h3 class="sidebar-right-title">Acompañamiento Pedagógico</h3>
+            <div style="padding: 0 8px;">
+                <div class="info-card">
+                    <h4>Nuestra Estrategia</h4>
+                    <p>Estar donde las cosas suceden. Priorizamos la <strong>pedagogía de la cercanía</strong>.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Narrativa de Cambio</h4>
+                    <span class="narrative-badge">Prioridad 2026</span>
+                    <p>Sostenemos trayectorias para que nadie transite su aprendizaje en soledad.</p>
+                </div>
+            </div>
+            <div class="checklist-box">
+                <div class="check-btn gamify" onclick="toggleCheck(this)"><div class="dot"></div><span>¿Interacción humana?</span></div>
+                <div class="check-btn gamify" onclick="toggleCheck(this)"><div class="dot"></div><span>¿Tono de comunidad?</span></div>
+            </div>
+        </div>
+
+        <div class="sidebar-base sidebar-right" id="tipsSidebar" style="position: absolute;">
+            <h3 class="sidebar-right-title">📢 Estrategia Visual</h3>
+            <div style="padding: 0 8px;">
+                <div class="info-card">
+                    <h4>La Tríada Institucional</h4>
+                    <p><strong>¿Qué quiero?</strong> Definir una sola acción.</p>
+                    <p><strong>¿A quién hablo?</strong> Ajustar tono según público.</p>
+                </div>
                 
-                <div class="guide-section" style="margin-top: 12px;">
-                    <h3>Definición Académica</h3>
-                    <p>Proceso de mediación estratégica para fortalecer prácticas de aprendizaje, basado en el intercambio horizontal y el apoyo sostenido.</p>
+                <div class="info-card">
+                    <h4>Jerarquía Visual</h4>
+                    <table class="tip-table">
+                        <tr><th>El Gancho</th><td>Título impactante.</td></tr>
+                        <tr><th>El Cuerpo</th><td>Qué, Cuándo, Dónde.</td></tr>
+                        <tr><th>El Cierre</th><td>CTA claro (Inscríbete).</td></tr>
+                    </table>
                 </div>
 
-                <div class="guide-section">
-                    <h3>Aplicación Narrativa</h3>
-                    <div class="narrative-strategy">
-                        <div class="narrative-item">
-                            <span class="narrative-label">Transformación del Título:</span>
-                            <div class="n-antes">Taller de Capacitación Técnica</div>
-                            <div class="n-despues">Herramientas para potenciar tu aula</div>
-                        </div>
-                        <div class="narrative-item" style="margin-bottom:0;">
-                            <span class="narrative-label">Concepto Clave:</span>
-                            <span style="font-style: italic;">"El MEC sostiene el camino de quien aprende."</span>
-                        </div>
-                    </div>
+                <div class="info-card" style="border-left: 4px solid #e74c3c;">
+                    <h4>Regla de Oro: 20%</h4>
+                    <p>Menos es más. El flyer es para llamar la atención, no para ordenanzas.</p>
                 </div>
-
-                <div class="guide-section">
-                    <h3>Tips de Comunicación</h3>
-                    <ul class="tips-list">
-                        <li><strong>Acción:</strong> Caminar, fortalecer, potenciar.</li>
-                        <li><strong>Imagen:</strong> Prioriza interacción humana real.</li>
-                        <li><strong>Título:</strong> Enmarca el beneficio, no lo técnico.</li>
-                    </ul>
-                </div>
-
-                <div class="guide-section">
-                    <h3>Checklist Visual</h3>
-                    <div class="checklist">
-                        <li>¿Se ve interacción humana?</li>
-                        <li>¿El título invita a participar?</li>
-                        <li>¿El tono de color es cálido?</li>
-                    </div>
-                </div>
+            </div>
+            <div class="checklist-box">
+                <div class="check-btn tips-check" onclick="toggleCheck(this)"><div class="dot"></div><span>¿Título llamativo?</span></div>
+                <div class="check-btn tips-check" onclick="toggleCheck(this)"><div class="dot"></div><span>¿Llamado a la acción?</span></div>
             </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
-        function toggleGuide() {
-            document.getElementById('rightSidebar').classList.toggle('active');
+        const inputs = { etiqueta: document.getElementById('etiquetaIn'), title: document.getElementById('titleIn'), subtitle: document.getElementById('subtitleIn') };
+        const logoSvg = document.getElementById('logoSvg'), textContainer = document.getElementById('textContainer'), scaleInput = document.getElementById('scaleInput');
+        const mainBtn = document.getElementById('mainDownloadBtn');
+        
+        const rightSidebar = document.getElementById('rightSidebar');
+        const tipsSidebar = document.getElementById('tipsSidebar');
+        const ejeToggle = document.getElementById('ejeToggle');
+        const tipsToggle = document.getElementById('tipsToggle');
+
+        function toggleSidebar(type) {
+            if (type === 'left') {
+                tipsSidebar.classList.remove('active');
+                tipsToggle.classList.remove('tips-on');
+                rightSidebar.classList.toggle('active');
+                ejeToggle.classList.toggle('on');
+            } else {
+                rightSidebar.classList.remove('active');
+                ejeToggle.classList.remove('on');
+                tipsSidebar.classList.toggle('active');
+                tipsToggle.classList.toggle('tips-on');
+            }
         }
 
-        const inputs = {
-            etiqueta: document.getElementById('etiquetaIn'),
-            title: document.getElementById('titleIn'),
-            subtitle: document.getElementById('subtitleIn'),
-            programa: document.getElementById('programaIn')
-        };
-        const logoSvg = document.getElementById('logoSvg');
-        const textContainer = document.getElementById('textContainer');
-        const scaleInput = document.getElementById('scaleInput');
-        let currentColor = "#E8E0FF";
-        let currentScale = 1;
+        function switchTab(element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            moveSlider(element);
+        }
 
-        function processHTML(text) {
-            return text.replace(/\[(.*?)\]/g, '<span class="bold-part">$1</span>');
+        function moveSlider(element) {
+            const slider = document.getElementById('navSlider');
+            slider.style.width = element.offsetWidth + "px";
+            slider.style.left = element.offsetLeft + "px";
+        }
+
+        function toggleCheck(btn) { btn.classList.toggle('checked'); checkGamification(); }
+        
+        function checkGamification() {
+            const gamifyChecks = document.querySelectorAll('.check-btn.gamify.checked').length;
+            const tipsChecks = document.querySelectorAll('.check-btn.tips-check.checked').length;
+            
+            if(gamifyChecks >= 2 && tipsChecks >= 1) {
+                mainBtn.classList.add('ready');
+                mainBtn.innerHTML = "¡Todo listo! Descargar";
+            } else {
+                mainBtn.classList.remove('ready');
+                mainBtn.innerHTML = "Descargar Afiche";
+            }
+        }
+
+        function applyTTTColor(dot) {
+            const mainColor = dot.dataset.color;
+            const borderColor = dot.dataset.border;
+            textContainer.style.color = mainColor;
+            logoSvg.style.color = mainColor;
+            dot.style.color = borderColor; 
         }
 
         function syncText() {
-            let labelText = inputs.etiqueta.value;
-            if(inputs.programa.value) labelText += ` | [${inputs.programa.value}]`;
-            document.getElementById('etiquetaShow').innerHTML = processHTML(labelText);
-            const titleEl = document.getElementById('titleShow');
-            titleEl.innerHTML = processHTML(inputs.title.value);
-            document.getElementById('subtitleShow').innerHTML = processHTML(inputs.subtitle.value);
+            const process = (t) => t.replace(/\[(.*?)\]/g, '<span class="bold-part">$1</span>');
+            document.getElementById('etiquetaShow').innerHTML = process(inputs.etiqueta.value);
+            document.getElementById('titleShow').innerHTML = process(inputs.title.value);
+            document.getElementById('subtitleShow').innerHTML = process(inputs.subtitle.value);
         }
-
-        function applyGlobalColor(hex) {
-            currentColor = hex;
-            textContainer.style.color = hex;
-            logoSvg.style.color = hex;
-        }
-
-        Object.values(inputs).forEach(input => input.oninput = syncText);
-        inputs.programa.onchange = syncText;
 
         document.querySelectorAll('.color-dot').forEach(dot => {
-            dot.addEventListener('click', () => {
-                document.querySelector('.color-dot.active').classList.remove('active');
+            dot.onclick = () => {
+                document.querySelector('.color-dot.active')?.classList.remove('active');
                 dot.classList.add('active');
-                applyGlobalColor(dot.dataset.color);
-            });
+                applyTTTColor(dot);
+            }
         });
 
-        const bgInput = document.getElementById('bgInput');
-        const bgPreview = document.getElementById('bgPreview');
-        const bgWrapper = document.getElementById('bgWrapper');
-        let posX = 0, posY = 0, isDragging = false, startX, startY;
-
-        function updateTransform() {
-            bgPreview.style.transform = `translate(${posX}px, ${posY}px) scale(${currentScale})`;
-        }
-
-        bgInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        const bgInput = document.getElementById('bgInput'), bgPreview = document.getElementById('bgPreview'), bgWrapper = document.getElementById('bgWrapper');
+        let posX = 0, posY = 0, isDragging = false, startX, startY, currentScale = 1;
+        
+        bgInput.onchange = (e) => {
             const reader = new FileReader();
-            reader.onload = (event) => {
-                bgPreview.src = event.target.result;
-                bgPreview.onload = () => {
-                    const imgAspect = bgPreview.naturalWidth / bgPreview.naturalHeight;
-                    if (imgAspect > (540/675)) { bgPreview.style.height = '675px'; bgPreview.style.width = 'auto'; }
-                    else { bgPreview.style.width = '540px'; bgPreview.style.height = 'auto'; }
-                    updateTransform();
-                }
-            };
-            reader.readAsDataURL(file);
-        });
+            reader.onload = (ev) => { bgPreview.src = ev.target.result; bgPreview.style.display = "block"; };
+            reader.readAsDataURL(e.target.files[0]);
+        };
 
-        scaleInput.oninput = (e) => { currentScale = parseFloat(e.target.value); updateTransform(); };
-        bgWrapper.onmousedown = (e) => { if(!bgPreview.src) return; isDragging = true; startX = e.clientX - posX; startY = e.clientY - posY; };
-        window.onmousemove = (e) => { if (!isDragging) return; posX = e.clientX - startX; posY = e.clientY - startY; updateTransform(); };
+        scaleInput.oninput = (e) => { currentScale = e.target.value; updateTransform(); };
+        function updateTransform() { bgPreview.style.transform = `translate(${posX}px, ${posY}px) scale(${currentScale})`; }
+        
+        bgWrapper.onmousedown = (e) => { if(!bgPreview.src) return; isDragging = true; startX = e.clientX - posX; startY = e.clientY - posY; e.preventDefault(); };
+        window.onmousemove = (e) => { if (isDragging) { posX = e.clientX - startX; posY = e.clientY - startY; updateTransform(); } };
         window.onmouseup = () => isDragging = false;
 
         async function downloadPoster() {
-            const poster = document.getElementById('posterArea');
-            const canvas = await html2canvas(poster, {
-                scale: 3, useCORS: true, allowTaint: true, backgroundColor: "#FFFFFF"
-            });
-            const link = document.createElement('a');
-            link.download = 'afiche-mec.png';
-            link.href = canvas.toDataURL('image/png', 1.0);
-            link.click();
+            const canvas = await html2canvas(document.getElementById('posterArea'), { scale: 3, useCORS: true });
+            const link = document.createElement('a'); link.download = 'afiche-mec.png'; link.href = canvas.toDataURL(); link.click();
         }
 
-        inputs.etiqueta.value = "Taller [Virtual]";
-        inputs.title.value = "Dirección Nacional de\n[Educación] 2026";
-        inputs.subtitle.value = "Resumen de gestión a un año desde marzo a diciembre";
-        applyGlobalColor(currentColor);
-        syncText();
+        window.onload = () => {
+            const firstDot = document.querySelector('.color-dot');
+            if(firstDot) { firstDot.classList.add('active'); applyTTTColor(firstDot); }
+            moveSlider(document.querySelector('.nav-item.active'));
+            syncText();
+        };
+
+        Object.values(inputs).forEach(i => i.oninput = syncText);
     </script>
 </body>
 </html>
