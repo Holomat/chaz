@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gafetes Pro | Editorial Studio</title>
+    <meta name="description"
+        content="Gafetes Pro Editorial Studio — Generación masiva de gafetes, pósters y materiales institucionales desde Excel/CSV.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- LEFT SIDEBAR                                -->
+    <!-- ═══════════════════════════════════════════ -->
+    <aside class="side-column side-column--left" id="sidebarLeft">
+        <div class="sidebar-base sidebar-left">
+
+            <!-- Brand -->
+            <header class="sidebar-header">
+                <img src="https://i.imgur.com/FakCT9f.png" class="brand-logo" alt="MEC Logo">
+                <span class="brand-badge">Editorial Studio</span>
+            </header>
+
+            <!-- Program Selector (hidden for Gafetes) -->
+            <div class="hide-for-badge">
+                <div class="label-style">Programa MEC</div>
+                <select id="programSelector" class="ui-select">
+                    <option value="DNE Isotipo">DNE Isotipo</option>
+                    <option value="MEC - DNE">MEC - DNE</option>
+                    <option value="Cultura Científica">Cultura Científica</option>
+                    <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
+                    <option value="Ccepi">Ccepi</option>
+                    <option value="PAS">PAS</option>
+                    <option value="PNEC">PNEC</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Secretaría Permanente">Secretaría Permanente</option>
+                </select>
+            </div>
+
+            <!-- ═══ POSTER CONTROLS (Redes Sociales tab) ═══ -->
+            <div id="posterControls" class="tab-panel active">
+                <div class="label-style">Formatos</div>
+                <div class="format-toggle-row">
+                    <button class="format-toggle-btn active" data-format="posteo">
+                        <span class="format-label">Posteo</span>
+                        <span class="format-ratio">5:4</span>
+                    </button>
+                    <button class="format-toggle-btn active" data-format="historia">
+                        <span class="format-label">Historia</span>
+                        <span class="format-ratio">9:16</span>
+                    </button>
+                </div>
+
+                <div class="label-style">Imagen de Fondo</div>
+                <label for="bgInput" class="ui-card file-label" id="bgLabel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Cargar foto</span>
+                </label>
+                <input type="file" id="bgInput" accept="image/*" style="display: none;">
+                <div class="scale-card ui-card">
+                    <span class="scale-label">Escala de imagen</span>
+                    <input type="range" id="scaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
+                    <span class="scale-value" id="scaleValue">100%</span>
+                </div>
+
+                <div class="label-style">Textos</div>
+                <input type="text" id="etiquetaIn" class="ui-card" placeholder="Etiqueta superior"
+                    value="La educación va a estar [buena]">
+                <input type="text" id="titleIn" class="ui-card" placeholder="Título principal"
+                    value="Dirección Nacional de [Educación]">
+                <input type="text" id="subtitleIn" class="ui-card" placeholder="Subtítulo"
+                    value="Educación de [oportunidades]">
+            </div>
+
+            <!-- ═══ BADGE CONTROLS (Gafetes tab) ═══ -->
+            <div id="badgeControls" class="tab-panel">
+                <div class="label-style">Medidas del Gafete (mm)</div>
+                <div class="badge-size-row">
+                    <div class="size-input-group">
+                        <label for="badgeWidthInput" class="size-label">Ancho</label>
+                        <input type="number" id="badgeWidthInput" class="ui-card size-input" value="72" min="10" max="200" step="1">
+                    </div>
+                    <div class="size-input-group">
+                        <label for="badgeHeightInput" class="size-label">Alto</label>
+                        <input type="number" id="badgeHeightInput" class="ui-card size-input" value="103" min="10" max="200" step="1">
+                    </div>
+                </div>
+
+                <div class="label-style">Fondo del Gafete</div>
+                <label for="badgeBgInput" class="ui-card file-label" id="badgeBgLabel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span>Imagen de fondo</span>
+                </label>
+                <input type="file" id="badgeBgInput" accept="image/*" style="display: none;">
+                <div class="scale-card ui-card">
+                    <span class="scale-label">Escala de imagen</span>
+                    <input type="range" id="badgeScaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
+                    <span class="scale-value" id="badgeScaleValue">100%</span>
+                </div>
+
+                <div class="label-style">Importar Datos</div>
+                <label for="dataFileInput" class="ui-card file-label" id="dataFileLabel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <span>Cargar Excel / CSV</span>
+                </label>
+                <input type="file" id="dataFileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+
+                <!-- Data preview -->
+                <div id="dataPreview" class="data-preview hidden">
+                    <div class="label-style">Vista Previa (primeras 3 filas)</div>
+                    <div id="previewTable" class="preview-table-wrap"></div>
+                    <div class="data-stats">
+                        <span id="dataRowCount">0 registros</span>
+                        <span id="dataColStatus" class="status-ok">✓ Columnas válidas</span>
+                    </div>
+                </div>
+
+                <div class="label-style">Posición del Texto</div>
+                <div class="position-controls">
+                    <div class="position-row">
+                        <label class="position-label">↔ Horizontal</label>
+                        <input type="range" id="badgeTextX" class="position-slider" min="-100" max="100" step="1" value="0">
+                    </div>
+                    <div class="position-row">
+                        <label class="position-label">↕ Vertical</label>
+                        <input type="range" id="badgeTextY" class="position-slider" min="0" max="100" step="1" value="50">
+                    </div>
+                </div>
+
+                <!-- Page navigator -->
+                <div id="pageNav" class="page-nav hidden">
+                    <div class="label-style">Navegación</div>
+                    <div class="page-nav-row">
+                        <button id="prevPageBtn" class="page-btn" disabled>‹</button>
+                        <span id="pageIndicator" class="page-indicator">1 / 1</span>
+                        <button id="nextPageBtn" class="page-btn">›</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ CERTIFICATE CONTROLS ═══ -->
+            <div id="certControls" class="tab-panel">
+                <div class="empty-state">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-mute)"
+                        stroke-width="1.5">
+                        <path d="M12 15l-2 5l-1-3l-3-1l5-2z" />
+                        <path d="M18 9a6 6 0 11-12 0 6 6 0 0112 0z" />
+                    </svg>
+                    <p>Módulo de Certificados</p>
+                    <span>Próximamente</span>
+                </div>
+            </div>
+
+            <!-- ═══ SHARED CONTROLS ═══ -->
+            <div class="hide-for-badge">
+                <div class="label-style">Color</div>
+                <div class="color-card">
+                    <div class="color-row" id="colorPalette">
+                        <div class="color-dot active" style="background: #DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24">
+                        </div>
+                        <div class="color-dot" style="background: #C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32">
+                        </div>
+                        <div class="color-dot" style="background: #E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF">
+                        </div>
+                        <div class="color-dot" style="background: #FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badge hex color pickers (hidden for poster tab) -->
+            <div class="hide-for-poster">
+                <div class="badge-hex-row">
+                    <div class="hex-input-group">
+                        <label class="size-label">Nombre / Apellido</label>
+                        <div class="hex-input-wrapper">
+                            <span class="hex-swatch" id="badgeNameSwatch" style="background: #7a63a5;"></span>
+                            <input type="text" id="badgeNameColor" class="ui-card hex-input" value="#7a63a5" maxlength="7" spellcheck="false">
+                        </div>
+                    </div>
+                    <div class="hex-input-group">
+                        <label class="size-label">Pa&iacute;s</label>
+                        <div class="hex-input-wrapper">
+                            <span class="hex-swatch" id="badgePaisSwatch" style="background: #3d3d44;"></span>
+                            <input type="text" id="badgePaisColor" class="ui-card hex-input" value="#3d3d44" maxlength="7" spellcheck="false">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badge stroke toggle (hidden for poster tab) -->
+            <div class="hide-for-poster">
+                <label class="badge-stroke-toggle">
+                    <input type="checkbox" id="badgeStrokeToggle" checked>
+                    <span class="badge-stroke-label">Línea de corte</span>
+                </label>
+            </div>
+
+            <!-- Logo mode toggle (hidden for Redes Sociales and Gafetes) -->
+            <div class="hide-for-poster hide-for-badge">
+                <div class="label-style">Logo</div>
+                <div class="logo-toggle-row">
+                    <button id="logoColorBtn" class="logo-toggle-btn active">Color</button>
+                    <button id="logoMonoBtn" class="logo-toggle-btn">Mono</button>
+                </div>
+            </div>
+
+            <!-- Download button -->
+            <button id="mainDownloadBtn" class="download-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Descargar</span>
+            </button>
+
+            <!-- Progress bar (hidden by default) -->
+            <div id="exportProgress" class="export-progress hidden">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <span id="progressText" class="progress-text">0%</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- MAIN CANVAS AREA                            -->
+    <!-- ═══════════════════════════════════════════ -->
+    <main class="canvas-area" id="canvasArea">
+
+        <!-- Poster Canvas (Redes Sociales) -->
+        <div class="poster-wrap" id="posterWrap">
+            <!-- Dual format container -->
+            <div class="poster-formats-container" id="posterFormatsContainer">
+                <!-- Posters will be generated dynamically by poster-generator.js -->
+            </div>
+        </div>
+
+        <!-- Badge Sheet Canvas (Gafetes) -->
+        <div class="badge-sheet-wrap hidden" id="badgeSheetWrap">
+            <div class="badge-sheet" id="badgeSheet">
+                <!-- 8 badge slots rendered by badge-generator.js -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- RIGHT SIDEBARS                              -->
+    <!-- ═══════════════════════════════════════════ -->
+    <aside class="side-column side-column--right" id="sidebarRight">
+
+        <!-- Eje del Mes panel -->
+        <div class="sidebar-base sidebar-right" id="rightSidebar">
+            <h3 class="sidebar-right-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                3 Líneas Transversales
+            </h3>
+
+            <!-- Navegación entre líneas -->
+            <div class="linea-nav">
+                <button class="linea-nav-btn" id="lineaPrev" onclick="navigateLinea(-1)">‹</button>
+                <span class="linea-nav-indicator" id="lineaIndicator">Línea 1 / 3</span>
+                <button class="linea-nav-btn" id="lineaNext" onclick="navigateLinea(1)">›</button>
+            </div>
+
+            <!-- Línea 1: Educación como derecho garantizado -->
+            <div class="linea-slide active" data-linea="0">
+                <div class="linea-comm-badge">🟢 Estás comunicando: Derecho garantizado</div>
+                <div class="sidebar-right-body">
+                    <div class="info-card">
+                        <h4>✍️ Aplicalo a tu pieza</h4>
+                        <p class="idea-fuerza" style="margin-bottom:6px;">Este contenido debería mostrar:</p>
+                        <ul class="comunicar-list">
+                            <li>Qué derecho se garantiza</li>
+                            <li>A quién alcanza</li>
+                            <li>Qué cambia concretamente</li>
+                        </ul>
+                        <div class="linea-tip">💡 Si no se ve esto, la pieza queda en anuncio.</div>
+                    </div>
+                    <div class="info-card">
+                        <h4>💬 Claves de tono</h4>
+                        <ul class="tono-desc-list">
+                            <li><strong>Cercanía institucional</strong> → Mostrar presencia real, no discurso</li>
+                            <li><strong>Responsabilidad pública</strong> → El Estado como actor activo</li>
+                            <li><strong>Igualdad como compromiso</strong> → Incluir a quienes más lo necesitan</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>⚡ Feedback dinámico</h4>
+                        <ul class="feedback-list">
+                            <li class="feedback-warn">⚠️ Tu pieza parece informativa, sumá impacto concreto</li>
+                            <li class="feedback-tip">💡 Podés reforzar mostrando una persona o territorio</li>
+                            <li class="feedback-ok">✅ El derecho está bien comunicado</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="checklist-box">
+                    <p class="checklist-label">🎮 Chequeo de calidad</p>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Se entiende qué cambia para las personas?</span>
+                    </div>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Se ve al Estado en acción (no solo anuncio)?</span>
+                    </div>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Se ve a quién alcanza (personas o territorio)?</span>
+                    </div>
+                </div>
+                <div class="linea-cierre">
+                    <p>🎯 <strong>Antes de publicar:</strong></p>
+                    <p><em>¿Esto muestra un derecho en acción o solo lo anuncia?</em></p>
+                </div>
+            </div>
+
+            <!-- Línea 2: Trayectorias educativas a lo largo de la vida -->
+            <div class="linea-slide" data-linea="1">
+                <div class="sidebar-right-body">
+                    <div class="info-card">
+                        <h4>Trayectorias educativas a lo largo de la vida</h4>
+                        <p class="idea-fuerza">Nadie recorre la educación en soledad.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Qué comunicar</h4>
+                        <ul class="comunicar-list">
+                            <li>Acompañamiento continuo (de primera infancia a superior)</li>
+                            <li>Apoyos concretos (becas, programas, inclusión)</li>
+                            <li>Historias reales de estudiantes</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Claves de tono</h4>
+                        <div class="tono-tags">
+                            <span class="tono-tag">Humano y empático</span>
+                            <span class="tono-tag">Enfocado en procesos</span>
+                            <span class="tono-tag">Esperanza + respaldo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="checklist-box">
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿La pieza muestra una experiencia real o relatable?</span>
+                    </div>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Se ve cómo el sistema apoya (no solo que existe)?</span>
+                    </div>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Se percibe continuidad en el tiempo?</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Línea 3: Participación y territorio -->
+            <div class="linea-slide" data-linea="2">
+                <div class="sidebar-right-body">
+                    <div class="info-card">
+                        <h4>Participación y territorio</h4>
+                        <p class="idea-fuerza">La educación se construye con la sociedad.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Qué comunicar</h4>
+                        <ul class="comunicar-list">
+                            <li>Espacios de participación (congresos, encuentros)</li>
+                            <li>Comunidad educativa activa</li>
+                            <li>Presencia en todo el país</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Claves de tono</h4>
+                        <div class="tono-tags">
+                            <span class="tono-tag">Colectivo y democrático</span>
+                            <span class="tono-tag">Voz de actores reales</span>
+                            <span class="tono-tag">Descentralizado</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="checklist-box">
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿La pieza abre una acción o convocatoria?</span>
+                    </div>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Incluye voces reales (docentes, estudiantes, territorio)?</span>
+                    </div>
+                    <div class="check-btn gamify" onclick="toggleCheck(this)">
+                        <div class="dot"></div><span>¿Se reconoce un lugar, contexto o comunidad concreta?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips de Comunicación panel -->
+        <div class="sidebar-base sidebar-right" id="tipsSidebar">
+            <h3 class="sidebar-right-title sidebar-right-title--tips">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18h6" />
+                    <path d="M10 22h4" />
+                    <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
+                </svg>
+                Estrategia Visual
+            </h3>
+            <div class="sidebar-right-body">
+                <div class="info-card">
+                    <h4>🧩 La Tríada Institucional</h4>
+                    <p>Antes de diseñar, definí esto:</p>
+                    <ul class="comunicar-list" style="margin-top:8px;">
+                        <li><strong>🎯 ¿Qué tiene que pasar?</strong><br><span class="idea-fuerza">Elegí una sola acción (inscribirse, participar, informarse)</span></li>
+                        <li><strong>👥 ¿Para quién es?</strong><br><span class="idea-fuerza">Ajustá lenguaje y tono (familias, docentes o estudiantes)</span></li>
+                        <li><strong>💬 ¿Qué idea tiene que quedar?</strong><br><span class="idea-fuerza">Si recuerdan una sola cosa, ¿cuál es?</span></li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>👁️ Jerarquía Visual</h4>
+                    <p style="font-size:12px; color:var(--text-mute); margin-bottom:8px;">Ordená para que se entienda en 3 segundos</p>
+                    <table class="tip-table">
+                        <tr>
+                            <th>🔥 Gancho</th>
+                            <td>Una frase que detiene el scroll.<br><span class="idea-fuerza">Clara &gt; creativa. Ej: "Inscripciones abiertas"</span></td>
+                        </tr>
+                        <tr>
+                            <th>📍 Cuerpo</th>
+                            <td>Lo esencial: qué, cuándo, dónde.<br><span class="idea-fuerza">Bloques cortos, sin sobrecargar.</span></td>
+                        </tr>
+                        <tr>
+                            <th>👉 CTA</th>
+                            <td>Decí exactamente qué hacer.<br><span class="idea-fuerza">"Inscribite hoy" &gt; "Más info"</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="info-card info-card--danger">
+                    <h4>Menos texto, más impacto</h4>
+                    <p>Mostrá solo el <strong>20% de la información clave</strong>. El resto va en web, link o contacto.</p>
+                    <ul class="comunicar-list" style="margin-top:6px;">
+                        <li>✔ El flyer <strong>atrae</strong></li>
+                        <li>✘ El flyer <strong>no explica todo</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="checklist-box">
+                <div class="check-btn tips-check" onclick="toggleCheck(this)">
+                    <div class="dot"></div><span>¿Se entiende en 3 segundos?</span>
+                </div>
+                <div class="check-btn tips-check" onclick="toggleCheck(this)">
+                    <div class="dot"></div><span>¿Hay un título claro y visible?</span>
+                </div>
+                <div class="check-btn tips-check" onclick="toggleCheck(this)">
+                    <div class="dot"></div><span>¿La acción es obvia?</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- BOTTOM NAVIGATION BAR                       -->
+    <!-- ═══════════════════════════════════════════ -->
+    <nav class="bottom-nav-container" id="bottomNav">
+        <div class="nav-group" id="navGroup">
+            <div id="navSlider" class="nav-slider"></div>
+            <div class="nav-item active" data-tab="poster" id="tabPoster">Redes Sociales</div>
+            <div class="nav-item" data-tab="badge" id="tabBadge">Gafetes</div>
+            <div class="nav-item" data-tab="cert" id="tabCert">Certificados</div>
+        </div>
+        <div class="nav-divider"></div>
+        <div class="nav-group">
+            <div class="nav-toggle-btn" id="ejeToggle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                Líneas transversales
+            </div>
+            <div class="nav-toggle-btn" id="tipsToggle">
+                💡 Tips
+            </div>
+        </div>
+        <div class="nav-divider"></div>
+        <div class="nav-group">
+            <div class="nav-toggle-btn" id="darkModeToggle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+                Modo
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- TOAST NOTIFICATIONS                         -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- CDN DEPENDENCIES                            -->
+    <!-- ═══════════════════════════════════════════ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- APP MODULES                                 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <script src="core/data-parser.js"></script>
+    <script src="core/color-manager.js"></script>
+    <script src="core/logo-engine.js"></script>
+    <script src="core/format-manager.js"></script>
+    <script src="core/export-engine.js"></script>
+    <script src="modules/badge-layout.js"></script>
+    <script src="modules/poster-generator.js"></script>
+    <script src="modules/badge-generator.js"></script>
+    <script src="modules/preview-controller.js"></script>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- APP BOOTSTRAP                               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <script>
+        /* ═══════════════════════════════════════════
+         * GLOBAL APP STATE & CORE FUNCTIONS
+         * Modules handle their own initialization.
+         * ═══════════════════════════════════════════ */
+
+        const APP = {
+            currentTab: 'poster',
+            records: [],
+            currentPage: 0,
+            totalPages: 1,
+            logoMode: 'color',
+            darkMode: false,
+            activeColor: null,
+        };
+
+        /* ── Toast System (Sileo-inspired: pill + badge + spring) ── */
+        function showToast(message, type = 'info', duration = 3500) {
+            const container = document.getElementById('toastContainer');
+            const badges = {
+                success: '<div class="toast-badge toast-badge--success"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>',
+                error: '<div class="toast-badge toast-badge--error"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><line x1="7" y1="7" x2="17" y2="17"/><line x1="17" y1="7" x2="7" y2="17"/></svg></div>',
+                info: '<div class="toast-badge toast-badge--info"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="17" r="0.5" fill="#fff" stroke="none"/></svg></div>'
+            };
+            const toast = document.createElement('div');
+            toast.className = `toast toast--${type}`;
+            toast.innerHTML = `${badges[type] || badges.info}<span class="toast-msg">${message}</span>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('visible'));
+            setTimeout(() => {
+                toast.classList.add('dismissing');
+                toast.addEventListener('animationend', () => toast.remove(), { once: true });
+            }, duration);
+        }
+
+        /* ── Tab Switching ── */
+        function switchTab(tabName) {
+            APP.currentTab = tabName;
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            const activeItem = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
+            if (activeItem) { activeItem.classList.add('active'); moveSlider(activeItem); }
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            const panelMap = { poster: 'posterControls', badge: 'badgeControls', cert: 'certControls' };
+            document.getElementById(panelMap[tabName])?.classList.add('active');
+            document.getElementById('posterWrap')?.classList.toggle('hidden', tabName !== 'poster');
+            document.getElementById('badgeSheetWrap')?.classList.toggle('hidden', tabName !== 'badge');
+            const btn = document.getElementById('mainDownloadBtn');
+            if (btn) btn.querySelector('span').textContent = ({ poster: 'Descargar Afiche', badge: 'Descargar Gafetes', cert: 'Descargar Certificado' })[tabName] || 'Descargar';
+
+            // Update body class for tab-specific styling
+            document.body.className = document.body.className.replace(/tab-\w+/g, '');
+            document.body.classList.add(`tab-${tabName}`);
+
+            // For Redes Sociales (poster), force Mono mode (keep selected program)
+            if (tabName === 'poster' && typeof LogoEngine !== 'undefined') {
+                LogoEngine.setMode('mono');
+            }
+        }
+
+        function moveSlider(el) {
+            const s = document.getElementById('navSlider');
+            if (s) { s.style.width = el.offsetWidth + 'px'; s.style.left = el.offsetLeft + 'px'; }
+        }
+
+        /* ── Sidebar Toggles ── */
+        function toggleSidebar(type) {
+            const r = document.getElementById('rightSidebar'), t = document.getElementById('tipsSidebar');
+            const eT = document.getElementById('ejeToggle'), tT = document.getElementById('tipsToggle');
+            if (type === 'eje') { t.classList.remove('active'); tT.classList.remove('tips-on'); r.classList.toggle('active'); eT.classList.toggle('on'); }
+            else { r.classList.remove('active'); eT.classList.remove('on'); t.classList.toggle('active'); tT.classList.toggle('tips-on'); }
+        }
+
+        function toggleCheck(btn) {
+            btn.classList.toggle('checked');
+            const checked = document.querySelectorAll('.check-btn.gamify.checked').length;
+            document.getElementById('mainDownloadBtn')?.classList.toggle('ready', checked >= 3);
+        }
+
+        /* ── Líneas Transversales Navigator ── */
+        let _lineaIndex = 0;
+        const LINEA_TOTAL = 3;
+
+        function navigateLinea(dir) {
+            _lineaIndex = Math.max(0, Math.min(LINEA_TOTAL - 1, _lineaIndex + dir));
+            document.querySelectorAll('.linea-slide').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.linea-slide[data-linea="${_lineaIndex}"]`)?.classList.add('active');
+            document.getElementById('lineaIndicator').textContent = `Línea ${_lineaIndex + 1} / ${LINEA_TOTAL}`;
+            document.getElementById('lineaPrev').disabled = _lineaIndex === 0;
+            document.getElementById('lineaNext').disabled = _lineaIndex === LINEA_TOTAL - 1;
+        }
+
+        function toggleDarkMode() {
+            APP.darkMode = !APP.darkMode;
+            document.body.classList.toggle('dark', APP.darkMode);
+            document.getElementById('darkModeToggle')?.classList.toggle('on', APP.darkMode);
+        }
+
+        /* ── Init (only nav/sidebar — modules handle everything else) ── */
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', () => switchTab(i.dataset.tab)));
+            document.getElementById('ejeToggle')?.addEventListener('click', () => toggleSidebar('eje'));
+            document.getElementById('tipsToggle')?.addEventListener('click', () => toggleSidebar('tips'));
+            document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
+            const activeNav = document.querySelector('.nav-item.active');
+            if (activeNav) moveSlider(activeNav);
+            window.addEventListener('resize', () => { const a = document.querySelector('.nav-item.active'); if (a) moveSlider(a); });
+
+            // Scale slider: percentage display + fill gradient
+            function wireScaleSlider(sliderId, displayId) {
+                const slider = document.getElementById(sliderId);
+                const display = document.getElementById(displayId);
+                const card = slider?.closest('.scale-card');
+                if (!slider || !display || !card) return;
+
+                function update() {
+                    const val = parseFloat(slider.value);
+                    const min = parseFloat(slider.min);
+                    const max = parseFloat(slider.max);
+                    display.textContent = Math.round(val * 100) + '%';
+                    const fill = ((val - min) / (max - min)) * 100;
+                    card.style.setProperty('--fill', fill + '%');
+                }
+
+                slider.addEventListener('input', update);
+                update(); // set initial fill
+            }
+            wireScaleSlider('scaleInput', 'scaleValue');
+            wireScaleSlider('badgeScaleInput', 'badgeScaleValue');
+
+            // Initialize linea navigator button states
+            document.getElementById('lineaPrev').disabled = true;
+            document.getElementById('lineaNext').disabled = false;
+
+            // Initialize default tab (poster with DNE Isotipo Mono)
+            switchTab('poster');
+
+            console.log('🚀 Gafetes Pro Editorial Studio initialized');
+        });
+    </script>
+</body>
+
+</html>
