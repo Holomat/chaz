@@ -33,8 +33,8 @@
                 <span class="brand-badge">Editorial Studio</span>
             </header>
 
-            <!-- Program Selector (hidden for Gafetes) -->
-            <div class="hide-for-badge">
+            <!-- Program Selector (hidden for Gafetes and Certificados) -->
+            <div class="hide-for-badge hide-for-cert">
                 <div class="label-style">Programa MEC</div>
                 <select id="programSelector" class="ui-select">
                     <option value="DNE Isotipo">DNE Isotipo</option>
@@ -163,19 +163,87 @@
 
             <!-- ═══ CERTIFICATE CONTROLS ═══ -->
             <div id="certControls" class="tab-panel">
-                <div class="empty-state">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-mute)"
-                        stroke-width="1.5">
-                        <path d="M12 15l-2 5l-1-3l-3-1l5-2z" />
-                        <path d="M18 9a6 6 0 11-12 0 6 6 0 0112 0z" />
-                    </svg>
-                    <p>Módulo de Certificados</p>
-                    <span>Próximamente</span>
+
+                <div class="label-style">Programa</div>
+                <select id="certProgram" class="ui-select">
+                    <option value="MEC - DNE">MEC - DNE</option>
+                    <option value="DNE Isotipo">DNE Isotipo</option>
+                    <option value="Cultura Científica">Cultura Científica</option>
+                    <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
+                    <option value="Ccepi">Ccepi</option>
+                    <option value="PAS">PAS</option>
+                    <option value="PNEC">PNEC</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Secretaría Permanente">Secretaría Permanente</option>
+                </select>
+
+                <div class="label-style">Título del Curso</div>
+                <textarea id="certTitle" class="ui-card cert-textarea" placeholder="Título del curso">Gestión de Bibliotecas en Contexto de Encierro</textarea>
+
+                <div class="label-style">Nombre y Apellido</div>
+                <input type="text" id="certName" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
+
+                <div class="label-style">Detalle del Curso</div>
+                <textarea id="certDetails" class="ui-card cert-textarea cert-textarea--tall" placeholder="Descripción del curso...">Ha participado del 11.er Campamento Científico Nacional para estudiantes de Formación Docente. La actividad fue organizada por Cultura Científica de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Se realizó entre los días 23 y 26 de abril de 2025; con una carga teórico‑práctica de 40 horas.</textarea>
+
+                <div class="label-style">Responsable 1</div>
+                <input type="text" id="certR1Name" class="ui-card" placeholder="Nombre y Apellido" value="Gabriel Quirici">
+                <input type="text" id="certR1Role" class="ui-card" placeholder="Cargo" value="Director Nacional de Educación">
+                <input type="text" id="certR1Inst" class="ui-card" placeholder="Institución" value="Ministerio de Educación y Cultura">
+                <div class="cert-sig-upload-row">
+                    <label for="certR1SigInput" class="ui-card file-label" id="certR1SigLabel">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <span>Firma digital</span>
+                    </label>
+                    <button class="cert-sig-clear-btn hidden" id="certR1SigClear" title="Quitar firma">✕</button>
                 </div>
+                <input type="file" id="certR1SigInput" accept="image/*" style="display:none;">
+
+                <div id="certRespSection2" class="hidden">
+                    <div class="label-style">Responsable 2</div>
+                    <input type="text" id="certR2Name" class="ui-card" placeholder="Nombre y Apellido" value="Andrea Gil">
+                    <input type="text" id="certR2Role" class="ui-card" placeholder="Cargo" value="Coordinadora Nacional">
+                    <input type="text" id="certR2Inst" class="ui-card" placeholder="Institución" value="Programa Aprender Siempre">
+                    <div class="cert-sig-upload-row">
+                        <label for="certR2SigInput" class="ui-card file-label" id="certR2SigLabel">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <span>Firma digital</span>
+                        </label>
+                        <button class="cert-sig-clear-btn hidden" id="certR2SigClear" title="Quitar firma">✕</button>
+                    </div>
+                    <input type="file" id="certR2SigInput" accept="image/*" style="display:none;">
+                </div>
+
+                <div id="certRespSection3" class="hidden">
+                    <div class="label-style">Responsable 3</div>
+                    <input type="text" id="certR3Name" class="ui-card" placeholder="Nombre y Apellido">
+                    <input type="text" id="certR3Role" class="ui-card" placeholder="Cargo">
+                    <input type="text" id="certR3Inst" class="ui-card" placeholder="Institución">
+                    <div class="cert-sig-upload-row">
+                        <label for="certR3SigInput" class="ui-card file-label" id="certR3SigLabel">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <span>Firma digital</span>
+                        </label>
+                        <button class="cert-sig-clear-btn hidden" id="certR3SigClear" title="Quitar firma">✕</button>
+                    </div>
+                    <input type="file" id="certR3SigInput" accept="image/*" style="display:none;">
+                </div>
+
+                <div class="cert-resp-btn-row">
+                    <button id="certAddResponsible" class="cert-add-resp-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Agregar
+                    </button>
+                    <button id="certRemoveResponsible" class="cert-remove-resp-btn hidden">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Quitar
+                    </button>
+                </div>
+
             </div>
 
             <!-- ═══ SHARED CONTROLS ═══ -->
-            <div class="hide-for-badge">
+            <div class="hide-for-badge hide-for-cert">
                 <div class="label-style">Color</div>
                 <div class="color-card">
                     <div class="color-row" id="colorPalette">
@@ -192,7 +260,7 @@
             </div>
 
             <!-- Badge hex color pickers (hidden for poster tab) -->
-            <div class="hide-for-poster">
+            <div class="hide-for-poster hide-for-cert">
                 <div class="badge-hex-row">
                     <div class="hex-input-group">
                         <label class="size-label">Nombre / Apellido</label>
@@ -212,15 +280,15 @@
             </div>
 
             <!-- Badge stroke toggle (hidden for poster tab) -->
-            <div class="hide-for-poster">
+            <div class="hide-for-poster hide-for-cert">
                 <label class="badge-stroke-toggle">
                     <input type="checkbox" id="badgeStrokeToggle" checked>
                     <span class="badge-stroke-label">Línea de corte</span>
                 </label>
             </div>
 
-            <!-- Logo mode toggle (hidden for Redes Sociales and Gafetes) -->
-            <div class="hide-for-poster hide-for-badge">
+            <!-- Logo mode toggle (hidden for all tabs) -->
+            <div class="hide-for-poster hide-for-badge hide-for-cert">
                 <div class="label-style">Logo</div>
                 <div class="logo-toggle-row">
                     <button id="logoColorBtn" class="logo-toggle-btn active">Color</button>
@@ -268,6 +336,51 @@
             </div>
         </div>
 
+        <!-- Certificate Canvas (Certificados) -->
+        <div class="cert-wrap hidden" id="certWrap">
+            <div class="cert-scale-wrapper" id="certScaleWrapper">
+                <div class="cert-canvas" id="certCanvas">
+                    <!-- Trama background -->
+                    <div class="cert-bg-trama"></div>
+                    <!-- Content layer -->
+                    <div class="cert-content">
+                        <header class="cert-header">
+                            <img id="certLogoImg" class="cert-logo" src="Root/assets/logos/logo-dne-color.svg" alt="Logo institucional">
+                        </header>
+                        <div class="cert-body">
+                            <div class="cert-title" id="certTitleDisplay">Gestión de Bibliotecas
+en Contexto de Encierro</div>
+                            <div class="cert-name-display" id="certNameDisplay">Nombre y Apellido</div>
+                            <div class="cert-details-display" id="certDetailsDisplay">Ha participado del 11.er Campamento Científico Nacional para estudiantes de Formación Docente. La actividad fue organizada por Cultura Científica de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Se realizó entre los días 23 y 26 de abril de 2025; con una carga teórico‑práctica de 40 horas.</div>
+                        </div>
+                        <footer class="cert-footer" id="certFooter">
+                            <div class="cert-responsible" id="certResponsible1">
+                                <img class="cert-sig-image" id="certR1SigImg" alt="">
+                                <div class="cert-responsible-line"></div>
+                                <div class="cert-sig-name" id="certR1NameDisplay">Gabriel Quirici</div>
+                                <div class="cert-sig-role" id="certR1RoleDisplay">Director Nacional de Educación</div>
+                                <div class="cert-sig-inst" id="certR1InstDisplay">Ministerio de Educación y Cultura</div>
+                            </div>
+                            <div class="cert-responsible hidden" id="certResponsible2">
+                                <img class="cert-sig-image" id="certR2SigImg" alt="">
+                                <div class="cert-responsible-line"></div>
+                                <div class="cert-sig-name" id="certR2NameDisplay">Andrea Gil</div>
+                                <div class="cert-sig-role" id="certR2RoleDisplay">Coordinadora Nacional</div>
+                                <div class="cert-sig-inst" id="certR2InstDisplay">Programa Aprender Siempre</div>
+                            </div>
+                            <div class="cert-responsible hidden" id="certResponsible3">
+                                <img class="cert-sig-image" id="certR3SigImg" alt="">
+                                <div class="cert-responsible-line"></div>
+                                <div class="cert-sig-name" id="certR3NameDisplay"></div>
+                                <div class="cert-sig-role" id="certR3RoleDisplay"></div>
+                                <div class="cert-sig-inst" id="certR3InstDisplay"></div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- ═══════════════════════════════════════════ -->
@@ -277,144 +390,126 @@
 
         <!-- Eje del Mes panel -->
         <div class="sidebar-base sidebar-right" id="rightSidebar">
-            <h3 class="sidebar-right-title">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                3 Líneas Transversales
-            </h3>
 
             <!-- Navegación entre líneas -->
             <div class="linea-nav">
                 <button class="linea-nav-btn" id="lineaPrev" onclick="navigateLinea(-1)">‹</button>
-                <span class="linea-nav-indicator" id="lineaIndicator">Línea 1 / 3</span>
+                <span class="linea-nav-indicator" id="lineaIndicator">🟢 DERECHO</span>
                 <button class="linea-nav-btn" id="lineaNext" onclick="navigateLinea(1)">›</button>
             </div>
 
+            <div class="linea-slides-container">
             <!-- Línea 1: Educación como derecho garantizado -->
-            <div class="linea-slide active" data-linea="0">
-                <div class="linea-comm-badge">🟢 Estás comunicando: Derecho garantizado</div>
+            <div class="linea-slide active" data-linea="0" data-badge="🟢 DERECHO">
                 <div class="sidebar-right-body">
                     <div class="info-card">
-                        <h4>✍️ Aplicalo a tu pieza</h4>
-                        <p class="idea-fuerza" style="margin-bottom:6px;">Este contenido debería mostrar:</p>
+                        <h4>Educación como derecho garantizado</h4>
+                        <p class="idea-fuerza">El Estado asegura acceso real para todos.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Mostrá</h4>
                         <ul class="comunicar-list">
+                            <li>Una persona o grupo de personas</li>
                             <li>Qué derecho se garantiza</li>
-                            <li>A quién alcanza</li>
-                            <li>Qué cambia concretamente</li>
-                        </ul>
-                        <div class="linea-tip">💡 Si no se ve esto, la pieza queda en anuncio.</div>
-                    </div>
-                    <div class="info-card">
-                        <h4>💬 Claves de tono</h4>
-                        <ul class="tono-desc-list">
-                            <li><strong>Cercanía institucional</strong> → Mostrar presencia real, no discurso</li>
-                            <li><strong>Responsabilidad pública</strong> → El Estado como actor activo</li>
-                            <li><strong>Igualdad como compromiso</strong> → Incluir a quienes más lo necesitan</li>
+                            <li>Qué cambia en ellas</li>
                         </ul>
                     </div>
                     <div class="info-card">
-                        <h4>⚡ Feedback dinámico</h4>
-                        <ul class="feedback-list">
-                            <li class="feedback-warn">⚠️ Tu pieza parece informativa, sumá impacto concreto</li>
-                            <li class="feedback-tip">💡 Podés reforzar mostrando una persona o territorio</li>
-                            <li class="feedback-ok">✅ El derecho está bien comunicado</li>
-                        </ul>
+                        <h4>Claves de tono</h4>
+                        <div class="tono-tags">
+                            <span class="tono-tag">Cercano</span>
+                            <span class="tono-tag">Claro</span>
+                            <span class="tono-tag">Compromiso con la igualdad</span>
+                        </div>
                     </div>
                 </div>
                 <div class="checklist-box">
-                    <p class="checklist-label">🎮 Chequeo de calidad</p>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Se entiende qué cambia para las personas?</span>
+                        <div class="dot"></div><span>¿Se ve el derecho en acción?</span>
                     </div>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Se ve al Estado en acción (no solo anuncio)?</span>
+                        <div class="dot"></div><span>¿Se entiende qué cambia?</span>
                     </div>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Se ve a quién alcanza (personas o territorio)?</span>
+                        <div class="dot"></div><span>¿Se ve a quién alcanza?</span>
                     </div>
-                </div>
-                <div class="linea-cierre">
-                    <p>🎯 <strong>Antes de publicar:</strong></p>
-                    <p><em>¿Esto muestra un derecho en acción o solo lo anuncia?</em></p>
                 </div>
             </div>
 
-            <!-- Línea 2: Trayectorias educativas a lo largo de la vida -->
-            <div class="linea-slide" data-linea="1">
+            <!-- Línea 2: Acompañamiento -->
+            <div class="linea-slide" data-linea="1" data-badge="🟣 ACOMPAÑAMIENTO">
                 <div class="sidebar-right-body">
                     <div class="info-card">
                         <h4>Trayectorias educativas a lo largo de la vida</h4>
                         <p class="idea-fuerza">Nadie recorre la educación en soledad.</p>
                     </div>
                     <div class="info-card">
-                        <h4>Qué comunicar</h4>
+                        <h4>Mostrá</h4>
                         <ul class="comunicar-list">
-                            <li>Acompañamiento continuo (de primera infancia a superior)</li>
-                            <li>Apoyos concretos (becas, programas, inclusión)</li>
-                            <li>Historias reales de estudiantes</li>
+                            <li>Una persona o grupo de personas</li>
+                            <li>Cómo se la/s acompaña</li>
+                            <li>Qué cambia en ella/s</li>
                         </ul>
                     </div>
                     <div class="info-card">
                         <h4>Claves de tono</h4>
                         <div class="tono-tags">
-                            <span class="tono-tag">Humano y empático</span>
-                            <span class="tono-tag">Enfocado en procesos</span>
-                            <span class="tono-tag">Esperanza + respaldo</span>
+                            <span class="tono-tag">Humano</span>
+                            <span class="tono-tag">Cercano</span>
+                            <span class="tono-tag">En proceso</span>
                         </div>
                     </div>
                 </div>
                 <div class="checklist-box">
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿La pieza muestra una experiencia real o relatable?</span>
+                        <div class="dot"></div><span>¿Se ve a quién se está ayudando?</span>
                     </div>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Se ve cómo el sistema apoya (no solo que existe)?</span>
+                        <div class="dot"></div><span>¿Hay una persona o historia?</span>
                     </div>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Se percibe continuidad en el tiempo?</span>
+                        <div class="dot"></div><span>¿Se ve un proceso (no solo algo puntual)?</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Línea 3: Participación y territorio -->
-            <div class="linea-slide" data-linea="2">
+            <!-- Línea 3: Comunidad -->
+            <div class="linea-slide" data-linea="2" data-badge="🔵 COMUNIDAD">
                 <div class="sidebar-right-body">
                     <div class="info-card">
-                        <h4>Participación y territorio</h4>
-                        <p class="idea-fuerza">La educación se construye con la sociedad.</p>
+                        <h4>Participación, democratización y territorio</h4>
+                        <p class="idea-fuerza">La educación se construye entre todos.</p>
                     </div>
                     <div class="info-card">
-                        <h4>Qué comunicar</h4>
+                        <h4>Mostrá</h4>
                         <ul class="comunicar-list">
-                            <li>Espacios de participación (congresos, encuentros)</li>
-                            <li>Comunidad educativa activa</li>
-                            <li>Presencia en todo el país</li>
+                            <li>Personas o comunidad</li>
+                            <li>Lugar donde sucede</li>
+                            <li>Acción que hacen juntas/os</li>
                         </ul>
                     </div>
                     <div class="info-card">
                         <h4>Claves de tono</h4>
                         <div class="tono-tags">
-                            <span class="tono-tag">Colectivo y democrático</span>
-                            <span class="tono-tag">Voz de actores reales</span>
-                            <span class="tono-tag">Descentralizado</span>
+                            <span class="tono-tag">Colectivo</span>
+                            <span class="tono-tag">Participativo</span>
+                            <span class="tono-tag">Territorial</span>
                         </div>
                     </div>
                 </div>
                 <div class="checklist-box">
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿La pieza abre una acción o convocatoria?</span>
+                        <div class="dot"></div><span>¿Se ve gente participando?</span>
                     </div>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Incluye voces reales (docentes, estudiantes, territorio)?</span>
+                        <div class="dot"></div><span>¿Hay personas reales?</span>
                     </div>
                     <div class="check-btn gamify" onclick="toggleCheck(this)">
-                        <div class="dot"></div><span>¿Se reconoce un lugar, contexto o comunidad concreta?</span>
+                        <div class="dot"></div><span>¿Se ve el lugar?</span>
                     </div>
                 </div>
             </div>
+            </div><!-- /linea-slides-container -->
         </div>
 
         <!-- Tips de Comunicación panel -->
@@ -537,6 +632,7 @@
     <script src="modules/poster-generator.js"></script>
     <script src="modules/badge-generator.js"></script>
     <script src="modules/preview-controller.js"></script>
+    <script src="modules/cert-generator.js"></script>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- APP BOOTSTRAP                               -->
@@ -587,6 +683,8 @@
             document.getElementById(panelMap[tabName])?.classList.add('active');
             document.getElementById('posterWrap')?.classList.toggle('hidden', tabName !== 'poster');
             document.getElementById('badgeSheetWrap')?.classList.toggle('hidden', tabName !== 'badge');
+            document.getElementById('certWrap')?.classList.toggle('hidden', tabName !== 'cert');
+            if (tabName === 'cert' && typeof CertGenerator !== 'undefined') CertGenerator.updateScale();
             const btn = document.getElementById('mainDownloadBtn');
             if (btn) btn.querySelector('span').textContent = ({ poster: 'Descargar Afiche', badge: 'Descargar Gafetes', cert: 'Descargar Certificado' })[tabName] || 'Descargar';
 
@@ -626,8 +724,9 @@
         function navigateLinea(dir) {
             _lineaIndex = Math.max(0, Math.min(LINEA_TOTAL - 1, _lineaIndex + dir));
             document.querySelectorAll('.linea-slide').forEach(s => s.classList.remove('active'));
-            document.querySelector(`.linea-slide[data-linea="${_lineaIndex}"]`)?.classList.add('active');
-            document.getElementById('lineaIndicator').textContent = `Línea ${_lineaIndex + 1} / ${LINEA_TOTAL}`;
+            const active = document.querySelector(`.linea-slide[data-linea="${_lineaIndex}"]`);
+            active?.classList.add('active');
+            document.getElementById('lineaIndicator').textContent = active?.dataset.badge || `Línea ${_lineaIndex + 1}`;
             document.getElementById('lineaPrev').disabled = _lineaIndex === 0;
             document.getElementById('lineaNext').disabled = _lineaIndex === LINEA_TOTAL - 1;
         }

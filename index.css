@@ -1313,6 +1313,28 @@ body.dark .badge-sheet {
     visibility: visible;
 }
 
+#rightSidebar.active {
+    height: auto;
+    max-height: 95vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#rightSidebar .linea-nav {
+    flex-shrink: 0;
+}
+
+#rightSidebar .linea-slide.active {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+#rightSidebar .linea-slide.active::-webkit-scrollbar {
+    display: none;
+}
+
 .sidebar-right-title {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
@@ -1468,9 +1490,15 @@ body.dark .check-btn.checked {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 8px 10px;
-    border-bottom: 1px solid var(--input-border);
+    padding: 8px 8px 12px;
     margin-bottom: 10px;
+}
+
+.linea-nav-indicator {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 0.03em;
 }
 
 .linea-nav-btn {
@@ -1500,19 +1528,21 @@ body.dark .check-btn.checked {
     cursor: default;
 }
 
-.linea-nav-indicator {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-mute);
-    letter-spacing: 0.04em;
+
+/* Todos los slides en la misma celda grid → el contenedor siempre tiene la altura del más alto */
+.linea-slides-container {
+    display: grid;
 }
 
 .linea-slide {
-    display: none;
+    grid-area: 1 / 1;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .linea-slide.active {
-    display: block;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .comunicar-list {
@@ -2075,4 +2105,290 @@ body.dark .toast {
 .poster-wrap,
 .badge-sheet-wrap {
     animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════════
+   CERTIFICADOS
+   ═══════════════════════════════════════════════ */
+
+/* hide shared controls when on cert tab */
+body.tab-cert .hide-for-cert {
+    display: none;
+}
+
+/* cert-textarea overrides ui-card height */
+.cert-textarea {
+    height: auto !important;
+    min-height: 60px;
+    padding: 12px 16px !important;
+    resize: none;
+    line-height: 1.5;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    display: block !important;
+}
+
+.cert-textarea--tall {
+    min-height: 96px;
+}
+
+/* ── Canvas wrapper ── */
+.cert-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cert-scale-wrapper {
+    transform-origin: center center;
+    /* transform applied via JS */
+}
+
+/* ── The A4 landscape canvas ── */
+.cert-canvas {
+    width: 1123px;
+    height: 794px;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.10);
+}
+
+body.dark .cert-canvas {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.40);
+}
+
+/* ── Trama background texture ── */
+.cert-bg-trama {
+    position: absolute;
+    inset: 0;
+    background-image: url('Root/assets/trama fondo certificados.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Content layer ── */
+.cert-content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 106px 100px 160px;
+}
+
+/* ── Logo header ── */
+.cert-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: 50px;
+}
+
+.cert-logo {
+    height: 88px;
+    max-width: 520px;
+    object-fit: contain;
+}
+
+/* ── Body (title + name + details) ── */
+.cert-body {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 860px;
+}
+
+.cert-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 33px;           /* 25pt @ 96dpi */
+    font-weight: 300;
+    line-height: 0.97;
+    letter-spacing: -0.01em;
+    color: #1d1d1f;
+    white-space: pre-wrap;     /* honours \n line breaks from JS word-wrap */
+}
+
+.cert-name-display {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;           /* 15pt @ 96dpi */
+    font-weight: 600;
+    margin-top: 30px;
+    line-height: 1.2;
+    color: #1d1d1f;
+}
+
+.cert-details-display {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;           /* 9pt @ 96dpi */
+    font-weight: 400;
+    line-height: 1.54;
+    letter-spacing: -0.01em;
+    color: #1d1d1f;
+    max-width: 700px;
+    text-align: center;
+}
+
+/* ── Footer (signatures) ── */
+.cert-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 120px;
+    flex-shrink: 0;
+    align-items: flex-start;
+    margin-top: 154px;
+}
+
+.cert-footer--single {
+    gap: 0;
+}
+
+.cert-responsible {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 180px;
+    max-width: 220px;
+}
+
+.cert-responsible-line {
+    width: 100%;
+    height: 1px;
+    background: #1d1d1f;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+/* ── Botones agregar / quitar responsable ── */
+.cert-resp-btn-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.cert-add-resp-btn,
+.cert-remove-resp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+    height: 40px;
+    border-radius: var(--radius-ui);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.cert-add-resp-btn {
+    background: rgba(0, 151, 181, 0.07);
+    color: var(--accent-primary);
+    border: 1px dashed rgba(0, 151, 181, 0.35);
+}
+
+.cert-add-resp-btn:hover {
+    background: rgba(0, 151, 181, 0.13);
+    border-color: rgba(0, 151, 181, 0.6);
+}
+
+.cert-remove-resp-btn {
+    background: rgba(231, 76, 60, 0.06);
+    color: var(--accent-danger);
+    border: 1px dashed rgba(231, 76, 60, 0.3);
+}
+
+.cert-remove-resp-btn:hover {
+    background: rgba(231, 76, 60, 0.13);
+    border-color: rgba(231, 76, 60, 0.6);
+}
+
+/* ── Firma digital (flota sobre la línea, fuera del flujo) ── */
+.cert-responsible {
+    position: relative;
+}
+
+.cert-sig-image {
+    position: absolute;
+    width: 140px;
+    height: 70px;          /* 110:55 → 140:70, proporción 2:1 */
+    object-fit: contain;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 12px);   /* borde inferior 12px sobre la línea */
+    display: none;
+}
+
+.cert-sig-image.loaded {
+    display: block;
+}
+
+/* ── Upload row en sidebar ── */
+.cert-sig-upload-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.cert-sig-upload-row .file-label {
+    flex: 1;
+    font-size: 12px;
+}
+
+.cert-sig-clear-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-ui);
+    background: rgba(231, 76, 60, 0.08);
+    color: var(--accent-danger);
+    border: 1px solid rgba(231, 76, 60, 0.15);
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+}
+
+.cert-sig-clear-btn:hover {
+    background: rgba(231, 76, 60, 0.16);
+}
+
+.cert-sig-clear-btn.hidden {
+    display: none;
+}
+
+.cert-sig-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;           /* 9pt */
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1d1d1f;
+}
+
+.cert-sig-role,
+.cert-sig-inst {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;           /* 9pt */
+    font-weight: 400;
+    line-height: 1.4;
+    color: #1d1d1f;
 }

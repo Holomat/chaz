@@ -376,8 +376,9 @@ const ExportEngine = (() => {
                 await exportBadgesJPG(APP.records);
                 showToast('Gafetes JPG descargados ✓', 'success');
 
-            } else {
-                showToast('Módulo de certificados próximamente', 'info');
+            } else if (APP.currentTab === 'cert') {
+                await CertGenerator.exportJPG();
+                showToast('Certificado descargado ✓', 'success');
             }
         } catch (err) {
             console.error('Export error:', err);
