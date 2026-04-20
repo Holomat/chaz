@@ -22,6 +22,71 @@
 <body>
 
     <!-- ═══════════════════════════════════════════ -->
+    <!-- ACCESS GATE                                  -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="accessGate" class="access-gate">
+        <div class="access-card">
+            <img src="Root/assets/logos/logo-dne-iso-mono.svg" class="access-logo" alt="DNE">
+            <div class="access-title">Editorial Studio</div>
+            <div class="access-subtitle">Dirección Nacional de Educación</div>
+            <div class="access-form">
+                <input
+                    type="password"
+                    id="accessCodeInput"
+                    class="access-input"
+                    placeholder="Código de acceso"
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <button id="accessSubmitBtn" class="access-btn">Ingresar</button>
+            </div>
+            <div id="accessError" class="access-error hidden">Código incorrecto</div>
+        </div>
+    </div>
+    <script>
+        (function () {
+            const KEY  = 'dne_access';
+            const CODE = atob('RE5FLTIwMjYh');
+            const isLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+
+            if (isLocal || sessionStorage.getItem(KEY) === '1') {
+                // Remove gate immediately — element exists right above this script
+                document.getElementById('accessGate').remove();
+            } else {
+                // Wire up form after DOM is ready
+                document.addEventListener('DOMContentLoaded', () => {
+                    const gate  = document.getElementById('accessGate');
+                    const input = document.getElementById('accessCodeInput');
+                    const error = document.getElementById('accessError');
+                    const btn   = document.getElementById('accessSubmitBtn');
+
+                    function unlock() {
+                        sessionStorage.setItem(KEY, '1');
+                        gate.classList.add('access-gate--out');
+                        gate.addEventListener('transitionend', () => gate.remove(), { once: true });
+                    }
+
+                    function tryCode() {
+                        if (input.value === CODE) {
+                            unlock();
+                        } else {
+                            input.value = '';
+                            error.classList.remove('hidden');
+                            input.classList.add('access-input--shake');
+                            input.addEventListener('animationend', () => input.classList.remove('access-input--shake'), { once: true });
+                            setTimeout(() => error.classList.add('hidden'), 2500);
+                        }
+                    }
+
+                    btn.addEventListener('click', tryCode);
+                    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryCode(); });
+                    input.focus();
+                });
+            }
+        })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════ -->
     <!-- LEFT SIDEBAR                                -->
     <!-- ═══════════════════════════════════════════ -->
     <aside class="side-column side-column--left" id="sidebarLeft">
@@ -29,12 +94,11 @@
 
             <!-- Brand -->
             <header class="sidebar-header">
-                <img src="https://i.imgur.com/FakCT9f.png" class="brand-logo" alt="MEC Logo">
                 <span class="brand-badge">Editorial Studio</span>
             </header>
 
-            <!-- Program Selector (hidden for Gafetes and Certificados) -->
-            <div class="hide-for-badge hide-for-cert">
+            <!-- Program Selector (hidden for Gafetes, Certificados and AVE) -->
+            <div class="hide-for-badge hide-for-cert hide-for-ave">
                 <div class="label-style">Programa MEC</div>
                 <select id="programSelector" class="ui-select">
                     <option value="DNE Isotipo">DNE Isotipo</option>
@@ -161,6 +225,46 @@
                 </div>
             </div>
 
+            <!-- ═══ AVE CONTROLS (Plataforma AVE tab) ═══ -->
+            <div id="aveControls" class="tab-panel">
+
+                <div class="label-style">Programa</div>
+                <select id="aveProgram" class="ui-select">
+                    <option value="MEC - DNE">MEC - DNE</option>
+                    <option value="DNE Isotipo">DNE Isotipo</option>
+                    <option value="Cultura Científica">Cultura Científica</option>
+                    <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
+                    <option value="Ccepi">Ccepi</option>
+                    <option value="PAS">PAS</option>
+                    <option value="PNEC">PNEC</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Secretaría Permanente">Secretaría Permanente</option>
+                </select>
+
+                <div class="label-style">Imagen de Fondo</div>
+                <label for="aveBgInput" class="ui-card file-label" id="aveBgLabel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Cargar foto</span>
+                </label>
+                <input type="file" id="aveBgInput" accept="image/*" style="display: none;">
+                <div class="scale-card ui-card">
+                    <span class="scale-label">Escala de imagen</span>
+                    <input type="range" id="aveScaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
+                    <span class="scale-value" id="aveScaleValue">100%</span>
+                </div>
+
+                <div class="label-style">Título</div>
+                <textarea id="aveTitleIn" class="ui-card cert-textarea" placeholder="Título principal">Dirección Nacional de Educación</textarea>
+
+                <div class="label-style">Subtítulo</div>
+                <textarea id="aveSubtitleIn" class="ui-card cert-textarea" placeholder="Subtítulo">Ministerio de Educación y Cultura</textarea>
+
+            </div>
+
             <!-- ═══ CERTIFICATE CONTROLS ═══ -->
             <div id="certControls" class="tab-panel">
 
@@ -285,7 +389,7 @@
             </div>
 
             <!-- Badge hex color pickers (hidden for poster tab) -->
-            <div class="hide-for-poster hide-for-cert">
+            <div class="hide-for-poster hide-for-cert hide-for-ave">
                 <div class="badge-hex-row">
                     <div class="hex-input-group">
                         <label class="size-label">Nombre / Apellido</label>
@@ -305,7 +409,7 @@
             </div>
 
             <!-- Badge stroke toggle (hidden for poster tab) -->
-            <div class="hide-for-poster hide-for-cert">
+            <div class="hide-for-poster hide-for-cert hide-for-ave">
                 <label class="badge-stroke-toggle">
                     <input type="checkbox" id="badgeStrokeToggle" checked>
                     <span class="badge-stroke-label">Línea de corte</span>
@@ -313,7 +417,7 @@
             </div>
 
             <!-- Logo mode toggle (hidden for all tabs) -->
-            <div class="hide-for-poster hide-for-badge hide-for-cert">
+            <div class="hide-for-poster hide-for-badge hide-for-cert hide-for-ave">
                 <div class="label-style">Logo</div>
                 <div class="logo-toggle-row">
                     <button id="logoColorBtn" class="logo-toggle-btn active">Color</button>
@@ -358,6 +462,25 @@
         <div class="badge-sheet-wrap hidden" id="badgeSheetWrap">
             <div class="badge-sheet" id="badgeSheet">
                 <!-- 8 badge slots rendered by badge-generator.js -->
+            </div>
+        </div>
+
+        <!-- AVE Canvas (Plataforma AVE) -->
+        <div class="ave-wrap hidden" id="aveWrap">
+            <div class="ave-scale-wrapper" id="aveScaleWrapper">
+                <div class="ave-canvas" id="aveCanvas">
+                    <div class="ave-bg-wrapper">
+                        <img class="ave-bg-preview" src="" alt="" style="display:none;">
+                    </div>
+                    <img class="ave-shadow-overlay" id="aveShadowOverlay" src="" alt="" style="display:none;">
+                    <div class="ave-content">
+                        <img class="ave-logo-img" id="aveLogoImg" src="Root/assets/logos/logo-dne-mono.svg" alt="">
+                        <div class="ave-text-block">
+                            <div class="ave-title" id="aveTitleDisplay">Dirección Nacional de Educación</div>
+                            <div class="ave-subtitle" id="aveSubtitleDisplay">Ministerio de Educación y Cultura</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -606,6 +729,7 @@ en Contexto de Encierro</div>
             <div id="navSlider" class="nav-slider"></div>
             <div class="nav-item active" data-tab="poster" id="tabPoster">Redes Sociales</div>
             <div class="nav-item" data-tab="badge" id="tabBadge">Gafetes</div>
+            <div class="nav-item" data-tab="ave" id="tabAve">Plataforma AVE</div>
             <div class="nav-item" data-tab="cert" id="tabCert">Certificados</div>
         </div>
         <div class="nav-divider"></div>
@@ -635,6 +759,9 @@ en Contexto de Encierro</div>
     <!-- ═══════════════════════════════════════════ -->
     <!-- TOAST NOTIFICATIONS                         -->
     <!-- ═══════════════════════════════════════════ -->
+    <!-- Watermark ISO top-left -->
+    <img src="Root/assets/logos/logo-dne-iso-mono.svg" class="app-watermark" alt="DNE">
+
     <div id="toastContainer" class="toast-container"></div>
 
     <!-- ═══════════════════════════════════════════ -->
@@ -657,6 +784,7 @@ en Contexto de Encierro</div>
     <script src="modules/poster-generator.js"></script>
     <script src="modules/badge-generator.js"></script>
     <script src="modules/preview-controller.js"></script>
+    <script src="modules/ave-generator.js"></script>
     <script src="modules/cert-generator.js"></script>
 
     <!-- ═══════════════════════════════════════════ -->
@@ -704,14 +832,16 @@ en Contexto de Encierro</div>
             const activeItem = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
             if (activeItem) { activeItem.classList.add('active'); moveSlider(activeItem); }
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            const panelMap = { poster: 'posterControls', badge: 'badgeControls', cert: 'certControls' };
+            const panelMap = { poster: 'posterControls', badge: 'badgeControls', ave: 'aveControls', cert: 'certControls' };
             document.getElementById(panelMap[tabName])?.classList.add('active');
             document.getElementById('posterWrap')?.classList.toggle('hidden', tabName !== 'poster');
             document.getElementById('badgeSheetWrap')?.classList.toggle('hidden', tabName !== 'badge');
+            document.getElementById('aveWrap')?.classList.toggle('hidden', tabName !== 'ave');
             document.getElementById('certWrap')?.classList.toggle('hidden', tabName !== 'cert');
             if (tabName === 'cert' && typeof CertGenerator !== 'undefined') CertGenerator.updateScale();
+            if (tabName === 'ave' && typeof AveGenerator !== 'undefined') AveGenerator.updateScale();
             const btn = document.getElementById('mainDownloadBtn');
-            if (btn) btn.querySelector('span').textContent = ({ poster: 'Descargar Afiche', badge: 'Descargar Gafetes', cert: 'Descargar Certificado' })[tabName] || 'Descargar';
+            if (btn) btn.querySelector('span').textContent = ({ poster: 'Descargar Afiche', badge: 'Descargar Gafetes', ave: 'Descargar Banner', cert: 'Descargar Certificado' })[tabName] || 'Descargar';
 
             // Update body class for tab-specific styling
             document.body.className = document.body.className.replace(/tab-\w+/g, '');
@@ -793,6 +923,7 @@ en Contexto de Encierro</div>
             }
             wireScaleSlider('scaleInput', 'scaleValue');
             wireScaleSlider('badgeScaleInput', 'badgeScaleValue');
+            wireScaleSlider('aveScaleInput', 'aveScaleValue');
 
             // Initialize linea navigator button states
             document.getElementById('lineaPrev').disabled = true;

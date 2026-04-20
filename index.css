@@ -189,10 +189,161 @@ body {
     gap: 10px;
 }
 
-.brand-logo {
+/* ═══════════════════════════════════════════════
+   ACCESS GATE
+   ═══════════════════════════════════════════════ */
+
+.access-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg-global);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.28, 0.11, 0.32, 1);
+}
+
+.access-gate--out {
+    opacity: 0;
+    transform: scale(1.04);
+    pointer-events: none;
+}
+
+.access-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 52px 48px 44px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 28px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    min-width: 340px;
+    max-width: 400px;
+}
+
+.access-logo {
+    height: 72px;
+    width: auto;
+    opacity: 0.22;
+    filter: brightness(0);
+    margin-bottom: 8px;
+}
+
+.access-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text-main);
+}
+
+.access-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-mute);
+    margin-bottom: 12px;
+}
+
+.access-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     width: 100%;
-    max-width: 100px;
-    height: auto;
+}
+
+.access-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 18px;
+    border-radius: var(--radius-ui);
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-main);
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.access-input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(0, 151, 181, 0.12);
+}
+
+.access-btn {
+    height: 48px;
+    border-radius: var(--radius-ui);
+    background: var(--accent-primary);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0, 151, 181, 0.28);
+}
+
+.access-btn:hover {
+    background: #007d99;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 151, 181, 0.35);
+}
+
+.access-btn:active {
+    transform: translateY(0);
+}
+
+.access-error {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-danger);
+    margin-top: 4px;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes accessShake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-8px); }
+    40%       { transform: translateX(8px); }
+    60%       { transform: translateX(-5px); }
+    80%       { transform: translateX(5px); }
+}
+
+.access-input--shake {
+    animation: accessShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    border-color: var(--accent-danger) !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12) !important;
+}
+
+/* ── App watermark — ISO mono top-left ── */
+.app-watermark {
+    position: fixed;
+    top: 20px;
+    left: 24px;
+    width: auto;
+    height: 108px;
+    opacity: 0.18;
+    filter: brightness(0);   /* fuerza negro puro */
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+}
+
+.app-watermark:hover {
+    opacity: 0.35;
 }
 
 .brand-badge {
@@ -2105,6 +2256,116 @@ body.dark .toast {
 .poster-wrap,
 .badge-sheet-wrap {
     animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════════
+   PLATAFORMA AVE
+   ═══════════════════════════════════════════════ */
+
+body.tab-ave .hide-for-ave {
+    display: none;
+}
+
+.ave-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ave-scale-wrapper {
+    transform-origin: top center;
+}
+
+.ave-canvas {
+    width: 1500px;
+    height: 540px;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a2e;
+    border-radius: 16px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.18);
+}
+
+body.dark .ave-canvas {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.ave-bg-wrapper {
+    position: absolute;
+    inset: 0;
+    cursor: move;
+}
+
+.ave-bg-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center center;
+    pointer-events: none;
+}
+
+.ave-shadow-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 1;
+    display: none;
+}
+
+.ave-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: 52px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ave-logo-img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+    object-position: left;
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
+    align-self: flex-start;
+}
+
+.ave-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ave-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 75px;
+    letter-spacing: -0.06em;
+    color: var(--active-color, #DDFF9D);
+    white-space: pre-wrap;
+}
+
+.ave-subtitle {
+    font-family: 'Sora', sans-serif;
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 47px;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    white-space: pre-wrap;
 }
 
 /* ═══════════════════════════════════════════════

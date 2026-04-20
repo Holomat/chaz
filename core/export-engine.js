@@ -376,6 +376,10 @@ const ExportEngine = (() => {
                 await exportBadgesJPG(APP.records);
                 showToast('Gafetes JPG descargados ✓', 'success');
 
+            } else if (APP.currentTab === 'ave') {
+                await AveGenerator.exportJPG();
+                showToast('Banner descargado ✓', 'success');
+
             } else if (APP.currentTab === 'cert') {
                 await CertGenerator.exportJPG();
                 showToast('Certificado descargado ✓', 'success');
