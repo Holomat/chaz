@@ -2,47 +2,61 @@
  * ═══════════════════════════════════════════════════════
  * SHEETS LOGGER — core/sheets-logger.js
  * Registra cada descarga en Google Sheets via Apps Script.
- * La URL del webhook se configura en SHEETS_WEBHOOK_URL.
+ * Incluye ciudad detectada por IP (ipapi.co, sin API key).
  * ═══════════════════════════════════════════════════════
  */
 
 const SheetsLogger = (() => {
     'use strict';
 
-    // Pegar aquí la URL del Apps Script Web App desplegado
     const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzPpwU5vnYqbb3U-P1pkKa7iz8DZ7FsaaugzK0Hf0NeaEx-FFBIjCVZg68ygixJiyl9/exec';
 
-    /**
-     * Registra una descarga en el Sheet.
-     * @param {Object} data
-     * @param {string} data.seccion   — 'Redes Sociales' | 'Gafetes' | 'Certificados' | 'Plataforma AVE'
-     * @param {string} data.programa  — programa institucional seleccionado
-     * @param {string} [data.titulo]  — título del afiche / certificado
-     * @param {string} [data.detalle] — detalle adicional (participante, subtítulo, etc.)
-     */
+    // Cache de ubicación en sessionStorage para no consultar en cada descarga
+    const GEO_KEY = 'dne_geo';
+
+    async function getCity() {
+        const cached = sessionStorage.getItem(GEO_KEY);
+        if (cached) return cached;
+
+        try {
+            const res  = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+            const data = await res.json();
+            const city = [data.city, data.region, data.country_name]
+                .filter(Boolean).join(', ');
+            sessionStorage.setItem(GEO_KEY, city);
+            return city;
+        } catch {
+            return '';
+        }
+    }
+
     async function log(data) {
-        if (!WEBHOOK_URL) return; // no configurado aún
+        if (!WEBHOOK_URL) return;
 
         const email = sessionStorage.getItem('dne_access') || '';
+        const ciudad = await getCity();
 
         const payload = {
             timestamp: new Date().toISOString(),
             email,
+            ciudad,
             ...data,
         };
 
         try {
             await fetch(WEBHOOK_URL, {
                 method:  'POST',
-                mode:    'no-cors', // Apps Script no envía CORS headers
+                mode:    'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body:    JSON.stringify(payload),
             });
         } catch (err) {
-            // Silencioso — el log nunca debe interrumpir la descarga
             console.warn('SheetsLogger: no se pudo registrar la descarga', err);
         }
     }
+
+    // Pre-cargar ubicación al iniciar (antes de la primera descarga)
+    document.addEventListener('DOMContentLoaded', () => getCity());
 
     return { log };
 })();
