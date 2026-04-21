@@ -9,7 +9,7 @@
 const SheetsLogger = (() => {
     'use strict';
 
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzPpwU5vnYqbb3U-P1pkKa7iz8DZ7FsaaugzK0Hf0NeaEx-FFBIjCVZg68ygixJiyl9/exec';
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzBq8Agl-hnlNu2dNIAa6lmOs2EjmYnuhQ8ZS-Myupk3prsTqVpLyBlT7U5CjKudwyj/exec';
 
     // Cache de ubicación en sessionStorage para no consultar en cada descarga
     const GEO_KEY = 'dne_geo';
