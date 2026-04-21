@@ -10,7 +10,7 @@ const SheetsLogger = (() => {
     'use strict';
 
     // Pegar aquí la URL del Apps Script Web App desplegado
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwJQ7uPF-V5QmjbAiM7CLuuqLlFPReNmt9WAcUH__f5wmVO01sOvTDS_A1O-GcjXUEr/exec';
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby4GY-lCxUomUHTUcF5n-0_gKuzcQDHc7UeG0FR9KBUWZT5LhZegu9ig5rohWbfF1n_/exec';
 
     /**
      * Registra una descarga en el Sheet.
