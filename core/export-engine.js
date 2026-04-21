@@ -369,6 +369,7 @@ const ExportEngine = (() => {
                 SheetsLogger?.log({
                     seccion:  'Redes Sociales',
                     programa: document.getElementById('programSelector')?.value || '',
+                    etiqueta: document.getElementById('etiquetaIn')?.value || '',
                     titulo:   document.getElementById('titleIn')?.value || '',
                     detalle:  document.getElementById('subtitleIn')?.value || '',
                 });

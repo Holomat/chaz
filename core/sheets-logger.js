@@ -28,10 +28,11 @@ const SheetsLogger = (() => {
         const payload = {
             timestamp: new Date().toISOString(),
             email,
-            seccion:   data.seccion  || '',
-            programa:  data.programa || '',
-            titulo:    data.titulo   || '',
-            detalle:   data.detalle  || '',
+            seccion:   data.seccion   || '',
+            programa:  data.programa  || '',
+            etiqueta:  data.etiqueta  || '',
+            titulo:    data.titulo    || '',
+            detalle:   data.detalle   || '',
         };
 
         try {
