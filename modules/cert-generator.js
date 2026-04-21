@@ -197,6 +197,12 @@ const CertGenerator = (() => {
             backgroundColor: '#FFFFFF',
             cacheBust:       true,
             skipFonts:       false,
+            filter: (node) => {
+                if (node.tagName === 'IMG') {
+                    return !!(node.src && node.naturalWidth > 0);
+                }
+                return true;
+            },
         });
     }
 
