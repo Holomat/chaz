@@ -367,12 +367,11 @@ const ExportEngine = (() => {
                 const activeCount = FormatManager ? FormatManager.getActive().length : 1;
                 showToast(`${activeCount} imagen(es) descargada(s) ✓`, 'success');
                 SheetsLogger?.log({
-                    hoja:     'Hoja 1',
-                    seccion:  'Redes Sociales',
+                    hoja:     'Redes sociales',
                     programa: document.getElementById('programSelector')?.value || '',
                     etiqueta: document.getElementById('etiquetaIn')?.value || '',
                     titulo:   document.getElementById('titleIn')?.value || '',
-                    detalle:  document.getElementById('subtitleIn')?.value || '',
+                    subtitulo: document.getElementById('subtitleIn')?.value || '',
                 });
 
             } else if (APP.currentTab === 'badge') {
@@ -403,7 +402,7 @@ const ExportEngine = (() => {
                 await CertGenerator.exportJPG();
                 showToast('Certificado descargado ✓', 'success');
                 SheetsLogger?.log({
-                    hoja:    'Hoja 2',
+                    hoja:    'Certificados',
                     titulo:  document.getElementById('certTitle')?.value || '',
                     detalle: document.getElementById('certDetails')?.value || '',
                     resp1:   document.getElementById('certR1Name')?.value || '',
