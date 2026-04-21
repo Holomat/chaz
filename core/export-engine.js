@@ -367,6 +367,7 @@ const ExportEngine = (() => {
                 const activeCount = FormatManager ? FormatManager.getActive().length : 1;
                 showToast(`${activeCount} imagen(es) descargada(s) ✓`, 'success');
                 SheetsLogger?.log({
+                    hoja:     'Hoja 1',
                     seccion:  'Redes Sociales',
                     programa: document.getElementById('programSelector')?.value || '',
                     etiqueta: document.getElementById('etiquetaIn')?.value || '',
@@ -402,10 +403,12 @@ const ExportEngine = (() => {
                 await CertGenerator.exportJPG();
                 showToast('Certificado descargado ✓', 'success');
                 SheetsLogger?.log({
-                    seccion:  'Certificados',
-                    programa: document.getElementById('certProgram')?.value || '',
-                    titulo:   document.getElementById('certTitle')?.value || '',
-                    detalle:  document.getElementById('certDetails')?.value?.slice(0, 120) || '',
+                    hoja:    'Hoja 2',
+                    titulo:  document.getElementById('certTitle')?.value || '',
+                    detalle: document.getElementById('certDetails')?.value || '',
+                    resp1:   document.getElementById('certR1Name')?.value || '',
+                    resp2:   document.getElementById('certR2Name')?.value || '',
+                    resp3:   document.getElementById('certR3Name')?.value || '',
                 });
             }
         } catch (err) {
