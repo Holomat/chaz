@@ -2489,7 +2489,7 @@ body.dark .cert-canvas {
 .cert-bg-trama {
     position: absolute;
     inset: 0;
-    background-image: url('Root/assets/trama fondo certificados.svg');
+    background-image: url('Root/assets/trama%20fondo%20certificados.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2543,6 +2543,7 @@ body.dark .cert-canvas {
     letter-spacing: -0.01em;
     color: #1d1d1f;
     white-space: pre-wrap;     /* honours \n line breaks from JS word-wrap */
+    padding: 12px;
 }
 
 .cert-name-display {

@@ -332,18 +332,18 @@
                 </div>
 
                 <div class="label-style">Título del Curso</div>
-                <textarea id="certTitle" class="ui-card cert-textarea" placeholder="Título del curso">Gestión de Bibliotecas en Contexto de Encierro</textarea>
+                <textarea id="certTitle" class="ui-card cert-textarea" placeholder="Título del curso">Nombre de la actividad a certificar (curso, taller o programa)</textarea>
 
                 <div class="label-style">Nombre y Apellido</div>
                 <input type="text" id="certName" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
 
                 <div class="label-style">Detalle del Curso</div>
-                <textarea id="certDetails" class="ui-card cert-textarea cert-textarea--tall" placeholder="Descripción del curso...">Ha participado del 11.er Campamento Científico Nacional para estudiantes de Formación Docente. La actividad fue organizada por Cultura Científica de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Se realizó entre los días 23 y 26 de abril de 2025; con una carga teórico‑práctica de 40 horas.</textarea>
+                <textarea id="certDetails" class="ui-card cert-textarea cert-textarea--tall" placeholder="Descripción del curso...">Ha aprobado / participado del [Nombre del curso o actividad], en el marco del [Nombre del Programa] de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Realizado entre [fecha de inicio] y [fecha de finalización], con una carga [tipo de carga: teórica / práctica / teórico-práctica] de [cantidad de horas] horas.</textarea>
 
                 <div class="label-style">Responsable 1</div>
-                <input type="text" id="certR1Name" class="ui-card" placeholder="Nombre y Apellido" value="Gabriel Quirici">
-                <input type="text" id="certR1Role" class="ui-card" placeholder="Cargo" value="Director Nacional de Educación">
-                <input type="text" id="certR1Inst" class="ui-card" placeholder="Institución" value="Ministerio de Educación y Cultura">
+                <input type="text" id="certR1Name" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
+                <input type="text" id="certR1Role" class="ui-card" placeholder="Cargo / Institución" value="Cargo / Institución">
+                <input type="text" id="certR1Inst" class="ui-card" placeholder="Institución" value="" style="display:none">
                 <div class="cert-sig-upload-row">
                     <label for="certR1SigInput" class="ui-card file-label" id="certR1SigLabel">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -355,9 +355,9 @@
 
                 <div id="certRespSection2" class="hidden">
                     <div class="label-style">Responsable 2</div>
-                    <input type="text" id="certR2Name" class="ui-card" placeholder="Nombre y Apellido" value="Andrea Gil">
-                    <input type="text" id="certR2Role" class="ui-card" placeholder="Cargo" value="Coordinadora Nacional">
-                    <input type="text" id="certR2Inst" class="ui-card" placeholder="Institución" value="Programa Aprender Siempre">
+                    <input type="text" id="certR2Name" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
+                    <input type="text" id="certR2Role" class="ui-card" placeholder="Cargo / Institución" value="Cargo / Institución">
+                    <input type="text" id="certR2Inst" class="ui-card" placeholder="Institución" value="" style="display:none">
                     <div class="cert-sig-upload-row">
                         <label for="certR2SigInput" class="ui-card file-label" id="certR2SigLabel">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -370,9 +370,9 @@
 
                 <div id="certRespSection3" class="hidden">
                     <div class="label-style">Responsable 3</div>
-                    <input type="text" id="certR3Name" class="ui-card" placeholder="Nombre y Apellido">
-                    <input type="text" id="certR3Role" class="ui-card" placeholder="Cargo">
-                    <input type="text" id="certR3Inst" class="ui-card" placeholder="Institución">
+                    <input type="text" id="certR3Name" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
+                    <input type="text" id="certR3Role" class="ui-card" placeholder="Cargo / Institución" value="Cargo / Institución">
+                    <input type="text" id="certR3Inst" class="ui-card" placeholder="Institución" style="display:none">
                     <div class="cert-sig-upload-row">
                         <label for="certR3SigInput" class="ui-card file-label" id="certR3SigLabel">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -521,32 +521,32 @@
                             <img id="certLogoImg" class="cert-logo" src="Root/assets/logos/logo-dne-color.svg" alt="Logo institucional">
                         </header>
                         <div class="cert-body">
-                            <div class="cert-title" id="certTitleDisplay">Gestión de Bibliotecas
-en Contexto de Encierro</div>
+                            <div class="cert-title" id="certTitleDisplay">Nombre de la actividad
+a certificar (curso, taller o programa)</div>
                             <div class="cert-name-display" id="certNameDisplay">Nombre y Apellido</div>
-                            <div class="cert-details-display" id="certDetailsDisplay">Ha participado del 11.er Campamento Científico Nacional para estudiantes de Formación Docente. La actividad fue organizada por Cultura Científica de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Se realizó entre los días 23 y 26 de abril de 2025; con una carga teórico‑práctica de 40 horas.</div>
+                            <div class="cert-details-display" id="certDetailsDisplay">Ha aprobado / participado del [Nombre del curso o actividad], en el marco del [Nombre del Programa] de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Realizado entre [fecha de inicio] y [fecha de finalización], con una carga [tipo de carga: teórica / práctica / teórico-práctica] de [cantidad de horas] horas.</div>
                         </div>
                         <footer class="cert-footer" id="certFooter">
                             <div class="cert-responsible" id="certResponsible1">
                                 <img class="cert-sig-image" id="certR1SigImg" alt="">
                                 <div class="cert-responsible-line"></div>
-                                <div class="cert-sig-name" id="certR1NameDisplay">Gabriel Quirici</div>
-                                <div class="cert-sig-role" id="certR1RoleDisplay">Director Nacional de Educación</div>
-                                <div class="cert-sig-inst" id="certR1InstDisplay">Ministerio de Educación y Cultura</div>
+                                <div class="cert-sig-name" id="certR1NameDisplay">Nombre y Apellido</div>
+                                <div class="cert-sig-role" id="certR1RoleDisplay">Cargo / Institución</div>
+                                <div class="cert-sig-inst" id="certR1InstDisplay" style="display:none"></div>
                             </div>
                             <div class="cert-responsible" id="certResponsible2" style="display:none">
                                 <img class="cert-sig-image" id="certR2SigImg" alt="">
                                 <div class="cert-responsible-line"></div>
-                                <div class="cert-sig-name" id="certR2NameDisplay">Andrea Gil</div>
-                                <div class="cert-sig-role" id="certR2RoleDisplay">Coordinadora Nacional</div>
-                                <div class="cert-sig-inst" id="certR2InstDisplay">Programa Aprender Siempre</div>
+                                <div class="cert-sig-name" id="certR2NameDisplay">Nombre y Apellido</div>
+                                <div class="cert-sig-role" id="certR2RoleDisplay">Cargo / Institución</div>
+                                <div class="cert-sig-inst" id="certR2InstDisplay" style="display:none"></div>
                             </div>
                             <div class="cert-responsible" id="certResponsible3" style="display:none">
                                 <img class="cert-sig-image" id="certR3SigImg" alt="">
                                 <div class="cert-responsible-line"></div>
-                                <div class="cert-sig-name" id="certR3NameDisplay"></div>
-                                <div class="cert-sig-role" id="certR3RoleDisplay"></div>
-                                <div class="cert-sig-inst" id="certR3InstDisplay"></div>
+                                <div class="cert-sig-name" id="certR3NameDisplay">Nombre y Apellido</div>
+                                <div class="cert-sig-role" id="certR3RoleDisplay">Cargo / Institución</div>
+                                <div class="cert-sig-inst" id="certR3InstDisplay" style="display:none"></div>
                             </div>
                         </footer>
                     </div>

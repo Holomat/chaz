@@ -402,12 +402,13 @@ const ExportEngine = (() => {
                 await CertGenerator.exportJPG();
                 showToast('Certificado descargado ✓', 'success');
                 SheetsLogger?.log({
-                    hoja:    'Certificados',
-                    titulo:  document.getElementById('certTitle')?.value || '',
-                    detalle: document.getElementById('certDetails')?.value || '',
-                    resp1:   document.getElementById('certR1Name')?.value || '',
-                    resp2:   document.getElementById('certR2Name')?.value || '',
-                    resp3:   document.getElementById('certR3Name')?.value || '',
+                    hoja:     'Certificados',
+                    programa: document.getElementById('certProgram')?.value || '',
+                    titulo:   document.getElementById('certTitle')?.value || '',
+                    detalle:  document.getElementById('certDetails')?.value || '',
+                    resp1:    document.getElementById('certR1Name')?.value || '',
+                    resp2:    document.getElementById('certR2Name')?.value || '',
+                    resp3:    document.getElementById('certR3Name')?.value || '',
                 });
             }
         } catch (err) {

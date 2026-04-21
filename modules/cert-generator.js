@@ -80,10 +80,16 @@ const CertGenerator = (() => {
         const logoEl  = document.getElementById('certLogoImg');
         if (logoEl) logoEl.src = getLogoSrc(program);
 
-        const rawTitle = val('certTitle') || 'Título del Curso';
+        const rawTitle = val('certTitle') || 'Nombre de la actividad a certificar (curso, taller o programa)';
         setText('certTitleDisplay',   wrapTitle(rawTitle));
         setText('certNameDisplay',    val('certName')    || 'Nombre y Apellido');
         setText('certDetailsDisplay', val('certDetails') || '');
+
+        // Hide inst display rows (always hidden, field removed from UI)
+        for (let i = 1; i <= 3; i++) {
+            const instEl = document.getElementById(`certR${i}InstDisplay`);
+            if (instEl) instEl.style.display = 'none';
+        }
 
         for (let i = 1; i <= 3; i++) {
             setText(`certR${i}NameDisplay`, val(`certR${i}Name`));
@@ -198,8 +204,10 @@ const CertGenerator = (() => {
             cacheBust:       true,
             skipFonts:       false,
             filter: (node) => {
+                // Excluir solo imágenes sin src (firmas no cargadas)
                 if (node.tagName === 'IMG') {
-                    return !!(node.src && node.naturalWidth > 0);
+                    const src = node.getAttribute('src');
+                    return !!(src && src.trim() !== '');
                 }
                 return true;
             },
