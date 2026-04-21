@@ -366,23 +366,46 @@ const ExportEngine = (() => {
                 await exportPosterJPG();
                 const activeCount = FormatManager ? FormatManager.getActive().length : 1;
                 showToast(`${activeCount} imagen(es) descargada(s) ✓`, 'success');
+                SheetsLogger?.log({
+                    seccion:  'Redes Sociales',
+                    programa: document.getElementById('programSelector')?.value || '',
+                    titulo:   document.getElementById('titleIn')?.value || '',
+                    detalle:  document.getElementById('subtitleIn')?.value || '',
+                });
 
             } else if (APP.currentTab === 'badge') {
                 if (!APP.records || APP.records.length === 0) {
                     showToast('Carga un archivo Excel/CSV primero', 'info');
                     return;
                 }
-                // Export as multiple JPG files (optimized for printing)
                 await exportBadgesJPG(APP.records);
                 showToast('Gafetes JPG descargados ✓', 'success');
+                SheetsLogger?.log({
+                    seccion:  'Gafetes',
+                    programa: '',
+                    titulo:   `${APP.records.length} participantes`,
+                    detalle:  '',
+                });
 
             } else if (APP.currentTab === 'ave') {
                 await AveGenerator.exportJPG();
                 showToast('Banner descargado ✓', 'success');
+                SheetsLogger?.log({
+                    seccion:  'Plataforma AVE',
+                    programa: document.getElementById('aveProgram')?.value || '',
+                    titulo:   document.getElementById('aveTitleIn')?.value || '',
+                    detalle:  document.getElementById('aveSubtitleIn')?.value || '',
+                });
 
             } else if (APP.currentTab === 'cert') {
                 await CertGenerator.exportJPG();
                 showToast('Certificado descargado ✓', 'success');
+                SheetsLogger?.log({
+                    seccion:  'Certificados',
+                    programa: document.getElementById('certProgram')?.value || '',
+                    titulo:   document.getElementById('certTitle')?.value || '',
+                    detalle:  document.getElementById('certDetails')?.value?.slice(0, 120) || '',
+                });
             }
         } catch (err) {
             console.error('Export error:', err);

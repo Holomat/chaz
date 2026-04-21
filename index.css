@@ -267,12 +267,21 @@ body {
     font-family: 'Inter', sans-serif;
     font-size: 15px;
     font-weight: 500;
-    letter-spacing: 0.08em;
     color: var(--text-main);
     outline: none;
-    text-align: center;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#accessEmailInput {
+    text-align: left;
+    letter-spacing: 0;
+}
+
+#accessCodeInput {
+    text-align: center;
+    letter-spacing: 0.18em;
+    font-size: 20px;
 }
 
 .access-input:focus {
@@ -1634,6 +1643,58 @@ body.dark .check-btn.checked {
     font-size: 14px;
     font-weight: 500;
     color: var(--text-main);
+}
+
+/* ── Checklist celebration ── */
+.checklist-celebration {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 2px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--input-bg);
+    border: 1px solid rgba(39, 174, 96, 0.22);
+    border-left: 3px solid var(--accent-success);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.checklist-celebration.cel-visible {
+    animation: celebReveal 0.4s cubic-bezier(0.28, 0.11, 0.32, 1) forwards;
+}
+
+@keyframes celebReveal {
+    0%   { opacity: 0; max-height: 0; transform: translateY(4px); }
+    100% { opacity: 1; max-height: 80px; transform: translateY(0); }
+}
+
+.cel-icon {
+    font-size: 14px;
+    color: var(--accent-success);
+    flex-shrink: 0;
+    margin-top: 1px;
+    line-height: 1.4;
+}
+
+.checklist-celebration p {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text-mute);
+    margin: 0;
+}
+
+.checklist-celebration p strong {
+    font-weight: 600;
+    color: #2E7D32;
+}
+
+body.dark .checklist-celebration p strong {
+    color: #81C784;
 }
 
 /* ── Líneas Transversales Navigator ── */

@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gafetes Pro | Editorial Studio</title>
+    <title>Átomo DNE</title>
     <meta name="description"
-        content="Gafetes Pro Editorial Studio — Generación masiva de gafetes, pósters y materiales institucionales desde Excel/CSV.">
+        content="Átomo DNE — Generación masiva de gafetes, pósters, certificados y materiales institucionales desde Excel/CSV.">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,60 +27,87 @@
     <div id="accessGate" class="access-gate">
         <div class="access-card">
             <img src="Root/assets/logos/logo-dne-iso-mono.svg" class="access-logo" alt="DNE">
-            <div class="access-title">Editorial Studio</div>
+            <div class="access-title">Átomo DNE</div>
             <div class="access-subtitle">Dirección Nacional de Educación</div>
             <div class="access-form">
+                <input
+                    type="email"
+                    id="accessEmailInput"
+                    class="access-input"
+                    placeholder="correo@mec.gub.uy"
+                    autocomplete="email"
+                    spellcheck="false"
+                    inputmode="email"
+                >
                 <input
                     type="password"
                     id="accessCodeInput"
                     class="access-input"
-                    placeholder="Código de acceso"
+                    placeholder="Código de 6 dígitos"
                     autocomplete="off"
-                    spellcheck="false"
+                    maxlength="6"
+                    inputmode="numeric"
                 >
                 <button id="accessSubmitBtn" class="access-btn">Ingresar</button>
             </div>
-            <div id="accessError" class="access-error hidden">Código incorrecto</div>
+            <div id="accessError" class="access-error hidden"></div>
         </div>
     </div>
     <script>
         (function () {
-            const KEY  = 'dne_access';
-            const CODE = atob('RE5FLTIwMjYh');
-            const isLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
-
-            if (isLocal || sessionStorage.getItem(KEY) === '1') {
-                // Remove gate immediately — element exists right above this script
+            const KEY    = 'dne_access';
+            const DOMAIN = '@mec.gub.uy';
+            const CODE   = atob('MjQ2ODEw'); // 246810 — cambiar por código definitivo
+            const saved  = sessionStorage.getItem(KEY);
+            if (saved) {
                 document.getElementById('accessGate').remove();
             } else {
-                // Wire up form after DOM is ready
                 document.addEventListener('DOMContentLoaded', () => {
-                    const gate  = document.getElementById('accessGate');
-                    const input = document.getElementById('accessCodeInput');
-                    const error = document.getElementById('accessError');
-                    const btn   = document.getElementById('accessSubmitBtn');
+                    const gate       = document.getElementById('accessGate');
+                    const emailInput = document.getElementById('accessEmailInput');
+                    const codeInput  = document.getElementById('accessCodeInput');
+                    const error      = document.getElementById('accessError');
+                    const btn        = document.getElementById('accessSubmitBtn');
+
+                    function showError(msg) {
+                        error.textContent = msg;
+                        error.classList.remove('hidden');
+                        setTimeout(() => error.classList.add('hidden'), 3000);
+                    }
+
+                    function shake(el) {
+                        el.classList.add('access-input--shake');
+                        el.addEventListener('animationend', () => el.classList.remove('access-input--shake'), { once: true });
+                    }
 
                     function unlock() {
-                        sessionStorage.setItem(KEY, '1');
+                        sessionStorage.setItem(KEY, emailInput.value.trim().toLowerCase());
                         gate.classList.add('access-gate--out');
                         gate.addEventListener('transitionend', () => gate.remove(), { once: true });
                     }
 
                     function tryCode() {
-                        if (input.value === CODE) {
-                            unlock();
-                        } else {
-                            input.value = '';
-                            error.classList.remove('hidden');
-                            input.classList.add('access-input--shake');
-                            input.addEventListener('animationend', () => input.classList.remove('access-input--shake'), { once: true });
-                            setTimeout(() => error.classList.add('hidden'), 2500);
+                        const email = emailInput.value.trim().toLowerCase();
+                        const code  = codeInput.value.trim();
+
+                        if (!email.endsWith(DOMAIN)) {
+                            shake(emailInput);
+                            showError('El correo debe ser @mec.gub.uy');
+                            return;
                         }
+                        if (code !== CODE) {
+                            shake(codeInput);
+                            codeInput.value = '';
+                            showError('Código incorrecto');
+                            return;
+                        }
+                        unlock();
                     }
 
                     btn.addEventListener('click', tryCode);
-                    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryCode(); });
-                    input.focus();
+                    emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') codeInput.focus(); });
+                    codeInput.addEventListener('keydown',  (e) => { if (e.key === 'Enter') tryCode(); });
+                    emailInput.focus();
                 });
             }
         })();
@@ -93,9 +120,7 @@
         <div class="sidebar-base sidebar-left">
 
             <!-- Brand -->
-            <header class="sidebar-header">
-                <span class="brand-badge">Editorial Studio</span>
-            </header>
+            <header class="sidebar-header"></header>
 
             <!-- Program Selector (hidden for Gafetes, Certificados and AVE) -->
             <div class="hide-for-badge hide-for-cert hide-for-ave">
@@ -775,6 +800,7 @@ en Contexto de Encierro</div>
     <!-- ═══════════════════════════════════════════ -->
     <!-- APP MODULES                                 -->
     <!-- ═══════════════════════════════════════════ -->
+    <script src="core/sheets-logger.js"></script>
     <script src="core/data-parser.js"></script>
     <script src="core/color-manager.js"></script>
     <script src="core/logo-engine.js"></script>
@@ -868,8 +894,35 @@ en Contexto de Encierro</div>
 
         function toggleCheck(btn) {
             btn.classList.toggle('checked');
-            const checked = document.querySelectorAll('.check-btn.gamify.checked').length;
-            document.getElementById('mainDownloadBtn')?.classList.toggle('ready', checked >= 3);
+
+            // Global ready state for download button
+            const totalChecked = document.querySelectorAll('.check-btn.gamify.checked').length;
+            document.getElementById('mainDownloadBtn')?.classList.toggle('ready', totalChecked >= 3);
+
+            // Per-card celebration
+            const box = btn.closest('.checklist-box');
+            if (!box) return;
+            const items = box.querySelectorAll('.check-btn.gamify');
+            const checkedInBox = box.querySelectorAll('.check-btn.gamify.checked').length;
+            const allDone = checkedInBox >= items.length;
+
+            box.classList.toggle('all-checked', allDone);
+
+            let cel = box.querySelector('.checklist-celebration');
+            if (allDone) {
+                if (!cel) {
+                    cel = document.createElement('div');
+                    cel.className = 'checklist-celebration';
+                    cel.innerHTML = '<div class="cel-icon">✓</div><p>Tu afiche está <strong>listo para publicar</strong> y llegar a la comunidad educativa.</p>';
+                    box.appendChild(cel);
+                }
+                // Re-trigger animation
+                cel.classList.remove('cel-visible');
+                void cel.offsetWidth;
+                cel.classList.add('cel-visible');
+            } else if (cel) {
+                cel.classList.remove('cel-visible');
+            }
         }
 
         /* ── Líneas Transversales Navigator ── */
