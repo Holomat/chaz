@@ -21,8 +21,10 @@ const CertGenerator = (() => {
     const LOGO_MAP = {
         'DNE Isotipo':              'dne-iso',
         'MEC - DNE':                'dne',
-        'Cultura Científica':       'cc',
-        'Cultura Científica (Anep)':'cc-anep',
+        'Cultura Científica':                'cc',
+        'Cultura Científica (Anep)':         'cc-anep',
+        'CC 40 Anos':        '40-cc',
+        'CC 40 Anos (Anep)': '40-cc-anep',
         'Ccepi':                    'ccepi',
         'PAS':                      'pas',
         'PNEC':                     'pnec',

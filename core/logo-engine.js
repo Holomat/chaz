@@ -39,6 +39,8 @@ const LogoEngine = (() => {
         'MEC - DNE': { base: 'dne', label: 'Logo MEC - DNE' },
         'Cultura Científica': { base: 'cc', label: 'Logo Cultura Científica' },
         'Cultura Científica (Anep)': { base: 'cc-anep', label: 'Logo Cultura Científica ANEP' },
+        'CC 40 Anos': { base: '40-cc', label: 'Logo Cultura Científica 40 años' },
+        'CC 40 Anos (Anep)': { base: '40-cc-anep', label: 'Logo Cultura Científica 40 años (Anep)' },
         'Ccepi': { base: 'ccepi', label: 'Logo CCEPI' },
         'PAS': { base: 'pas', label: 'Logo PAS' },
         'PNEC': { base: 'pnec', label: 'Logo PNEC' },
@@ -117,7 +119,8 @@ const LogoEngine = (() => {
         const fullPath = `${LOGO_BASE_PATH}${filename}`;
 
         try {
-            const response = await fetch(fullPath);
+            const response = await fetch(fullPath, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const blob = await response.blob();
 
             // Convert blob to data URL
@@ -128,7 +131,7 @@ const LogoEngine = (() => {
                 reader.readAsDataURL(blob);
             });
 
-            // Cache it
+            // Cache only on success
             logoCache[filename] = dataUrl;
             return dataUrl;
         } catch (error) {

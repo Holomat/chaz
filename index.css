@@ -193,50 +193,61 @@ body {
    ACCESS GATE
    ═══════════════════════════════════════════════ */
 
+/* ── Access Gate ── */
 .access-gate {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: var(--bg-global);
+    background: #eceae5;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.28, 0.11, 0.32, 1);
+    overflow: hidden;
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.28, 0.11, 0.32, 1);
 }
 
 .access-gate--out {
     opacity: 0;
-    transform: scale(1.04);
+    transform: scale(1.03);
     pointer-events: none;
 }
 
+.gate-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 .access-card {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 52px 48px 44px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 28px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    min-width: 340px;
-    max-width: 400px;
+    gap: var(--gap-ui);
+    padding: 44px 20px 20px;
+    width: 340px;
+    background: var(--card-bg);
+    backdrop-filter: blur(40px) saturate(1.4);
+    -webkit-backdrop-filter: blur(40px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-main);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
 }
 
 .access-logo {
-    height: 72px;
+    height: 48px;
     width: auto;
-    opacity: 0.22;
+    opacity: 0.45;
     filter: brightness(0);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .access-title {
     font-family: 'Sora', sans-serif;
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 600;
     letter-spacing: -0.03em;
     color: var(--text-main);
@@ -247,30 +258,38 @@ body {
     font-size: 13px;
     font-weight: 400;
     color: var(--text-mute);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .access-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--gap-ui);
     width: 100%;
 }
 
 .access-input {
     width: 100%;
-    height: 48px;
-    padding: 0 18px;
+    height: 44px;
+    padding: 0 16px;
     border-radius: var(--radius-ui);
-    border: 1.5px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     font-family: 'Inter', sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--text-main);
     outline: none;
     box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: var(--transition-smooth);
+}
+
+.access-input::placeholder {
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 400;
 }
 
 #accessEmailInput {
@@ -280,38 +299,43 @@ body {
 
 #accessCodeInput {
     text-align: center;
-    letter-spacing: 0.18em;
-    font-size: 20px;
+    letter-spacing: 0.20em;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .access-input:focus {
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(0, 151, 181, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 151, 181, 0.10);
+    background: rgba(255, 255, 255, 0.65);
 }
 
+/* Tono a tono — same warm palette as the card, no contrast pop */
 .access-btn {
-    height: 48px;
+    width: 100%;
+    height: 44px;
     border-radius: var(--radius-ui);
-    background: var(--accent-primary);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.07);
+    color: var(--text-main);
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.01em;
-    border: none;
+    letter-spacing: -0.01em;
+    border: 1px solid rgba(0, 0, 0, 0.06);
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 16px rgba(0, 151, 181, 0.28);
+    margin-top: 4px;
+    transition: var(--transition-smooth);
+    box-shadow: none;
 }
 
 .access-btn:hover {
-    background: #007d99;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 151, 181, 0.35);
+    background: rgba(0, 0, 0, 0.11);
+    border-color: rgba(0, 0, 0, 0.09);
 }
 
 .access-btn:active {
-    transform: translateY(0);
+    transform: scale(0.98);
+    background: rgba(0, 0, 0, 0.14);
 }
 
 .access-error {
@@ -319,9 +343,10 @@ body {
     font-size: 12px;
     font-weight: 500;
     color: var(--accent-danger);
-    margin-top: 4px;
+    margin-top: 2px;
     animation: fadeIn 0.2s ease;
 }
+
 
 @keyframes accessShake {
     0%, 100% { transform: translateX(0); }
@@ -334,7 +359,7 @@ body {
 .access-input--shake {
     animation: accessShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
     border-color: var(--accent-danger) !important;
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12) !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25) !important;
 }
 
 /* ── App watermark — ISO mono top-left ── */

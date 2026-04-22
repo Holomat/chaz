@@ -25,6 +25,7 @@
     <!-- ACCESS GATE                                  -->
     <!-- ═══════════════════════════════════════════ -->
     <div id="accessGate" class="access-gate">
+        <canvas id="gateCanvas" class="gate-canvas"></canvas>
         <div class="access-card">
             <img src="Root/assets/logos/logo-dne-iso-mono.svg" class="access-logo" alt="DNE">
             <div class="access-title">Átomo DNE</div>
@@ -130,6 +131,8 @@
                     <option value="MEC - DNE">MEC - DNE</option>
                     <option value="Cultura Científica">Cultura Científica</option>
                     <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
+                    <option value="CC 40 Anos">Cultura Científica 40 años</option>
+                    <option value="CC 40 Anos (Anep)">Cultura Científica 40 años (Anep)</option>
                     <option value="Ccepi">Ccepi</option>
                     <option value="PAS">PAS</option>
                     <option value="PNEC">PNEC</option>
@@ -299,6 +302,8 @@
                     <option value="DNE Isotipo">DNE Isotipo</option>
                     <option value="Cultura Científica">Cultura Científica</option>
                     <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
+                    <option value="CC 40 Anos">Cultura Científica 40 años</option>
+                    <option value="CC 40 Anos (Anep)">Cultura Científica 40 años (Anep)</option>
                     <option value="Ccepi">Ccepi</option>
                     <option value="PAS">PAS</option>
                     <option value="PNEC">PNEC</option>
@@ -812,6 +817,7 @@ a certificar (curso, taller o programa)</div>
     <script src="modules/preview-controller.js"></script>
     <script src="modules/ave-generator.js"></script>
     <script src="modules/cert-generator.js"></script>
+    <script src="modules/gate-shaders.js"></script>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- APP BOOTSTRAP                               -->
