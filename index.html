@@ -173,11 +173,11 @@
 
                 <div class="label-style">Textos</div>
                 <input type="text" id="etiquetaIn" class="ui-card" placeholder="Etiqueta superior"
-                    value="La educación va a estar [buena]">
+                    value="La educación va a estar *buena*">
                 <input type="text" id="titleIn" class="ui-card" placeholder="Título principal"
-                    value="Dirección Nacional de [Educación]">
+                    value="Dirección Nacional de *Educación*">
                 <input type="text" id="subtitleIn" class="ui-card" placeholder="Subtítulo"
-                    value="Educación de [oportunidades]">
+                    value="Educación de *oportunidades*">
             </div>
 
             <!-- ═══ BADGE CONTROLS (Gafetes tab) ═══ -->
@@ -256,6 +256,18 @@
             <!-- ═══ AVE CONTROLS (Plataforma AVE tab) ═══ -->
             <div id="aveControls" class="tab-panel">
 
+                <div class="label-style">Formatos</div>
+                <div class="format-toggle-row">
+                    <button class="format-toggle-btn active" data-ave-format="540">
+                        <span class="format-label">Banner</span>
+                        <span class="format-ratio">1500×540</span>
+                    </button>
+                    <button class="format-toggle-btn active" data-ave-format="360">
+                        <span class="format-label">Banner S</span>
+                        <span class="format-ratio">1500×360</span>
+                    </button>
+                </div>
+
                 <div class="label-style">Programa</div>
                 <select id="aveProgram" class="ui-select">
                     <option value="MEC - DNE">MEC - DNE</option>
@@ -291,6 +303,12 @@
                 <div class="label-style">Subtítulo</div>
                 <textarea id="aveSubtitleIn" class="ui-card cert-textarea" placeholder="Subtítulo">Ministerio de Educación y Cultura</textarea>
 
+            </div>
+
+            <!-- ═══ LOGOS CONTROLS ═══ -->
+            <div id="logosControls" class="tab-panel">
+                <div class="label-style">Convivencia de logotipos</div>
+                <p class="logos-sidebar-hint">Descargá el kit de convivencia del programa correspondiente.</p>
             </div>
 
             <!-- ═══ CERTIFICATE CONTROLS ═══ -->
@@ -498,10 +516,9 @@
         <!-- AVE Canvas (Plataforma AVE) -->
         <div class="ave-wrap hidden" id="aveWrap">
             <div class="ave-scale-wrapper" id="aveScaleWrapper">
+                <img class="ave-bg-preview" id="aveBgPreview" src="" alt="" style="display:none;">
                 <div class="ave-canvas" id="aveCanvas">
-                    <div class="ave-bg-wrapper">
-                        <img class="ave-bg-preview" src="" alt="" style="display:none;">
-                    </div>
+                    <div class="ave-bg-wrapper"></div>
                     <img class="ave-shadow-overlay" id="aveShadowOverlay" src="" alt="" style="display:none;">
                     <div class="ave-content">
                         <img class="ave-logo-img" id="aveLogoImg" src="Root/assets/logos/logo-dne-mono.svg" alt="">
@@ -510,6 +527,47 @@
                             <div class="ave-subtitle" id="aveSubtitleDisplay">Ministerio de Educación y Cultura</div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="ave-scale-wrapper" id="aveScaleWrapper360">
+                <img class="ave-bg-preview" id="aveBgPreview360" src="" alt="" style="display:none;">
+                <div class="ave-canvas ave-canvas--360" id="aveCanvas360">
+                    <div class="ave-bg-wrapper"></div>
+                    <img class="ave-shadow-overlay" id="aveShadowOverlay360" src="" alt="" style="display:none;">
+                    <div class="ave-content">
+                        <img class="ave-logo-img" id="aveLogoImg360" src="Root/assets/logos/logo-dne-mono.svg" alt="">
+                        <div class="ave-text-block">
+                            <div class="ave-title" id="aveTitleDisplay360">Dirección Nacional de Educación</div>
+                            <div class="ave-subtitle" id="aveSubtitleDisplay360">Ministerio de Educación y Cultura</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logos (Logotipos) -->
+        <div class="logos-wrap hidden" id="logosWrap">
+            <div class="logos-list">
+                <h2 class="logos-section-title">Logotipos</h2>
+                <div class="logo-card">
+                    <span class="logo-card-name">Dirección Nacional de Educación</span>
+                    <a class="logo-card-btn" href="Root/assets/convivencia%20de%20logotipos/Convivencia%20MEC%20DNE.zip" download>Descargar</a>
+                </div>
+                <div class="logo-card">
+                    <span class="logo-card-name">Cultura Científica</span>
+                    <a class="logo-card-btn" href="Root/assets/convivencia%20de%20logotipos/Convivencia%20MEC%20DNE_Cultura%20Cient%C3%ADfica.zip" download>Descargar</a>
+                </div>
+                <div class="logo-card">
+                    <span class="logo-card-name">Programa Aprender Siempre</span>
+                    <a class="logo-card-btn" href="Root/assets/convivencia%20de%20logotipos/Convivencia%20MEC%20DNE_PAS.zip" download>Descargar</a>
+                </div>
+                <div class="logo-card">
+                    <span class="logo-card-name">Programa Nacional de Educación en Cárceles</span>
+                    <a class="logo-card-btn" href="Root/assets/convivencia%20de%20logotipos/Convivencia%20MEC%20DNE_PNEC.zip" download>Descargar</a>
+                </div>
+                <div class="logo-card">
+                    <span class="logo-card-name">Centros Educativos de Capacitación, Arte y Producción</span>
+                    <a class="logo-card-btn" href="Root/assets/convivencia%20de%20logotipos/Convivencia%20MEC%20DNE_Cecap.zip" download>Descargar</a>
                 </div>
             </div>
         </div>
@@ -758,9 +816,10 @@ a certificar (curso, taller o programa)</div>
         <div class="nav-group" id="navGroup">
             <div id="navSlider" class="nav-slider"></div>
             <div class="nav-item active" data-tab="poster" id="tabPoster">Redes Sociales</div>
-            <div class="nav-item" data-tab="badge" id="tabBadge">Gafetes</div>
-            <div class="nav-item" data-tab="ave" id="tabAve">Plataforma AVE</div>
             <div class="nav-item" data-tab="cert" id="tabCert">Certificados</div>
+            <div class="nav-item" data-tab="ave" id="tabAve">Plataforma AVE</div>
+            <div class="nav-item" data-tab="logos" id="tabLogos">Logotipos</div>
+            <div class="nav-item" data-tab="badge" id="tabBadge">Gafetes</div>
         </div>
         <div class="nav-divider"></div>
         <div class="nav-group">
@@ -860,19 +919,23 @@ a certificar (curso, taller o programa)</div>
         /* ── Tab Switching ── */
         function switchTab(tabName) {
             APP.currentTab = tabName;
+            if (typeof ZoomController !== 'undefined') ZoomController.reset();
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const activeItem = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
             if (activeItem) { activeItem.classList.add('active'); moveSlider(activeItem); }
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            const panelMap = { poster: 'posterControls', badge: 'badgeControls', ave: 'aveControls', cert: 'certControls' };
+            const panelMap = { poster: 'posterControls', badge: 'badgeControls', ave: 'aveControls', cert: 'certControls', logos: 'logosControls' };
             document.getElementById(panelMap[tabName])?.classList.add('active');
             document.getElementById('posterWrap')?.classList.toggle('hidden', tabName !== 'poster');
             document.getElementById('badgeSheetWrap')?.classList.toggle('hidden', tabName !== 'badge');
             document.getElementById('aveWrap')?.classList.toggle('hidden', tabName !== 'ave');
             document.getElementById('certWrap')?.classList.toggle('hidden', tabName !== 'cert');
-            if (tabName === 'cert' && typeof CertGenerator !== 'undefined') CertGenerator.updateScale();
-            if (tabName === 'ave' && typeof AveGenerator !== 'undefined') AveGenerator.updateScale();
+            document.getElementById('logosWrap')?.classList.toggle('hidden', tabName !== 'logos');
+            if (tabName === 'cert'  && typeof CertGenerator  !== 'undefined') CertGenerator.updateScale();
+            if (tabName === 'ave'   && typeof AveGenerator   !== 'undefined') AveGenerator.updateScale();
+            if (tabName === 'badge' && typeof BadgeGenerator !== 'undefined') { BadgeGenerator.goToPage(APP.currentPage || 0); BadgeGenerator.updateScale(); }
             const btn = document.getElementById('mainDownloadBtn');
+            if (btn) btn.classList.toggle('hidden', tabName === 'logos');
             if (btn) btn.querySelector('span').textContent = ({ poster: 'Descargar Afiche', badge: 'Descargar Gafetes', ave: 'Descargar Banner', cert: 'Descargar Certificado' })[tabName] || 'Descargar';
 
             // Update body class for tab-specific styling
@@ -993,6 +1056,61 @@ a certificar (curso, taller o programa)</div>
 
             console.log('🚀 Gafetes Pro Editorial Studio initialized');
         });
+    </script>
+
+    <!-- ═══ ZOOM PANEL ═══ -->
+    <div class="zoom-panel" id="zoomPanel">
+        <button class="zoom-step" id="zoomInBtn" title="Acercar">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/>
+            </svg>
+        </button>
+        <div class="zoom-track-wrap">
+            <input type="range" class="zoom-range" id="zoomSlider"
+                   min="30" max="180" value="100" step="5" orient="vertical">
+        </div>
+        <button class="zoom-step" id="zoomOutBtn" title="Alejar">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="1" y1="6" x2="11" y2="6"/>
+            </svg>
+        </button>
+        <span class="zoom-pct" id="zoomPct">100%</span>
+    </div>
+
+    <script>
+    const ZoomController = (() => {
+        let current = 100;
+
+        function apply(value) {
+            current = Math.max(30, Math.min(180, value));
+            const slider = document.getElementById('zoomSlider');
+            const label  = document.getElementById('zoomPct');
+            if (slider) slider.value = current;
+            if (label)  label.textContent = current + '%';
+
+            const factor = current / 100;
+            const tab = typeof APP !== 'undefined' ? APP.currentTab : '';
+            if (tab === 'cert'   && typeof CertGenerator   !== 'undefined') CertGenerator.setZoom(factor);
+            if (tab === 'poster' && typeof PosterGenerator !== 'undefined') PosterGenerator.setZoom(factor);
+            if (tab === 'ave'    && typeof AveGenerator    !== 'undefined') AveGenerator.setZoom(factor);
+            if (tab === 'badge'  && typeof BadgeGenerator  !== 'undefined') BadgeGenerator.setZoom(factor);
+        }
+
+        function step(delta) { apply(current + delta); }
+        function reset()     { apply(100); }
+
+        function init() {
+            document.getElementById('zoomSlider')
+                ?.addEventListener('input', e => apply(parseInt(e.target.value)));
+            document.getElementById('zoomInBtn')
+                ?.addEventListener('click', () => step(5));
+            document.getElementById('zoomOutBtn')
+                ?.addEventListener('click', () => step(-5));
+        }
+
+        return { init, apply, step, reset };
+    })();
+    document.addEventListener('DOMContentLoaded', () => ZoomController.init());
     </script>
 </body>
 

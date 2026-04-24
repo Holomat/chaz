@@ -15,6 +15,7 @@ const BadgeGenerator = (() => {
     /* ── State ── */
     let badgeBgSrc = null;
     let badgeBgScale = 1;
+    let badgeZoomFactor = 1;
 
     /* ── Default example badge ── */
     const DEFAULT_BADGE = {
@@ -102,9 +103,9 @@ const BadgeGenerator = (() => {
                 // Badge content con tipografía Sora y layout personalizado
                 inner.innerHTML = `
                     <div class="badge-text-container" style="transform: translateX(${offsetX}%); margin-top: ${yShift}px;">
-                        <div class="badge-nombre" style="color: ${nameColor}">${escapeHTML(record.nombre)}</div>
-                        <div class="badge-apellido" style="color: ${nameColor}">${escapeHTML(record.apellido)}</div>
-                        <div class="badge-pais" style="color: ${paisColor}">${escapeHTML(record.pais)}</div>
+                        <div class="badge-nombre" style="color: ${nameColor}">${processBold(record.nombre)}</div>
+                        <div class="badge-apellido" style="color: ${nameColor}">${processBold(record.apellido)}</div>
+                        <div class="badge-pais" style="color: ${paisColor}">${processBold(record.pais)}</div>
                     </div>
                 `;
 
@@ -195,13 +196,33 @@ const BadgeGenerator = (() => {
         return badgeBgSrc;
     }
 
-    /**
-     * Escape HTML to prevent XSS.
-     */
     function escapeHTML(str) {
         const div = document.createElement('div');
         div.textContent = (str || '').trim();
         return div.innerHTML;
+    }
+
+    function processBold(str) {
+        return escapeHTML(str).replace(/\*(.*?)\*/g, '<span class="bold-part">$1</span>');
+    }
+
+    /* ── Scale ── */
+
+    function updateScale() {
+        const sheet = document.getElementById('badgeSheet');
+        const canvasArea = document.getElementById('canvasArea');
+        if (!sheet || !canvasArea) return;
+        const availW = canvasArea.clientWidth - 48;
+        const availH = canvasArea.clientHeight - 48;
+        const base = Math.min(availW / 1123, availH / 794, 1);
+        sheet.style.transform = `scale(${base * badgeZoomFactor})`;
+        sheet.style.transformOrigin = 'center center';
+        sheet.style.marginBottom = `${-(794 - 794 * base * badgeZoomFactor) + 24}px`;
+    }
+
+    function setZoom(factor) {
+        badgeZoomFactor = factor;
+        updateScale();
     }
 
     /**
@@ -280,10 +301,8 @@ const BadgeGenerator = (() => {
         // Initial grid setup
         updateGridLayout();
 
-        // Show default example badge on init
-        if (APP.currentTab === 'badge') {
-            goToPage(0);
-        }
+        window.addEventListener('resize', updateScale);
+        updateScale();
 
         console.log('🎫 BadgeGenerator initialized');
     }
@@ -299,6 +318,8 @@ const BadgeGenerator = (() => {
         setScale,
         getAllPages,
         getBgSrc,
+        updateScale,
+        setZoom,
         BADGES_PER_PAGE
     };
 })();

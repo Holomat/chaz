@@ -38,10 +38,10 @@ const PosterGenerator = (() => {
     }
 
     /**
-     * Process bracket syntax: [text] → <span class="bold-part">text</span>
+     * Process asterisk syntax: *text* → <span class="bold-part">text</span>
      */
     function processBrackets(text) {
-        return text.replace(/\[(.*?)\]/g, '<span class="bold-part">$1</span>');
+        return text.replace(/\*(.*?)\*/g, '<span class="bold-part">$1</span>');
     }
 
     /**
@@ -343,6 +343,14 @@ const PosterGenerator = (() => {
         console.log('🖼️ PosterGenerator initialized (multi-format)');
     }
 
+    /* ── Zoom ── */
+    function setZoom(factor) {
+        const container = document.getElementById('posterFormatsContainer');
+        if (!container) return;
+        container.style.transform = `scale(${factor})`;
+        container.style.transformOrigin = 'center center';
+    }
+
     /* ── Public API ── */
     return {
         init,
@@ -351,7 +359,8 @@ const PosterGenerator = (() => {
         setScale,
         getConfig,
         renderPosters,
-        getPosterElement
+        getPosterElement,
+        setZoom
     };
 })();
 

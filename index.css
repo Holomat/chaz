@@ -149,6 +149,7 @@ body {
     align-items: center;
     min-width: 0;
     position: relative;
+    overflow: visible;
 }
 
 /* ═══════════════════════════════════════════════
@@ -165,6 +166,17 @@ body {
     flex-direction: column;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
     transition: var(--transition-smooth);
+}
+
+/* ── Column edge alignment — 3× closer than centered ── */
+.side-column--left {
+    align-items: flex-start;
+    padding-left: calc((33.33vw - 340px) / 6);
+}
+
+.side-column--right {
+    align-items: flex-end;
+    padding-right: calc((33.33vw - 340px) / 6);
 }
 
 /* ── Left Sidebar ── */
@@ -1310,7 +1322,9 @@ body.dark .poster {
 .badge-sheet-wrap {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    overflow: visible;
+    padding-top: 24px;
 }
 
 .badge-sheet {
@@ -1322,7 +1336,6 @@ body.dark .poster {
     border-radius: 4px;
     border: 1px solid #F0F0F0;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
-    transform: scale(0.65);
     transform-origin: center center;
 
     /* Grid - gafetes pegados sin gaps */
@@ -2352,18 +2365,28 @@ body.tab-ave .hide-for-ave {
     display: none;
 }
 
+body.tab-logos #sidebarLeft {
+    display: none;
+}
+
 .ave-wrap {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
+    padding: 24px 0;
+    gap: 0;
     animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ave-scale-wrapper {
+    position: relative;
     transform-origin: top center;
+    flex-shrink: 0;
+    background: #ffffff;
 }
 
 .ave-canvas {
@@ -2371,13 +2394,17 @@ body.tab-ave .hide-for-ave {
     height: 540px;
     position: relative;
     overflow: hidden;
-    background: #1a1a2e;
+    background: transparent;
     border-radius: 16px;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.18);
 }
 
 body.dark .ave-canvas {
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.ave-canvas--360 {
+    height: 360px;
 }
 
 .ave-bg-wrapper {
@@ -2388,10 +2415,10 @@ body.dark .ave-canvas {
 
 .ave-bg-preview {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
     object-fit: cover;
     transform-origin: center center;
     pointer-events: none;
@@ -2399,10 +2426,13 @@ body.dark .ave-canvas {
 
 .ave-shadow-overlay {
     position: absolute;
-    inset: 0;
+    top: -24px;
+    left: 0;
+    right: 0;
     width: 100%;
-    height: 100%;
+    height: 200%;
     object-fit: cover;
+    object-position: bottom;
     pointer-events: none;
     z-index: 1;
     display: none;
@@ -2415,17 +2445,13 @@ body.dark .ave-canvas {
     padding: 52px 80px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
+    pointer-events: none;
+    cursor: move;
 }
 
 .ave-logo-img {
-    height: 44px;
-    width: auto;
-    object-fit: contain;
-    object-position: left;
-    filter: brightness(0) invert(1);
-    opacity: 0.92;
-    align-self: flex-start;
+    display: none;
 }
 
 .ave-text-block {
@@ -2450,8 +2476,89 @@ body.dark .ave-canvas {
     font-weight: 400;
     line-height: 47px;
     letter-spacing: -0.03em;
-    color: #ffffff;
+    color: var(--active-color, #DDFF9D);
     white-space: pre-wrap;
+}
+
+/* ═══════════════════════════════════════════════
+   LOGOTIPOS
+   ═══════════════════════════════════════════════ */
+
+.logos-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 32px;
+    animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logos-section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-main, #1d1d1f);
+    margin: 0 0 16px 4px;
+    letter-spacing: -0.02em;
+}
+
+.logos-list {
+    width: 100%;
+    max-width: 860px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.logo-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: var(--card-bg, #fff);
+    border-radius: 16px;
+    gap: 16px;
+}
+
+.logo-card-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-main, #1d1d1f);
+}
+
+.logo-card-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 22px;
+    background: #1d1d1f;
+    color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+}
+
+.logo-card-btn:hover {
+    opacity: 0.7;
+}
+
+body.dark .logo-card-btn {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.logos-sidebar-hint {
+    font-size: 13px;
+    color: var(--text-secondary, #888);
+    line-height: 1.5;
+    margin: 0;
 }
 
 /* ═══════════════════════════════════════════════
@@ -2486,14 +2593,11 @@ body.tab-cert .hide-for-cert {
     align-items: center;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
     animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.cert-scale-wrapper {
-    transform-origin: center center;
-    /* transform applied via JS */
-}
+/* .cert-scale-wrapper — zoom applied via JS */
 
 /* ── The A4 landscape canvas ── */
 .cert-canvas {
@@ -2562,13 +2666,19 @@ body.dark .cert-canvas {
 
 .cert-title {
     font-family: 'Sora', sans-serif;
-    font-size: 33px;           /* 25pt @ 96dpi */
+    font-size: 33px;
     font-weight: 300;
     line-height: 0.97;
     letter-spacing: -0.01em;
     color: #1d1d1f;
-    white-space: pre-wrap;     /* honours \n line breaks from JS word-wrap */
+    word-break: break-word;
+    text-wrap: balance;
     padding: 12px;
+    transition: width 0.15s ease;
+}
+
+.cert-title--wide {
+    width: 115%;
 }
 
 .cert-name-display {
@@ -2582,7 +2692,7 @@ body.dark .cert-canvas {
 
 .cert-details-display {
     font-family: 'Sora', sans-serif;
-    font-size: 12px;           /* 9pt @ 96dpi */
+    font-size: 10pt;
     font-weight: 400;
     line-height: 1.54;
     letter-spacing: -0.01em;
@@ -2617,7 +2727,7 @@ body.dark .cert-canvas {
 
 .cert-responsible-line {
     width: 100%;
-    height: 1px;
+    height: 0.5px;
     background: #1d1d1f;
     margin-bottom: 8px;
     flex-shrink: 0;
@@ -2739,4 +2849,136 @@ body.dark .cert-canvas {
     font-weight: 400;
     line-height: 1.4;
     color: #1d1d1f;
+}
+
+/* ═══════════════════════════════════════════════
+   ZOOM PANEL
+   ═══════════════════════════════════════════════ */
+
+.zoom-panel {
+    position: fixed;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: var(--card-bg, rgba(255,255,255,0.78));
+    border-radius: 999px;
+    padding: 10px 8px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+}
+
+body.tab-poster .zoom-panel,
+body.tab-cert   .zoom-panel,
+body.tab-ave    .zoom-panel,
+body.tab-badge  .zoom-panel {
+    display: flex;
+}
+
+body.dark .zoom-panel {
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* +/- buttons */
+.zoom-step {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--text-main, #1d1d1f);
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.zoom-step:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+body.dark .zoom-step:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Vertical slider track wrapper */
+.zoom-track-wrap {
+    width: 20px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+/* Rotate horizontal range to vertical */
+.zoom-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 120px;
+    height: 20px;
+    transform: rotate(-90deg);
+    cursor: pointer;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.zoom-range::-webkit-slider-runnable-track {
+    height: 3px;
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 99px;
+}
+
+body.dark .zoom-range::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.zoom-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-main, #1d1d1f);
+    margin-top: -5.5px;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.zoom-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.zoom-range::-moz-range-track {
+    height: 3px;
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 99px;
+    border: none;
+}
+
+.zoom-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-main, #1d1d1f);
+    border: none;
+    cursor: pointer;
+}
+
+/* Percentage label */
+.zoom-pct {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-mute, #888);
+    letter-spacing: 0.02em;
+    line-height: 1;
 }

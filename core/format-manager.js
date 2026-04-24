@@ -117,7 +117,7 @@ const FormatManager = (() => {
      * Initialize format toggles
      */
     function init() {
-        const toggleButtons = document.querySelectorAll('.format-toggle-btn');
+        const toggleButtons = document.querySelectorAll('.format-toggle-btn[data-format]');
 
         toggleButtons.forEach(btn => {
             const formatId = btn.dataset.format;
@@ -141,7 +141,7 @@ const FormatManager = (() => {
      * Update toggle button UI
      */
     function updateToggleUI() {
-        const toggleButtons = document.querySelectorAll('.format-toggle-btn');
+        const toggleButtons = document.querySelectorAll('.format-toggle-btn[data-format]');
 
         toggleButtons.forEach(btn => {
             const formatId = btn.dataset.format;

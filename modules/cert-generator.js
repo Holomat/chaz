@@ -17,6 +17,7 @@ const CertGenerator = (() => {
     let certResponsibleCount = 1;
     let certRecords          = [];   // loaded from CSV/Excel
     let certRecordIndex      = 0;
+    let certZoomFactor       = 1;
 
     const LOGO_MAP = {
         'DNE Isotipo':              'dne-iso',
@@ -61,9 +62,14 @@ const CertGenerator = (() => {
         return document.getElementById(id)?.value ?? '';
     }
 
+    function processBold(text) {
+        const escaped = (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return escaped.replace(/\*(.*?)\*/g, '<span class="bold-part">$1</span>');
+    }
+
     function setText(id, text) {
         const el = document.getElementById(id);
-        if (el) el.textContent = text;
+        if (el) el.innerHTML = processBold(text);
     }
 
     function setInput(id, text) {
@@ -75,6 +81,22 @@ const CertGenerator = (() => {
         return new Promise(r => setTimeout(r, ms));
     }
 
+    /* ── Title width adjustment ── */
+
+    function adjustTitleWidth() {
+        const el = document.getElementById('certTitleDisplay');
+        if (!el) return;
+        el.classList.remove('cert-title--wide');
+        const style  = getComputedStyle(el);
+        const lineH  = parseFloat(style.lineHeight);
+        const twoLinesH = lineH * 2
+                        + parseFloat(style.paddingTop)
+                        + parseFloat(style.paddingBottom);
+        if (el.offsetHeight > Math.ceil(twoLinesH) + 1) {
+            el.classList.add('cert-title--wide');
+        }
+    }
+
     /* ── Render ── */
 
     function render() {
@@ -83,7 +105,8 @@ const CertGenerator = (() => {
         if (logoEl) logoEl.src = getLogoSrc(program);
 
         const rawTitle = val('certTitle') || 'Nombre de la actividad a certificar (curso, taller o programa)';
-        setText('certTitleDisplay',   wrapTitle(rawTitle));
+        setText('certTitleDisplay', rawTitle);
+        adjustTitleWidth();
         setText('certNameDisplay',    val('certName')    || 'Nombre y Apellido');
         setText('certDetailsDisplay', val('certDetails') || '');
 
@@ -106,13 +129,19 @@ const CertGenerator = (() => {
     /* ── Scale ── */
 
     function updateScale() {
-        const wrapper = document.getElementById('certScaleWrapper');
-        const wrap    = document.getElementById('certWrap');
-        if (!wrapper || !wrap) return;
-        const availW = wrap.offsetWidth  - 48;
-        const availH = wrap.offsetHeight - 48;
-        const scale  = Math.min(availW / CERT_W, availH / CERT_H, 1);
-        wrapper.style.transform = `scale(${scale})`;
+        const wrapper    = document.getElementById('certScaleWrapper');
+        const canvasArea = document.getElementById('canvasArea');
+        if (!wrapper || !canvasArea) return;
+        const availW = canvasArea.clientWidth  - 48;
+        const availH = canvasArea.clientHeight - 48;
+        const base   = Math.min(availW / CERT_W, availH / CERT_H, 1);
+        wrapper.style.transform       = `scale(${base * certZoomFactor})`;
+        wrapper.style.transformOrigin = 'center center';
+    }
+
+    function setZoom(factor) {
+        certZoomFactor = factor;
+        updateScale();
     }
 
     /* ── CSV / Excel data loading ── */
@@ -178,7 +207,7 @@ const CertGenerator = (() => {
     /* ── Export helpers ── */
 
     function prepareCanvasForExport(certCanvas, wrapper) {
-        const origTransform = wrapper ? wrapper.style.transform : '';
+        const origTransform = wrapper ? wrapper.style.transform       : '';
         const origOrigin    = wrapper ? wrapper.style.transformOrigin : '';
         if (wrapper) {
             wrapper.style.transform       = 'scale(1)';
@@ -426,7 +455,7 @@ const CertGenerator = (() => {
         console.log('📜 CertGenerator initialized');
     }
 
-    return { init, render, exportJPG, updateScale };
+    return { init, render, exportJPG, updateScale, setZoom };
 })();
 
 document.addEventListener('DOMContentLoaded', () => CertGenerator.init());
