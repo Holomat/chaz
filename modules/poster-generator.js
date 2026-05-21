@@ -63,7 +63,7 @@ const PosterGenerator = (() => {
             <div class="bg-wrapper" data-format="${format.id}">
                 <img class="bg-preview" src="${bgDataUrl || ''}" alt="" style="display: ${bgDataUrl ? 'block' : 'none'};">
             </div>
-            <img class="shadow-overlay" src="" alt="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; z-index: 1; display: none;">
+            <img class="shadow-overlay" src="Root/assets/sombra-post-story.png" alt="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; z-index: 1; display: block;">
             <div class="logo-container">
                 <svg class="logo-svg-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 53.84 90.93" style="display: block;">
                     <polygon fill="currentColor" points="45.57 24.06 45.57 19.42 31.62 19.42 26.98 19.42 26.98 24.06 26.98 28.72 26.98 33.36 26.98 38.02 26.98 42.66 31.62 42.66 45.57 42.66 45.57 38.02 31.62 38.02 31.62 33.36 45.57 33.36 45.57 28.72 31.62 28.72 31.62 24.06 45.57 24.06"/>
@@ -78,7 +78,6 @@ const PosterGenerator = (() => {
                 <div class="title"></div>
                 <div class="subtitle"></div>
             </div>
-            <div class="format-label-overlay">${format.label}</div>
         `;
 
         return poster;
@@ -107,6 +106,9 @@ const PosterGenerator = (() => {
 
         // Sync text to all posters
         syncText();
+
+        // Mobile: recalculate zoom after new format(s) are in DOM
+        setTimeout(() => updateScale(), 50);
 
         console.log(`📐 Rendered ${activeFormats.length} poster(s)`);
     }
@@ -184,9 +186,8 @@ const PosterGenerator = (() => {
                 img.style.display = 'block';
             });
 
-            if (e.bgLabel) {
-                e.bgLabel.querySelector('span').textContent = file.name;
-            }
+            const nameEl = document.querySelector('#bgLabel .prompt-photo-name');
+            if (nameEl) nameEl.textContent = file.name;
 
             // Reset position
             bgPosX = 0;
@@ -204,6 +205,13 @@ const PosterGenerator = (() => {
      */
     function setScale(scale) {
         bgScale = parseFloat(scale);
+        updateBgTransform();
+    }
+
+    function stepScale(delta) {
+        bgScale = Math.max(0.5, Math.min(5, bgScale + delta));
+        const e = getEls();
+        if (e.scaleInput) e.scaleInput.value = bgScale;
         updateBgTransform();
     }
 
@@ -345,10 +353,72 @@ const PosterGenerator = (() => {
 
     /* ── Zoom ── */
     function setZoom(factor) {
-        const container = document.getElementById('posterFormatsContainer');
+        const container = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
         if (!container) return;
         container.style.transform = `scale(${factor})`;
         container.style.transformOrigin = 'center center';
+    }
+
+    function getFullState() {
+        const e = getEls();
+        return {
+            etiqueta:  e.etiquetaIn?.value  || '',
+            title:     e.titleIn?.value     || '',
+            subtitle:  e.subtitleIn?.value  || '',
+            bgDataUrl: bgDataUrl || null,
+            bgScale,
+            bgPosX,
+            bgPosY
+        };
+    }
+
+    function restoreState(state) {
+        if (!state) return;
+        bgDataUrl = state.bgDataUrl || null;
+        bgScale   = state.bgScale  ?? 1;
+        bgPosX    = state.bgPosX   ?? 0;
+        bgPosY    = state.bgPosY   ?? 0;
+
+        document.querySelectorAll('.poster[data-format] .bg-preview').forEach(img => {
+            if (bgDataUrl) { img.src = bgDataUrl; img.style.display = 'block'; }
+            else           { img.src = '';        img.style.display = 'none';  }
+        });
+
+        const e = getEls();
+        if (e.scaleInput) e.scaleInput.value = bgScale;
+        const nameEl = document.querySelector('#bgLabel .prompt-photo-name');
+        if (nameEl) nameEl.textContent = bgDataUrl ? '(imagen cargada)' : '';
+        updateBgTransform();
+    }
+
+    /**
+     * Mobile-only: recalculate zoom so the poster fills the canvas-area correctly.
+     * Preview state → fills full width; edit state → fits entirely with padding.
+     * Safe to call on desktop (no-op).
+     */
+    function updateScale() {
+        if (window.innerWidth > 640) return;
+        if (document.body.classList.contains('mob-mini')) return; // mini zoom managed by MobileDesignManager
+
+        const canvas = document.querySelector('.canvas-area');
+        if (!canvas) return;
+
+        const activeFormats = typeof FormatManager !== 'undefined' ? FormatManager.getActive() : [];
+        if (activeFormats.length === 0) return;
+
+        const format = activeFormats[0];
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+
+        const isMobEdit = document.body.classList.contains('mob-edit');
+        const pad = isMobEdit ? 20 : 0;
+
+        const scale = Math.min(
+            (rect.width  - pad) / format.displayWidth,
+            (rect.height - pad) / format.displayHeight
+        );
+
+        setZoom(Math.max(0.1, scale));
     }
 
     /* ── Public API ── */
@@ -357,10 +427,14 @@ const PosterGenerator = (() => {
         syncText,
         loadBackground,
         setScale,
+        stepScale,
         getConfig,
+        getFullState,
+        restoreState,
         renderPosters,
         getPosterElement,
-        setZoom
+        setZoom,
+        updateScale
     };
 })();
 

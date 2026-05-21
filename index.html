@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Átomo DNE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>átomo IA</title>
     <meta name="description"
         content="Átomo DNE — Generación masiva de gafetes, pósters, certificados y materiales institucionales desde Excel/CSV.">
 
@@ -21,477 +21,59 @@
 
 <body>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- ACCESS GATE                                  -->
-    <!-- ═══════════════════════════════════════════ -->
-    <div id="accessGate" class="access-gate">
-        <canvas id="gateCanvas" class="gate-canvas"></canvas>
-        <div class="access-card">
-            <img src="Root/assets/logos/logo-dne-iso-mono.svg" class="access-logo" alt="DNE">
-            <div class="access-title">Átomo DNE</div>
-            <div class="access-subtitle">Dirección Nacional de Educación</div>
-            <div class="access-form">
-                <input
-                    type="email"
-                    id="accessEmailInput"
-                    class="access-input"
-                    placeholder="correo@mec.gub.uy"
-                    autocomplete="email"
-                    spellcheck="false"
-                    inputmode="email"
-                >
-                <input
-                    type="password"
-                    id="accessCodeInput"
-                    class="access-input"
-                    placeholder="Código de 6 dígitos"
-                    autocomplete="off"
-                    maxlength="6"
-                    inputmode="numeric"
-                >
-                <button id="accessSubmitBtn" class="access-btn">Ingresar</button>
-            </div>
-            <div id="accessError" class="access-error hidden"></div>
+    <!-- Ghost container: JS-required IDs, zero visual footprint -->
+    <div style="position:absolute;top:-9999px;left:-9999px;width:0;height:0;" aria-hidden="true">
+        <input type="file" id="bgInput" accept="image/*">
+        <input type="range" id="scaleInput" min="1" max="3" step="0.01" value="1">
+        <select id="programSelector">
+            <option value="DNE Isotipo">DNE Isotipo</option>
+            <option value="MEC - DNE">MEC - DNE</option>
+            <option value="Cultura Científica">Cultura Científica</option>
+            <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
+            <option value="CC 40 Anos">Cultura Científica 40 años</option>
+            <option value="CC 40 Anos (Anep)">Cultura Científica 40 años (Anep)</option>
+            <option value="Ccepi">Ccepi</option>
+            <option value="PAS">PAS</option>
+            <option value="PNEC">PNEC</option>
+            <option value="Cecap">Cecap</option>
+            <option value="Secretaría Permanente">Secretaría Permanente</option>
+        </select>
+        <button id="logoColorBtn" class="logo-toggle-btn active">Color</button>
+        <button id="logoMonoBtn" class="logo-toggle-btn">Mono</button>
+        <div id="colorPalette">
+            <div class="color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24"></div>
+            <div class="color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32"></div>
+            <div class="color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF"></div>
+            <div class="color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6"></div>
         </div>
+        <div id="posterControls" class="tab-panel active"></div>
+        <div id="badgeControls" class="tab-panel"></div>
+        <div id="aveControls" class="tab-panel"></div>
+        <div id="certControls" class="tab-panel"></div>
+        <div id="logosControls" class="tab-panel"></div>
     </div>
-    <script>
-        (function () {
-            const KEY    = 'dne_access';
-            const DOMAIN = '@mec.gub.uy';
-            const CODE   = atob('MTIzNDU2');
-            const saved  = sessionStorage.getItem(KEY);
-            if (saved) {
-                document.getElementById('accessGate').remove();
-            } else {
-                document.addEventListener('DOMContentLoaded', () => {
-                    const gate       = document.getElementById('accessGate');
-                    const emailInput = document.getElementById('accessEmailInput');
-                    const codeInput  = document.getElementById('accessCodeInput');
-                    const error      = document.getElementById('accessError');
-                    const btn        = document.getElementById('accessSubmitBtn');
 
-                    function showError(msg) {
-                        error.textContent = msg;
-                        error.classList.remove('hidden');
-                        setTimeout(() => error.classList.add('hidden'), 3000);
-                    }
-
-                    function shake(el) {
-                        el.classList.add('access-input--shake');
-                        el.addEventListener('animationend', () => el.classList.remove('access-input--shake'), { once: true });
-                    }
-
-                    function unlock() {
-                        sessionStorage.setItem(KEY, emailInput.value.trim().toLowerCase());
-                        gate.classList.add('access-gate--out');
-                        gate.addEventListener('transitionend', () => gate.remove(), { once: true });
-                    }
-
-                    function tryCode() {
-                        const email = emailInput.value.trim().toLowerCase();
-                        const code  = codeInput.value.trim();
-
-                        if (!email.endsWith(DOMAIN)) {
-                            shake(emailInput);
-                            showError('El correo debe ser @mec.gub.uy');
-                            return;
-                        }
-                        if (code !== CODE) {
-                            shake(codeInput);
-                            codeInput.value = '';
-                            showError('Código incorrecto');
-                            return;
-                        }
-                        unlock();
-                    }
-
-                    btn.addEventListener('click', tryCode);
-                    emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') codeInput.focus(); });
-                    codeInput.addEventListener('keydown',  (e) => { if (e.key === 'Enter') tryCode(); });
-                    emailInput.focus();
-                });
-            }
-        })();
-    </script>
-
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- LEFT SIDEBAR                                -->
-    <!-- ═══════════════════════════════════════════ -->
-    <aside class="side-column side-column--left" id="sidebarLeft">
-        <div class="sidebar-base sidebar-left">
-
-            <!-- Brand -->
-            <header class="sidebar-header"></header>
-
-            <!-- Program Selector (hidden for Gafetes, Certificados and AVE) -->
-            <div class="hide-for-badge hide-for-cert hide-for-ave">
-                <div class="label-style">Programa MEC</div>
-                <select id="programSelector" class="ui-select">
-                    <option value="DNE Isotipo">DNE Isotipo</option>
-                    <option value="MEC - DNE">MEC - DNE</option>
-                    <option value="Cultura Científica">Cultura Científica</option>
-                    <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
-                    <option value="CC 40 Anos">Cultura Científica 40 años</option>
-                    <option value="CC 40 Anos (Anep)">Cultura Científica 40 años (Anep)</option>
-                    <option value="Ccepi">Ccepi</option>
-                    <option value="PAS">PAS</option>
-                    <option value="PNEC">PNEC</option>
-                    <option value="Cecap">Cecap</option>
-                    <option value="Secretaría Permanente">Secretaría Permanente</option>
-                </select>
-            </div>
-
-            <!-- ═══ POSTER CONTROLS (Redes Sociales tab) ═══ -->
-            <div id="posterControls" class="tab-panel active">
-                <div class="label-style">Formatos</div>
-                <div class="format-toggle-row">
-                    <button class="format-toggle-btn active" data-format="posteo">
-                        <span class="format-label">Posteo</span>
-                        <span class="format-ratio">5:4</span>
-                    </button>
-                    <button class="format-toggle-btn active" data-format="historia">
-                        <span class="format-label">Historia</span>
-                        <span class="format-ratio">9:16</span>
-                    </button>
-                </div>
-
-                <div class="label-style">Imagen de Fondo</div>
-                <label for="bgInput" class="ui-card file-label" id="bgLabel">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
-                    </svg>
-                    <span>Cargar foto</span>
-                </label>
-                <input type="file" id="bgInput" accept="image/*" style="display: none;">
-                <div class="scale-card ui-card">
-                    <span class="scale-label">Escala de imagen</span>
-                    <input type="range" id="scaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
-                    <span class="scale-value" id="scaleValue">100%</span>
-                </div>
-
-                <div class="label-style">Textos</div>
-                <input type="text" id="etiquetaIn" class="ui-card" placeholder="Etiqueta superior"
-                    value="La educación va a estar *buena*">
-                <input type="text" id="titleIn" class="ui-card" placeholder="Título principal"
-                    value="Dirección Nacional de *Educación*">
-                <input type="text" id="subtitleIn" class="ui-card" placeholder="Subtítulo"
-                    value="Educación de *oportunidades*">
-            </div>
-
-            <!-- ═══ BADGE CONTROLS (Gafetes tab) ═══ -->
-            <div id="badgeControls" class="tab-panel">
-                <div class="label-style">Medidas del Gafete (mm)</div>
-                <div class="badge-size-row">
-                    <div class="size-input-group">
-                        <label for="badgeWidthInput" class="size-label">Ancho</label>
-                        <input type="number" id="badgeWidthInput" class="ui-card size-input" value="72" min="10" max="200" step="1">
-                    </div>
-                    <div class="size-input-group">
-                        <label for="badgeHeightInput" class="size-label">Alto</label>
-                        <input type="number" id="badgeHeightInput" class="ui-card size-input" value="103" min="10" max="200" step="1">
-                    </div>
-                </div>
-
-                <div class="label-style">Fondo del Gafete</div>
-                <label for="badgeBgInput" class="ui-card file-label" id="badgeBgLabel">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <polyline points="21 15 16 10 5 21" />
-                    </svg>
-                    <span>Imagen de fondo</span>
-                </label>
-                <input type="file" id="badgeBgInput" accept="image/*" style="display: none;">
-                <div class="scale-card ui-card">
-                    <span class="scale-label">Escala de imagen</span>
-                    <input type="range" id="badgeScaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
-                    <span class="scale-value" id="badgeScaleValue">100%</span>
-                </div>
-
-                <div class="label-style">Importar Datos</div>
-                <label for="dataFileInput" class="ui-card file-label" id="dataFileLabel">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                    </svg>
-                    <span>Cargar Excel / CSV</span>
-                </label>
-                <input type="file" id="dataFileInput" accept=".xlsx,.xls,.csv" style="display: none;">
-
-                <!-- Data preview -->
-                <div id="dataPreview" class="data-preview hidden">
-                    <div class="label-style">Vista Previa (primeras 3 filas)</div>
-                    <div id="previewTable" class="preview-table-wrap"></div>
-                    <div class="data-stats">
-                        <span id="dataRowCount">0 registros</span>
-                        <span id="dataColStatus" class="status-ok">✓ Columnas válidas</span>
-                    </div>
-                </div>
-
-                <div class="label-style">Posición del Texto</div>
-                <div class="position-controls">
-                    <div class="position-row">
-                        <label class="position-label">↔ Horizontal</label>
-                        <input type="range" id="badgeTextX" class="position-slider" min="-100" max="100" step="1" value="0">
-                    </div>
-                    <div class="position-row">
-                        <label class="position-label">↕ Vertical</label>
-                        <input type="range" id="badgeTextY" class="position-slider" min="0" max="100" step="1" value="50">
-                    </div>
-                </div>
-
-                <!-- Page navigator -->
-                <div id="pageNav" class="page-nav hidden">
-                    <div class="label-style">Navegación</div>
-                    <div class="page-nav-row">
-                        <button id="prevPageBtn" class="page-btn" disabled>‹</button>
-                        <span id="pageIndicator" class="page-indicator">1 / 1</span>
-                        <button id="nextPageBtn" class="page-btn">›</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ═══ AVE CONTROLS (Plataforma AVE tab) ═══ -->
-            <div id="aveControls" class="tab-panel">
-
-                <div class="label-style">Formatos</div>
-                <div class="format-toggle-row">
-                    <button class="format-toggle-btn active" data-ave-format="540">
-                        <span class="format-label">Banner</span>
-                        <span class="format-ratio">1500×540</span>
-                    </button>
-                    <button class="format-toggle-btn active" data-ave-format="360">
-                        <span class="format-label">Banner S</span>
-                        <span class="format-ratio">1500×360</span>
-                    </button>
-                </div>
-
-                <div class="label-style">Programa</div>
-                <select id="aveProgram" class="ui-select">
-                    <option value="MEC - DNE">MEC - DNE</option>
-                    <option value="DNE Isotipo">DNE Isotipo</option>
-                    <option value="Cultura Científica">Cultura Científica</option>
-                    <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
-                    <option value="Ccepi">Ccepi</option>
-                    <option value="PAS">PAS</option>
-                    <option value="PNEC">PNEC</option>
-                    <option value="Cecap">Cecap</option>
-                    <option value="Secretaría Permanente">Secretaría Permanente</option>
-                </select>
-
-                <div class="label-style">Imagen de Fondo</div>
-                <label for="aveBgInput" class="ui-card file-label" id="aveBgLabel">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
-                    </svg>
-                    <span>Cargar foto</span>
-                </label>
-                <input type="file" id="aveBgInput" accept="image/*" style="display: none;">
-                <div class="scale-card ui-card">
-                    <span class="scale-label">Escala de imagen</span>
-                    <input type="range" id="aveScaleInput" class="scale-slider" min="1" max="3" step="0.01" value="1">
-                    <span class="scale-value" id="aveScaleValue">100%</span>
-                </div>
-
-                <div class="label-style">Título</div>
-                <textarea id="aveTitleIn" class="ui-card cert-textarea" placeholder="Título principal">Dirección Nacional de Educación</textarea>
-
-                <div class="label-style">Subtítulo</div>
-                <textarea id="aveSubtitleIn" class="ui-card cert-textarea" placeholder="Subtítulo">Ministerio de Educación y Cultura</textarea>
-
-            </div>
-
-            <!-- ═══ LOGOS CONTROLS ═══ -->
-            <div id="logosControls" class="tab-panel">
-                <div class="label-style">Convivencia de logotipos</div>
-                <p class="logos-sidebar-hint">Descargá el kit de convivencia del programa correspondiente.</p>
-            </div>
-
-            <!-- ═══ CERTIFICATE CONTROLS ═══ -->
-            <div id="certControls" class="tab-panel">
-
-                <div class="label-style">Programa</div>
-                <select id="certProgram" class="ui-select">
-                    <option value="MEC - DNE">MEC - DNE</option>
-                    <option value="DNE Isotipo">DNE Isotipo</option>
-                    <option value="Cultura Científica">Cultura Científica</option>
-                    <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
-                    <option value="CC 40 Anos">Cultura Científica 40 años</option>
-                    <option value="CC 40 Anos (Anep)">Cultura Científica 40 años (Anep)</option>
-                    <option value="Ccepi">Ccepi</option>
-                    <option value="PAS">PAS</option>
-                    <option value="PNEC">PNEC</option>
-                    <option value="Cecap">Cecap</option>
-                    <option value="Secretaría Permanente">Secretaría Permanente</option>
-                </select>
-
-                <div class="label-style">Importar Participantes</div>
-                <label for="certDataInput" class="ui-card file-label" id="certDataLabel">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                        <polyline points="10 9 9 9 8 9"/>
-                    </svg>
-                    <span>Cargar CSV / Excel</span>
-                </label>
-                <input type="file" id="certDataInput" accept=".csv,.xlsx,.xls" style="display:none">
-
-                <div id="certDataPreview" class="hidden">
-                    <div class="data-stats" style="margin: 4px 12px;">
-                        <span id="certDataRowCount" style="font-size:12px; color:var(--text-mute);">0 participantes</span>
-                        <span id="certDataStatus" class="status-ok">✓</span>
-                    </div>
-                    <div class="page-nav-row" style="padding: 0 4px;">
-                        <button id="certPrevBtn" class="page-btn" disabled>‹</button>
-                        <span id="certPageIndicator" class="page-indicator">1 / 1</span>
-                        <button id="certNextBtn" class="page-btn">›</button>
-                    </div>
-                </div>
-
-                <div class="label-style">Título del Curso</div>
-                <textarea id="certTitle" class="ui-card cert-textarea" placeholder="Título del curso">Nombre de la actividad a certificar (curso, taller o programa)</textarea>
-
-                <div class="label-style">Nombre y Apellido</div>
-                <input type="text" id="certName" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
-
-                <div class="label-style">Detalle del Curso</div>
-                <textarea id="certDetails" class="ui-card cert-textarea cert-textarea--tall" placeholder="Descripción del curso...">Ha aprobado / participado del [Nombre del curso o actividad], en el marco del [Nombre del Programa] de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Realizado entre [fecha de inicio] y [fecha de finalización], con una carga [tipo de carga: teórica / práctica / teórico-práctica] de [cantidad de horas] horas.</textarea>
-
-                <div class="label-style">Responsable 1</div>
-                <input type="text" id="certR1Name" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
-                <input type="text" id="certR1Role" class="ui-card" placeholder="Cargo / Institución" value="Cargo / Institución">
-                <input type="text" id="certR1Inst" class="ui-card" placeholder="Institución" value="" style="display:none">
-                <div class="cert-sig-upload-row">
-                    <label for="certR1SigInput" class="ui-card file-label" id="certR1SigLabel">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                        <span>Firma digital</span>
-                    </label>
-                    <button class="cert-sig-clear-btn hidden" id="certR1SigClear" title="Quitar firma">✕</button>
-                </div>
-                <input type="file" id="certR1SigInput" accept="image/*" style="display:none;">
-
-                <div id="certRespSection2" class="hidden">
-                    <div class="label-style">Responsable 2</div>
-                    <input type="text" id="certR2Name" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
-                    <input type="text" id="certR2Role" class="ui-card" placeholder="Cargo / Institución" value="Cargo / Institución">
-                    <input type="text" id="certR2Inst" class="ui-card" placeholder="Institución" value="" style="display:none">
-                    <div class="cert-sig-upload-row">
-                        <label for="certR2SigInput" class="ui-card file-label" id="certR2SigLabel">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                            <span>Firma digital</span>
-                        </label>
-                        <button class="cert-sig-clear-btn hidden" id="certR2SigClear" title="Quitar firma">✕</button>
-                    </div>
-                    <input type="file" id="certR2SigInput" accept="image/*" style="display:none;">
-                </div>
-
-                <div id="certRespSection3" class="hidden">
-                    <div class="label-style">Responsable 3</div>
-                    <input type="text" id="certR3Name" class="ui-card" placeholder="Nombre y Apellido" value="Nombre y Apellido">
-                    <input type="text" id="certR3Role" class="ui-card" placeholder="Cargo / Institución" value="Cargo / Institución">
-                    <input type="text" id="certR3Inst" class="ui-card" placeholder="Institución" style="display:none">
-                    <div class="cert-sig-upload-row">
-                        <label for="certR3SigInput" class="ui-card file-label" id="certR3SigLabel">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                            <span>Firma digital</span>
-                        </label>
-                        <button class="cert-sig-clear-btn hidden" id="certR3SigClear" title="Quitar firma">✕</button>
-                    </div>
-                    <input type="file" id="certR3SigInput" accept="image/*" style="display:none;">
-                </div>
-
-                <div class="cert-resp-btn-row">
-                    <button id="certAddResponsible" class="cert-add-resp-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Agregar
-                    </button>
-                    <button id="certRemoveResponsible" class="cert-remove-resp-btn hidden">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Quitar
-                    </button>
-                </div>
-
-            </div>
-
-            <!-- ═══ SHARED CONTROLS ═══ -->
-            <div class="hide-for-badge hide-for-cert">
-                <div class="label-style">Color</div>
-                <div class="color-card">
-                    <div class="color-row" id="colorPalette">
-                        <div class="color-dot active" style="background: #DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24">
-                        </div>
-                        <div class="color-dot" style="background: #C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32">
-                        </div>
-                        <div class="color-dot" style="background: #E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF">
-                        </div>
-                        <div class="color-dot" style="background: #FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Badge hex color pickers (hidden for poster tab) -->
-            <div class="hide-for-poster hide-for-cert hide-for-ave">
-                <div class="badge-hex-row">
-                    <div class="hex-input-group">
-                        <label class="size-label">Nombre / Apellido</label>
-                        <div class="hex-input-wrapper">
-                            <span class="hex-swatch" id="badgeNameSwatch" style="background: #7a63a5;"></span>
-                            <input type="text" id="badgeNameColor" class="ui-card hex-input" value="#7a63a5" maxlength="7" spellcheck="false">
-                        </div>
-                    </div>
-                    <div class="hex-input-group">
-                        <label class="size-label">Pa&iacute;s</label>
-                        <div class="hex-input-wrapper">
-                            <span class="hex-swatch" id="badgePaisSwatch" style="background: #3d3d44;"></span>
-                            <input type="text" id="badgePaisColor" class="ui-card hex-input" value="#3d3d44" maxlength="7" spellcheck="false">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Badge stroke toggle (hidden for poster tab) -->
-            <div class="hide-for-poster hide-for-cert hide-for-ave">
-                <label class="badge-stroke-toggle">
-                    <input type="checkbox" id="badgeStrokeToggle" checked>
-                    <span class="badge-stroke-label">Línea de corte</span>
-                </label>
-            </div>
-
-            <!-- Logo mode toggle (hidden for all tabs) -->
-            <div class="hide-for-poster hide-for-badge hide-for-cert hide-for-ave">
-                <div class="label-style">Logo</div>
-                <div class="logo-toggle-row">
-                    <button id="logoColorBtn" class="logo-toggle-btn active">Color</button>
-                    <button id="logoMonoBtn" class="logo-toggle-btn">Mono</button>
-                </div>
-            </div>
-
-            <!-- Download button -->
-            <button id="mainDownloadBtn" class="download-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span>Descargar</span>
-            </button>
-
-            <!-- Progress bar (hidden by default) -->
-            <div id="exportProgress" class="export-progress hidden">
-                <div class="progress-bar">
-                    <div id="progressFill" class="progress-fill"></div>
-                </div>
-                <span id="progressText" class="progress-text">0%</span>
-            </div>
+    <!-- Export progress — fixed pill overlay, visible during export -->
+    <div id="exportProgress" class="export-progress export-progress--fixed hidden">
+        <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
         </div>
-    </aside>
+        <span id="progressText" class="progress-text">0%</span>
+    </div>
+
+    <!-- AI Key panel — fixed floating panel, shown via API Key toggle -->
+    <div id="aiKeyPanel" class="ai-key-panel" style="display:none">
+        <div class="ai-key-row">
+            <input type="password" id="aiApiKey" class="ui-card ai-key-input"
+                placeholder="Groq API Key (se guarda localmente)">
+            <button class="ai-key-save-btn" id="aiKeySaveBtn" title="Guardar clave">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </button>
+        </div>
+        <div id="aiResults" class="ai-results hidden"></div>
+    </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- MAIN CANVAS AREA                            -->
@@ -500,10 +82,46 @@
 
         <!-- Poster Canvas (Redes Sociales) -->
         <div class="poster-wrap" id="posterWrap">
-            <!-- Dual format container -->
-            <div class="poster-formats-container" id="posterFormatsContainer">
-                <!-- Posters will be generated dynamically by poster-generator.js -->
+            <!-- Stack frame — receives zoom transform; ghosts live here -->
+            <div class="poster-stack-frame" id="posterStackFrame">
+                <div class="mob-ghost" id="mobGhost2"></div>
+                <div class="mob-ghost" id="mobGhost1"></div>
+                <!-- Dual format container -->
+                <div class="poster-formats-container" id="posterFormatsContainer">
+                    <!-- Posters will be generated dynamically by poster-generator.js -->
+                </div>
             </div>
+        </div>
+
+        <!-- Design controls — columna vertical derecha (mobile-only) -->
+        <div class="mob-design-ctrl" id="mobDesignCtrl">
+            <button class="mob-dcbtn" id="mobDcAdd" title="Nuevo diseño">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <button class="mob-dcbtn mob-dcbtn--nav" id="mobDcNext" title="Siguiente" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button class="mob-dcbtn mob-dcbtn--nav" id="mobDcPrev" title="Anterior" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="mob-dcbtn mob-dcbtn--del" id="mobDcRemove" title="Eliminar" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+        </div>
+
+        <!-- Carousel dots (mobile-only) -->
+        <div class="mob-dots" id="mobDots"></div>
+
+        <!-- Side cards (mobile-only mini carousel preview) -->
+        <div class="mob-scard" id="mobScardL">
+            <div class="mob-sc-bg"></div>
+            <div class="mob-sc-overlay"></div>
+            <div class="mob-sc-text"><span class="mob-sc-title"></span></div>
+        </div>
+        <div class="mob-scard" id="mobScardR">
+            <div class="mob-sc-bg"></div>
+            <div class="mob-sc-overlay"></div>
+            <div class="mob-sc-text"><span class="mob-sc-title"></span></div>
         </div>
 
         <!-- Badge Sheet Canvas (Gafetes) -->
@@ -807,49 +425,707 @@ a certificar (curso, taller o programa)</div>
                 </div>
             </div>
         </div>
+
+        <div class="sidebar-base sidebar-right" id="fotoSidebar">
+            <div class="linea-nav">
+                <button class="linea-nav-btn" id="fotoPrev" onclick="navigateFoto(-1)">‹</button>
+                <span class="linea-nav-indicator" id="fotoIndicator">🎯 INTENCIÓN</span>
+                <button class="linea-nav-btn" id="fotoNext" onclick="navigateFoto(1)">›</button>
+            </div>
+            <div class="linea-slides-container">
+
+                <div class="linea-slide active" data-foto="0" data-label="🎯 INTENCIÓN">
+                    <div class="sidebar-right-body">
+                        <div class="info-card">
+                            <h4>Intención clara antes de disparar</h4>
+                            <p class="idea-fuerza">Cada foto tiene que responder a uno de tus ejes.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>¿A qué eje responde?</h4>
+                            <ul class="comunicar-list">
+                                <li><strong>🟢 Derecho:</strong> acceso (niños, adultos, diversidad de contextos aprendiendo)</li>
+                                <li><strong>🟣 Acompañamiento:</strong> interacción (docente escuchando, guiando)</li>
+                                <li><strong>🔵 Descentralización:</strong> territorio (escuelas rurales, barrios, espacios no tradicionales)</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>Preguntate antes</h4>
+                            <p style="font-size:12px; color:var(--text-mute);">¿Qué historia estoy contando y a qué eje responde? Si no está claro, la imagen pierde fuerza.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-box">
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿La foto responde a un eje?</span>
+                        </div>
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿Está clara la historia que contás?</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="linea-slide" data-foto="1" data-label="🤝 PERSONAS">
+                    <div class="sidebar-right-body">
+                        <div class="info-card">
+                            <h4>Las personas primero (y con respeto)</h4>
+                            <p class="idea-fuerza">El valor pedagógico está en el vínculo.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>Buscá</h4>
+                            <ul class="comunicar-list">
+                                <li>Miradas, gestos, manos en acción.</li>
+                                <li>Momentos reales de intercambio.</li>
+                                <li>Diversidad (edades, contextos, realidades).</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>Clave ética</h4>
+                            <p style="font-size:12px; color:var(--text-mute);">Consentimiento y cuidado de la dignidad. No expongas situaciones sensibles ni refuerces estereotipos.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-box">
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿Evitaste fotos rígidas o posadas?</span>
+                        </div>
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿Hay diversidad de contextos?</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="linea-slide" data-foto="2" data-label="📐 COMPOSICIÓN">
+                    <div class="sidebar-right-body">
+                        <div class="info-card">
+                            <h4>Composición simple pero significativa</h4>
+                            <p class="idea-fuerza">Con celular no necesitás técnica compleja, pero sí criterio.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>Criterios</h4>
+                            <ul class="comunicar-list">
+                                <li><strong>Acercate:</strong> evitá fotos lejanas sin foco.</li>
+                                <li><strong>Luz natural:</strong> de costado o de frente, no contraluz fuerte.</li>
+                                <li><strong>Encuadre:</strong> ¿qué entra y qué queda afuera? El fondo también comunica.</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>Tip concreto</h4>
+                            <p style="font-size:12px; color:var(--text-mute);">Si hay demasiadas cosas, la foto pierde mensaje.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-box">
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿Hay foco claro en el sujeto?</span>
+                        </div>
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿El fondo suma o distrae?</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="linea-slide" data-foto="3" data-label="🗺️ TERRITORIO">
+                    <div class="sidebar-right-body">
+                        <div class="info-card">
+                            <h4>Contexto que cuente territorio</h4>
+                            <p class="idea-fuerza">Mostrá dónde sucede la educación.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>Cómo hacerlo</h4>
+                            <ul class="comunicar-list">
+                                <li>Incluí elementos del entorno (carteles, calles, paisaje, infraestructura).</li>
+                                <li>Alterná planos: foto cercana (acción) + foto abierta (contexto).</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>Por qué importa</h4>
+                            <p style="font-size:12px; color:var(--text-mute);">Ayuda a entender que la educación ocurre en múltiples realidades, no solo en el aula.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-box">
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿Se ve el contexto territorial?</span>
+                        </div>
+                        <div class="check-btn gamify" onclick="toggleCheck(this)">
+                            <div class="dot"></div><span>¿Alternás planos?</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /linea-slides-container -->
+        </div>
     </aside>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- BOTTOM NAVIGATION BAR                       -->
+    <!-- SIDE NAVIGATION                             -->
     <!-- ═══════════════════════════════════════════ -->
-    <nav class="bottom-nav-container" id="bottomNav">
-        <div class="nav-group" id="navGroup">
+    <!-- Nav menu toggle — fixed top-right -->
+    <button class="nav-menu-toggle" id="navMenuToggle" title="Menú">
+        <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+            <rect x="0.5" y="0.5" width="21" height="17" rx="4" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect class="nav-toggle-panel" x="1.5" y="1.5" width="9" height="15" rx="3" fill="white"/>
+        </svg>
+    </button>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SIDE NAVIGATION                             -->
+    <!-- ═══════════════════════════════════════════ -->
+    <nav class="side-nav" id="sideNav">
+
+        <!-- Nav content — slides in/out from left -->
+        <div class="nav-menu-content" id="navMenuContent">
+
+        <!-- Tabs -->
+        <div class="side-nav-section" id="navGroup">
             <div id="navSlider" class="nav-slider"></div>
-            <div class="nav-item active" data-tab="poster" id="tabPoster">Redes Sociales</div>
-            <div class="nav-item" data-tab="cert" id="tabCert">Certificados</div>
-            <div class="nav-item" data-tab="ave" id="tabAve">Plataforma AVE</div>
-            <div class="nav-item" data-tab="logos" id="tabLogos">Logotipos</div>
-            <div class="nav-item" data-tab="badge" id="tabBadge">Gafetes</div>
+
+            <div class="nav-item active" data-tab="poster" id="tabPoster">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+                <span class="side-nav-label">Redes Sociales</span>
+            </div>
+
+            <div class="nav-item" data-tab="cert" id="tabCert">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                </svg>
+                <span class="side-nav-label">Certificados</span>
+            </div>
+
+            <div class="nav-item" data-tab="ave" id="tabAve">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                <span class="side-nav-label">Plataforma AVE</span>
+            </div>
+
+            <div class="nav-item" data-tab="logos" id="tabLogos">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                    <polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+                </svg>
+                <span class="side-nav-label">Logotipos</span>
+            </div>
+
+            <div class="nav-item" data-tab="badge" id="tabBadge">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                <span class="side-nav-label">Gafetes</span>
+            </div>
         </div>
-        <div class="nav-divider"></div>
-        <div class="nav-group">
+
+        <div class="side-nav-divider"></div>
+
+        <!-- Paneles -->
+        <div class="side-nav-section">
             <div class="nav-toggle-btn" id="ejeToggle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                 </svg>
-                Líneas transversales
+                <span class="side-nav-label">Líneas transversales</span>
             </div>
+            <div class="side-nav-item-sep"></div>
+
             <div class="nav-toggle-btn" id="tipsToggle">
-                💡 Tips
-            </div>
-        </div>
-        <div class="nav-divider"></div>
-        <div class="nav-group">
-            <div class="nav-toggle-btn" id="darkModeToggle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                 </svg>
-                Modo
+                <span class="side-nav-label">Tips</span>
+            </div>
+            <div class="side-nav-item-sep"></div>
+
+            <div class="nav-toggle-btn" id="fotoToggle">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span class="side-nav-label">Fotografía</span>
             </div>
         </div>
+
+        <div class="side-nav-divider"></div>
+
+        <!-- API Key + Modo -->
+        <div class="side-nav-section">
+            <div class="nav-toggle-btn" id="apiKeyToggle">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                </svg>
+                <span class="side-nav-label">API Key</span>
+            </div>
+            <div class="nav-toggle-btn" id="darkModeToggle">
+                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <span class="side-nav-label">Modo</span>
+            </div>
+        </div>
+
+        </div><!-- /nav-menu-content -->
+
     </nav>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- TOAST NOTIFICATIONS                         -->
     <!-- ═══════════════════════════════════════════ -->
-    <!-- Watermark ISO top-left -->
-    <img src="Root/assets/logos/logo-dne-iso-mono.svg" class="app-watermark" alt="DNE">
+
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- POSTER BARS STACK (Redes Sociales only)     -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="poster-bars-stack" id="posterBarsStack">
+
+    <!-- Barra de texto -->
+    <div class="poster-text-bar" id="posterTextBar">
+        <div class="text-bar-field">
+            <span class="text-bar-label">Etiqueta</span>
+            <input type="text" id="etiquetaIn" class="text-bar-input" placeholder="Etiqueta superior" value="La educación va a estar *buena*">
+        </div>
+        <div class="text-bar-sep"></div>
+        <div class="text-bar-field">
+            <span class="text-bar-label">Título</span>
+            <input type="text" id="titleIn" class="text-bar-input" placeholder="Título principal" value="Dirección Nacional de *Educación*">
+        </div>
+        <div class="text-bar-sep"></div>
+        <div class="text-bar-field">
+            <span class="text-bar-label">Subtítulo</span>
+            <input type="text" id="subtitleIn" class="text-bar-input" placeholder="Subtítulo" value="Educación de *oportunidades*">
+        </div>
+    </div>
+
+    <!-- Barra IA prompt -->
+    <div class="poster-prompt-bar" id="posterPromptBar">
+
+        <!-- Fila 1: campo de escritura -->
+        <div class="prompt-row prompt-row--top">
+            <textarea id="aiBriefInput" class="prompt-brief-input"
+                placeholder="Describí el contenido: qué querés comunicar, para quién, contexto..."></textarea>
+        </div>
+
+        <!-- Fila variaciones: navegación inline (oculta hasta generar) -->
+        <div class="prompt-row prompt-row--variation hidden" id="promptVariationRow">
+            <button class="prompt-var-nav" id="promptVarPrev">‹</button>
+            <div class="prompt-var-display" id="promptVarDisplay"></div>
+            <button class="prompt-var-nav" id="promptVarNext">›</button>
+            <span class="prompt-var-counter" id="promptVarCounter">1 / 1</span>
+        </div>
+
+        <!-- Fila 2: controles + generar -->
+        <div class="prompt-row prompt-row--bottom">
+
+            <!-- Foto + zoom -->
+            <label for="bgInput" class="prompt-photo-btn" id="bgLabel" title="Cargar foto">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span class="prompt-photo-name">Foto</span>
+            </label>
+            <button class="prompt-scale-btn" id="bgScaleMinus" title="Alejar foto">−</button>
+            <button class="prompt-scale-btn" id="bgScalePlus" title="Acercar foto">+</button>
+
+            <div class="prompt-divider"></div>
+
+            <!-- Logo -->
+            <select class="prompt-eje-select custom-select-trigger" id="programSelectorBar">
+                <option value="DNE Isotipo">DNE Isotipo</option>
+                <option value="MEC - DNE">MEC - DNE</option>
+                <option value="Cultura Científica">Cultura Científica</option>
+                <option value="Cultura Científica (Anep)">CC (Anep)</option>
+                <option value="CC 40 Anos">CC 40 años</option>
+                <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
+                <option value="Ccepi">Ccepi</option>
+                <option value="PAS">PAS</option>
+                <option value="PNEC">PNEC</option>
+                <option value="Cecap">Cecap</option>
+                <option value="Secretaría Permanente">Sec. Permanente</option>
+            </select>
+
+            <div class="prompt-divider"></div>
+
+            <!-- Eje -->
+            <select class="prompt-eje-select custom-select-trigger" id="aiEjeSelect">
+                <option value="">Ejes Transversales</option>
+                <option value="1">Derecho</option>
+                <option value="2">Trayectorias</option>
+                <option value="3">Territorio</option>
+            </select>
+
+            <div class="prompt-divider"></div>
+
+            <!-- Colores -->
+            <div class="prompt-color-group" id="colorPaletteBar">
+                <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24"></div>
+                <div class="color-dot prompt-color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32"></div>
+                <div class="color-dot prompt-color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF"></div>
+                <div class="color-dot prompt-color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6"></div>
+            </div>
+
+            <div class="prompt-divider"></div>
+
+            <!-- Formatos -->
+            <div class="prompt-format-group">
+                <button class="format-toggle-btn active" data-format="posteo">
+                    <span class="format-label">Posteo</span>
+                    <span class="format-ratio">5:4</span>
+                </button>
+                <button class="format-toggle-btn active" data-format="historia">
+                    <span class="format-label">Historia</span>
+                    <span class="format-ratio">9:16</span>
+                </button>
+            </div>
+
+            <!-- Generar (empujado a la derecha) -->
+            <button id="aiGenerateBtn" class="prompt-generate-btn">
+                Generar copy
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+
+            <div class="prompt-divider"></div>
+
+            <!-- Descargar -->
+            <button id="mainDownloadBtn" class="prompt-download-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>Descargar</span>
+            </button>
+
+        </div>
+    </div>
+
+    </div><!-- /poster-bars-stack -->
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- AVE BARS STACK (Plataforma AVE only)       -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="ave-bars-stack" id="aveBarsStack">
+
+        <!-- Barra de texto -->
+        <div class="poster-text-bar">
+            <div class="text-bar-field">
+                <span class="text-bar-label">Título</span>
+                <input type="text" id="aveTitleIn" class="text-bar-input" placeholder="Título principal" value="Dirección Nacional de Educación">
+            </div>
+            <div class="text-bar-sep"></div>
+            <div class="text-bar-field">
+                <span class="text-bar-label">Subtítulo</span>
+                <input type="text" id="aveSubtitleIn" class="text-bar-input" placeholder="Subtítulo" value="Ministerio de Educación y Cultura">
+            </div>
+        </div>
+
+        <!-- Barra de controles -->
+        <div class="poster-prompt-bar">
+            <div class="prompt-row prompt-row--bottom">
+
+                <!-- Foto + zoom -->
+                <label for="aveBgInput" class="prompt-photo-btn" id="aveBgLabel" title="Cargar foto de fondo">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                    <span class="prompt-photo-name">Foto</span>
+                </label>
+                <input type="file" id="aveBgInput" accept="image/*" style="display:none">
+                <input type="range" id="aveScaleInput" min="1" max="3" step="0.01" value="1" style="display:none">
+                <button class="prompt-scale-btn" id="aveScaleMinus" title="Alejar foto">−</button>
+                <button class="prompt-scale-btn" id="aveScalePlus" title="Acercar foto">+</button>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Programa -->
+                <select class="prompt-eje-select custom-select-trigger" id="aveProgram">
+                    <option value="MEC - DNE">MEC - DNE</option>
+                    <option value="DNE Isotipo">DNE Isotipo</option>
+                    <option value="Cultura Científica">Cultura Científica</option>
+                    <option value="Cultura Científica (Anep)">CC (Anep)</option>
+                    <option value="Ccepi">Ccepi</option>
+                    <option value="PAS">PAS</option>
+                    <option value="PNEC">PNEC</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Secretaría Permanente">Sec. Permanente</option>
+                </select>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Colores -->
+                <div class="prompt-color-group" id="colorPaletteAve">
+                    <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6"></div>
+                </div>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Formatos -->
+                <div class="prompt-format-group">
+                    <button class="format-toggle-btn active" data-ave-format="540">
+                        <span class="format-label">Banner</span>
+                        <span class="format-ratio">1500×540</span>
+                    </button>
+                    <button class="format-toggle-btn active" data-ave-format="360">
+                        <span class="format-label">Banner S</span>
+                        <span class="format-ratio">1500×360</span>
+                    </button>
+                </div>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Descargar -->
+                <button id="aveDownloadBtn" class="prompt-download-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span>Descargar</span>
+                </button>
+
+            </div>
+        </div>
+
+    </div><!-- /ave-bars-stack -->
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- CERT BARS STACK (Certificados only)        -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="cert-bars-stack" id="certBarsStack">
+        <div class="cert-bar">
+
+            <!-- Fila 1: Título + Participante -->
+            <div class="cert-row cert-row--text">
+                <div class="text-bar-field">
+                    <span class="text-bar-label">Título</span>
+                    <input type="text" id="certTitle" class="text-bar-input" placeholder="Título del curso" value="Nombre de la actividad a certificar (curso, taller o programa)">
+                </div>
+                <div class="text-bar-sep"></div>
+                <div class="text-bar-field cert-name-field">
+                    <span class="text-bar-label">Participante</span>
+                    <input type="text" id="certName" class="text-bar-input" placeholder="Nombre y Apellido" value="Nombre y Apellido">
+                </div>
+            </div>
+
+            <div class="cert-row-sep"></div>
+
+            <!-- Fila 2: Detalles -->
+            <div class="cert-row cert-row--details">
+                <span class="text-bar-label cert-detail-label">Detalle</span>
+                <textarea id="certDetails" class="text-bar-input cert-details-input" placeholder="Descripción del curso...">Ha aprobado / participado del [Nombre del curso o actividad], en el marco del [Nombre del Programa] de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Realizado entre [fecha de inicio] y [fecha de finalización], con una carga [tipo de carga: teórica / práctica / teórico-práctica] de [cantidad de horas] horas.</textarea>
+            </div>
+
+            <div class="cert-row-sep"></div>
+
+            <!-- Fila 3: Controles -->
+            <div class="cert-row cert-row--controls">
+
+                <!-- CSV import -->
+                <label for="certDataInput" class="prompt-photo-btn" id="certDataLabel" title="Importar participantes CSV/Excel">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <span class="prompt-photo-name">Importar</span>
+                </label>
+                <input type="file" id="certDataInput" accept=".csv,.xlsx,.xls" style="display:none">
+
+                <!-- Page nav (visible after CSV load) -->
+                <div id="certDataPreview" class="cert-data-preview hidden">
+                    <span id="certDataRowCount" class="cert-row-count">0 participantes</span>
+                    <button id="certPrevBtn" class="prompt-scale-btn" disabled>‹</button>
+                    <span id="certPageIndicator" class="prompt-var-counter">1 / 1</span>
+                    <button id="certNextBtn" class="prompt-scale-btn">›</button>
+                </div>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Programa -->
+                <select class="prompt-eje-select custom-select-trigger" id="certProgram">
+                    <option value="MEC - DNE">MEC - DNE</option>
+                    <option value="DNE Isotipo">DNE Isotipo</option>
+                    <option value="Cultura Científica">Cultura Científica</option>
+                    <option value="Cultura Científica (Anep)">CC (Anep)</option>
+                    <option value="CC 40 Anos">CC 40 años</option>
+                    <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
+                    <option value="Ccepi">Ccepi</option>
+                    <option value="PAS">PAS</option>
+                    <option value="PNEC">PNEC</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Secretaría Permanente">Sec. Permanente</option>
+                </select>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Responsables -->
+                <div class="cert-resp-group">
+                    <div class="cert-resp-row">
+                        <input type="text" id="certR1Name" class="cert-resp-input" placeholder="Nombre" value="Nombre y Apellido">
+                        <input type="text" id="certR1Role" class="cert-resp-input" placeholder="Cargo" value="Cargo / Institución">
+                        <input type="text" id="certR1Inst" class="cert-resp-input" placeholder="Institución" value="" style="display:none">
+                        <label for="certR1SigInput" class="cert-sig-btn" id="certR1SigLabel" title="Firma digital">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <span>Firma</span>
+                        </label>
+                        <button class="cert-sig-clear-sm hidden" id="certR1SigClear" title="Quitar firma">✕</button>
+                        <input type="file" id="certR1SigInput" accept="image/*" style="display:none">
+                    </div>
+                    <div id="certRespSection2" class="cert-resp-row hidden">
+                        <input type="text" id="certR2Name" class="cert-resp-input" placeholder="Nombre" value="Nombre y Apellido">
+                        <input type="text" id="certR2Role" class="cert-resp-input" placeholder="Cargo" value="Cargo / Institución">
+                        <input type="text" id="certR2Inst" class="cert-resp-input" placeholder="Institución" value="" style="display:none">
+                        <label for="certR2SigInput" class="cert-sig-btn" id="certR2SigLabel" title="Firma digital">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <span>Firma</span>
+                        </label>
+                        <button class="cert-sig-clear-sm hidden" id="certR2SigClear" title="Quitar firma">✕</button>
+                        <input type="file" id="certR2SigInput" accept="image/*" style="display:none">
+                    </div>
+                    <div id="certRespSection3" class="cert-resp-row hidden">
+                        <input type="text" id="certR3Name" class="cert-resp-input" placeholder="Nombre" value="Nombre y Apellido">
+                        <input type="text" id="certR3Role" class="cert-resp-input" placeholder="Cargo" value="Cargo / Institución">
+                        <input type="text" id="certR3Inst" class="cert-resp-input" placeholder="Institución" style="display:none">
+                        <label for="certR3SigInput" class="cert-sig-btn" id="certR3SigLabel" title="Firma digital">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <span>Firma</span>
+                        </label>
+                        <button class="cert-sig-clear-sm hidden" id="certR3SigClear" title="Quitar firma">✕</button>
+                        <input type="file" id="certR3SigInput" accept="image/*" style="display:none">
+                    </div>
+                </div>
+                <div class="cert-resp-ctrl">
+                    <button id="certAddResponsible" class="cert-resp-icon-btn" title="Agregar responsable">+</button>
+                    <button id="certRemoveResponsible" class="cert-resp-icon-btn cert-resp-icon-btn--remove hidden" title="Quitar responsable">−</button>
+                </div>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Descargar -->
+                <button id="certDownloadBtn" class="prompt-download-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span>Descargar</span>
+                </button>
+
+            </div>
+
+        </div>
+    </div><!-- /cert-bars-stack -->
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- BADGE BARS STACK (Gafetes only)             -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="badge-bars-stack" id="badgeBarsStack">
+        <div class="badge-bar">
+
+            <!-- Fila 1: Fondo+escala | Datos+nav | Colores | Corte | Descargar -->
+            <div class="badge-row badge-row--controls">
+
+                <!-- Fondo -->
+                <label for="badgeBgInput" class="prompt-photo-btn" id="badgeBgLabel" title="Imagen de fondo">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span class="prompt-photo-name">Fondo</span>
+                </label>
+                <input type="file" id="badgeBgInput" accept="image/*" style="display:none">
+                <input type="range" id="badgeScaleInput" min="1" max="3" step="0.01" value="1" style="display:none">
+                <button id="badgeScaleMinus" class="prompt-scale-btn">−</button>
+                <button id="badgeScalePlus" class="prompt-scale-btn">+</button>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Datos CSV -->
+                <label for="dataFileInput" class="prompt-photo-btn" id="dataFileLabel" title="Cargar Excel / CSV">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>Datos</span>
+                </label>
+                <input type="file" id="dataFileInput" accept=".xlsx,.xls,.csv" style="display:none">
+                <div id="previewTable" style="display:none"></div>
+                <span id="dataColStatus" style="display:none"></span>
+
+                <!-- Conteo (aparece tras cargar CSV) -->
+                <div id="dataPreview" class="cert-data-preview hidden">
+                    <span id="dataRowCount" class="cert-row-count">0 registros</span>
+                </div>
+
+                <!-- Navegación de páginas (aparece si hay >1 página) -->
+                <div id="pageNav" class="cert-data-preview hidden">
+                    <button id="prevPageBtn" class="prompt-scale-btn" disabled>‹</button>
+                    <span id="pageIndicator" class="prompt-var-counter">1 / 1</span>
+                    <button id="nextPageBtn" class="prompt-scale-btn">›</button>
+                </div>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Colores Nombre/País -->
+                <span id="badgeNameSwatch" style="display:none"></span>
+                <input type="color" id="badgeNameColorPicker" class="badge-color-picker" value="#7a63a5" title="Color Nombre/Apellido">
+                <input type="text" id="badgeNameColor" class="badge-hex-text" value="#7a63a5" maxlength="7" spellcheck="false" placeholder="#rrggbb">
+                <span id="badgePaisSwatch" style="display:none"></span>
+                <input type="color" id="badgePaisColorPicker" class="badge-color-picker" value="#3d3d44" title="Color País">
+                <input type="text" id="badgePaisColor" class="badge-hex-text" value="#3d3d44" maxlength="7" spellcheck="false" placeholder="#rrggbb">
+
+                <div class="prompt-divider"></div>
+
+                <!-- Línea de corte -->
+                <label class="badge-bar-stroke" title="Línea de corte">
+                    <input type="checkbox" id="badgeStrokeToggle" checked style="display:none">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                    <span>Corte</span>
+                </label>
+
+            </div>
+
+            <div class="badge-row-sep"></div>
+
+            <!-- Fila 2: Medidas + Posición de texto -->
+            <div class="badge-row badge-row--settings">
+
+                <!-- Medidas -->
+                <span class="text-bar-label">W</span>
+                <input type="number" id="badgeWidthInput" class="badge-dim-input" value="72" min="10" max="200" step="1">
+                <span class="text-bar-label">×</span>
+                <span class="text-bar-label">H</span>
+                <input type="number" id="badgeHeightInput" class="badge-dim-input" value="103" min="10" max="200" step="1">
+                <span class="text-bar-label">mm</span>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Posición horizontal -->
+                <input type="range" id="badgeTextX" min="-100" max="100" step="1" value="0" style="display:none">
+                <span class="text-bar-label">↔</span>
+                <button id="badgeTextXMinus" class="prompt-scale-btn">←</button>
+                <span id="badgeTextXVal" class="prompt-var-counter badge-pos-val">0</span>
+                <button id="badgeTextXPlus" class="prompt-scale-btn">→</button>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Posición vertical -->
+                <input type="range" id="badgeTextY" min="0" max="100" step="1" value="50" style="display:none">
+                <span class="text-bar-label">↕</span>
+                <button id="badgeTextYMinus" class="prompt-scale-btn">↑</button>
+                <span id="badgeTextYVal" class="prompt-var-counter badge-pos-val">50</span>
+                <button id="badgeTextYPlus" class="prompt-scale-btn">↓</button>
+
+                <!-- Descargar -->
+                <button id="badgeDownloadBtn" class="prompt-download-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Descargar</span>
+                </button>
+
+            </div>
+
+        </div>
+    </div><!-- /badge-bars-stack -->
 
     <div id="toastContainer" class="toast-container"></div>
 
@@ -877,6 +1153,7 @@ a certificar (curso, taller o programa)</div>
     <script src="modules/ave-generator.js"></script>
     <script src="modules/cert-generator.js"></script>
     <script src="modules/gate-shaders.js"></script>
+    <script src="modules/ai-copy-generator.js"></script>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- APP BOOTSTRAP                               -->
@@ -919,7 +1196,7 @@ a certificar (curso, taller o programa)</div>
         /* ── Tab Switching ── */
         function switchTab(tabName) {
             APP.currentTab = tabName;
-            if (typeof ZoomController !== 'undefined') ZoomController.reset();
+            if (typeof ZoomController !== 'undefined') ZoomController.apply(tabName === 'poster' ? 140 : 100);
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const activeItem = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
             if (activeItem) { activeItem.classList.add('active'); moveSlider(activeItem); }
@@ -955,10 +1232,19 @@ a certificar (curso, taller o programa)</div>
 
         /* ── Sidebar Toggles ── */
         function toggleSidebar(type) {
-            const r = document.getElementById('rightSidebar'), t = document.getElementById('tipsSidebar');
-            const eT = document.getElementById('ejeToggle'), tT = document.getElementById('tipsToggle');
-            if (type === 'eje') { t.classList.remove('active'); tT.classList.remove('tips-on'); r.classList.toggle('active'); eT.classList.toggle('on'); }
-            else { r.classList.remove('active'); eT.classList.remove('on'); t.classList.toggle('active'); tT.classList.toggle('tips-on'); }
+            const panels  = { eje: 'rightSidebar', tips: 'tipsSidebar', foto: 'fotoSidebar' };
+            const toggles = { eje: 'ejeToggle',    tips: 'tipsToggle',  foto: 'fotoToggle'  };
+            const panel   = document.getElementById(panels[type]);
+            const toggle  = document.getElementById(toggles[type]);
+            const isOpen  = panel?.classList.contains('active');
+            // Close all
+            Object.values(panels).forEach(id  => document.getElementById(id)?.classList.remove('active'));
+            Object.values(toggles).forEach(id => document.getElementById(id)?.classList.remove('on', 'tips-on'));
+            // Open clicked one if it was closed
+            if (!isOpen) {
+                panel?.classList.add('active');
+                toggle?.classList.add(type === 'eje' ? 'on' : 'tips-on');
+            }
         }
 
         function toggleCheck(btn) {
@@ -1000,12 +1286,25 @@ a certificar (curso, taller o programa)</div>
 
         function navigateLinea(dir) {
             _lineaIndex = Math.max(0, Math.min(LINEA_TOTAL - 1, _lineaIndex + dir));
-            document.querySelectorAll('.linea-slide').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.linea-slide[data-linea]').forEach(s => s.classList.remove('active'));
             const active = document.querySelector(`.linea-slide[data-linea="${_lineaIndex}"]`);
             active?.classList.add('active');
             document.getElementById('lineaIndicator').textContent = active?.dataset.badge || `Línea ${_lineaIndex + 1}`;
             document.getElementById('lineaPrev').disabled = _lineaIndex === 0;
             document.getElementById('lineaNext').disabled = _lineaIndex === LINEA_TOTAL - 1;
+        }
+
+        let _fotoIndex = 0;
+        const FOTO_TOTAL = 4;
+
+        function navigateFoto(dir) {
+            _fotoIndex = Math.max(0, Math.min(FOTO_TOTAL - 1, _fotoIndex + dir));
+            document.querySelectorAll('.linea-slide[data-foto]').forEach(s => s.classList.remove('active'));
+            const active = document.querySelector(`.linea-slide[data-foto="${_fotoIndex}"]`);
+            active?.classList.add('active');
+            document.getElementById('fotoIndicator').textContent = active?.dataset.label || `Guía ${_fotoIndex + 1}`;
+            document.getElementById('fotoPrev').disabled = _fotoIndex === 0;
+            document.getElementById('fotoNext').disabled = _fotoIndex === FOTO_TOTAL - 1;
         }
 
         function toggleDarkMode() {
@@ -1014,15 +1313,34 @@ a certificar (curso, taller o programa)</div>
             document.getElementById('darkModeToggle')?.classList.toggle('on', APP.darkMode);
         }
 
+        /* ── Side Nav toggle ── */
+        function initSideNav() {
+            const nav = document.getElementById('sideNav');
+            const btn = document.getElementById('sideNavToggle');
+            btn?.addEventListener('click', () => {
+                const isCollapsed = nav.classList.toggle('collapsed');
+                document.body.classList.toggle('nav-collapsed', isCollapsed);
+            });
+        }
+
         /* ── Init (only nav/sidebar — modules handle everything else) ── */
         window.addEventListener('DOMContentLoaded', () => {
+            initSideNav();
             document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', () => switchTab(i.dataset.tab)));
             document.getElementById('ejeToggle')?.addEventListener('click', () => toggleSidebar('eje'));
             document.getElementById('tipsToggle')?.addEventListener('click', () => toggleSidebar('tips'));
+            document.getElementById('fotoToggle')?.addEventListener('click', () => toggleSidebar('foto'));
             document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
-            const activeNav = document.querySelector('.nav-item.active');
-            if (activeNav) moveSlider(activeNav);
-            window.addEventListener('resize', () => { const a = document.querySelector('.nav-item.active'); if (a) moveSlider(a); });
+
+            // API Key toggle — muestra/oculta el panel flotante de clave Groq
+            document.getElementById('apiKeyToggle')?.addEventListener('click', () => {
+                const panel = document.getElementById('aiKeyPanel');
+                if (!panel) return;
+                const visible = panel.style.display === 'flex';
+                panel.style.display = visible ? 'none' : 'flex';
+                if (!visible) document.getElementById('aiApiKey')?.focus();
+                document.getElementById('apiKeyToggle')?.classList.toggle('on', !visible);
+            });
 
             // Scale slider: percentage display + fill gradient
             function wireScaleSlider(sliderId, displayId) {
@@ -1047,9 +1365,168 @@ a certificar (curso, taller o programa)</div>
             wireScaleSlider('badgeScaleInput', 'badgeScaleValue');
             wireScaleSlider('aveScaleInput', 'aveScaleValue');
 
+            // Photo zoom buttons in prompt bar
+            document.getElementById('bgScaleMinus')?.addEventListener('click', () => PosterGenerator.stepScale(-0.15));
+            document.getElementById('bgScalePlus')?.addEventListener('click',  () => PosterGenerator.stepScale(0.15));
+
+            // AVE scale buttons
+            document.getElementById('aveScaleMinus')?.addEventListener('click', () => {
+                const inp = document.getElementById('aveScaleInput');
+                if (!inp) return;
+                inp.value = Math.max(1, parseFloat(inp.value) - 0.15);
+                inp.dispatchEvent(new Event('input'));
+            });
+            document.getElementById('aveScalePlus')?.addEventListener('click', () => {
+                const inp = document.getElementById('aveScaleInput');
+                if (!inp) return;
+                inp.value = Math.min(3, parseFloat(inp.value) + 0.15);
+                inp.dispatchEvent(new Event('input'));
+            });
+
+            // AVE download button
+            document.getElementById('aveDownloadBtn')?.addEventListener('click', () => ExportEngine.download());
+
+            // Cert download button
+            document.getElementById('certDownloadBtn')?.addEventListener('click', () => ExportEngine.download());
+
+            // Badge scale buttons
+            document.getElementById('badgeScaleMinus')?.addEventListener('click', () => {
+                const inp = document.getElementById('badgeScaleInput');
+                if (!inp) return;
+                inp.value = Math.max(1, parseFloat(inp.value) - 0.15);
+                inp.dispatchEvent(new Event('input'));
+            });
+            document.getElementById('badgeScalePlus')?.addEventListener('click', () => {
+                const inp = document.getElementById('badgeScaleInput');
+                if (!inp) return;
+                inp.value = Math.min(3, parseFloat(inp.value) + 0.15);
+                inp.dispatchEvent(new Event('input'));
+            });
+
+            // Badge text X position buttons
+            document.getElementById('badgeTextX')?.addEventListener('input', (e) => {
+                const v = document.getElementById('badgeTextXVal');
+                if (v) v.textContent = e.target.value;
+            });
+            document.getElementById('badgeTextXMinus')?.addEventListener('click', () => {
+                const inp = document.getElementById('badgeTextX');
+                if (!inp) return;
+                inp.value = Math.max(-100, parseFloat(inp.value) - 5);
+                inp.dispatchEvent(new Event('input'));
+            });
+            document.getElementById('badgeTextXPlus')?.addEventListener('click', () => {
+                const inp = document.getElementById('badgeTextX');
+                if (!inp) return;
+                inp.value = Math.min(100, parseFloat(inp.value) + 5);
+                inp.dispatchEvent(new Event('input'));
+            });
+
+            // Badge text Y position buttons
+            document.getElementById('badgeTextY')?.addEventListener('input', (e) => {
+                const v = document.getElementById('badgeTextYVal');
+                if (v) v.textContent = e.target.value;
+            });
+            document.getElementById('badgeTextYMinus')?.addEventListener('click', () => {
+                const inp = document.getElementById('badgeTextY');
+                if (!inp) return;
+                inp.value = Math.max(0, parseFloat(inp.value) - 5);
+                inp.dispatchEvent(new Event('input'));
+            });
+            document.getElementById('badgeTextYPlus')?.addEventListener('click', () => {
+                const inp = document.getElementById('badgeTextY');
+                if (!inp) return;
+                inp.value = Math.min(100, parseFloat(inp.value) + 5);
+                inp.dispatchEvent(new Event('input'));
+            });
+
+            // Badge download button
+            document.getElementById('badgeDownloadBtn')?.addEventListener('click', () => ExportEngine.download());
+
+            // Sync badge color pickers <-> hex text inputs
+            function syncBadgeColor(pickerId, hexId) {
+                const picker = document.getElementById(pickerId);
+                const hex    = document.getElementById(hexId);
+                if (!picker || !hex) return;
+                picker.addEventListener('input', () => {
+                    hex.value = picker.value;
+                    hex.dispatchEvent(new Event('input'));
+                });
+                hex.addEventListener('input', () => {
+                    const v = hex.value.trim();
+                    if (/^#[0-9a-fA-F]{6}$/.test(v)) picker.value = v;
+                });
+            }
+            syncBadgeColor('badgeNameColorPicker', 'badgeNameColor');
+            syncBadgeColor('badgePaisColorPicker', 'badgePaisColor');
+
+            // Nav menu toggle (slide in/out from left)
+            document.getElementById('navMenuToggle')?.addEventListener('click', () => {
+                const content = document.getElementById('navMenuContent');
+                const btn = document.getElementById('navMenuToggle');
+                const hidden = content?.classList.toggle('nav-menu--hidden');
+                btn?.classList.toggle('nav-menu-toggle--closed', hidden);
+            });
+
             // Initialize linea navigator button states
             document.getElementById('lineaPrev').disabled = true;
             document.getElementById('lineaNext').disabled = false;
+
+            // Custom selects — replace native <select> with Apple-style dropdowns
+            document.querySelectorAll('.custom-select-trigger').forEach(sel => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'custom-select';
+
+                const btn = document.createElement('button');
+                btn.className = 'custom-select-btn';
+                btn.type = 'button';
+
+                const label = document.createElement('span');
+                label.textContent = sel.options[sel.selectedIndex]?.text || '';
+
+                const chevron = document.createElementNS('http://www.w3.org/2000/svg','svg');
+                chevron.setAttribute('width','10'); chevron.setAttribute('height','10');
+                chevron.setAttribute('viewBox','0 0 24 24'); chevron.setAttribute('fill','none');
+                chevron.setAttribute('stroke','currentColor'); chevron.setAttribute('stroke-width','2.5');
+                chevron.setAttribute('stroke-linecap','round'); chevron.setAttribute('stroke-linejoin','round');
+                chevron.innerHTML = '<polyline points="6 9 12 15 18 9"/>';
+
+                btn.appendChild(label);
+                btn.appendChild(chevron);
+
+                const panel = document.createElement('div');
+                panel.className = 'custom-select-panel';
+
+                Array.from(sel.options).forEach(opt => {
+                    const item = document.createElement('button');
+                    item.className = 'custom-select-option' + (opt.selected ? ' selected' : '');
+                    item.type = 'button';
+                    item.textContent = opt.text;
+                    item.addEventListener('click', () => {
+                        sel.value = opt.value;
+                        sel.dispatchEvent(new Event('change', { bubbles: true }));
+                        label.textContent = opt.text;
+                        panel.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+                        item.classList.add('selected');
+                        wrapper.classList.remove('open');
+                    });
+                    panel.appendChild(item);
+                });
+
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const wasOpen = wrapper.classList.contains('open');
+                    document.querySelectorAll('.custom-select.open').forEach(s => s.classList.remove('open'));
+                    if (!wasOpen) wrapper.classList.add('open');
+                });
+
+                wrapper.appendChild(btn);
+                wrapper.appendChild(panel);
+                sel.parentNode.insertBefore(wrapper, sel);
+            });
+
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.custom-select.open').forEach(s => s.classList.remove('open'));
+            });
 
             // Initialize default tab (poster with DNE Isotipo Mono)
             switchTab('poster');
@@ -1060,36 +1537,235 @@ a certificar (curso, taller o programa)</div>
 
     <!-- ═══ ZOOM PANEL ═══ -->
     <div class="zoom-panel" id="zoomPanel">
-        <button class="zoom-step" id="zoomInBtn" title="Acercar">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                <line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/>
-            </svg>
-        </button>
-        <div class="zoom-track-wrap">
-            <input type="range" class="zoom-range" id="zoomSlider"
-                   min="30" max="180" value="100" step="5" orient="vertical">
+
+        <!-- Grupo: Deshacer / Rehacer -->
+        <div class="zoom-group">
+            <button class="zoom-btn" id="undoBtn" title="Deshacer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+                </svg>
+            </button>
+            <div class="zoom-inner-sep"></div>
+            <button class="zoom-btn" id="redoBtn" title="Rehacer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
+                </svg>
+            </button>
         </div>
-        <button class="zoom-step" id="zoomOutBtn" title="Alejar">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                <line x1="1" y1="6" x2="11" y2="6"/>
-            </svg>
-        </button>
-        <span class="zoom-pct" id="zoomPct">100%</span>
+
+        <!-- Grupo: Encuadrar -->
+        <div class="zoom-group">
+            <button class="zoom-btn" id="zoomFitBtn" title="Encuadrar">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+                    <path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Grupo: Zoom + / - -->
+        <div class="zoom-group">
+            <button class="zoom-btn" id="zoomInBtn" title="Zoom +">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/>
+                </svg>
+            </button>
+            <div class="zoom-inner-sep"></div>
+            <button class="zoom-btn" id="zoomOutBtn" title="Zoom −">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="1" y1="7" x2="13" y2="7"/>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- MOBILE POSTER UI — visible solo en ≤640px           -->
+    <!-- ═══════════════════════════════════════════════════ -->
+
+    <!-- Header (solo visible en mob-edit) -->
+    <div class="mob-header" id="mobHeader">
+        <span class="mob-header-title">Redes Sociales</span>
+        <button class="mob-export-btn" id="mobExportBtn">Exportar</button>
+    </div>
+
+    <!-- AI bar — siempre visible en el fondo -->
+    <div class="mob-ai-bar">
+        <div class="mob-ai-pill">
+            <input type="text" id="mobBriefIn" class="mob-ai-input" placeholder="Generá copy con IA...">
+            <button class="mob-ai-send" id="mobAISend" title="Generar copy">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 4a1 1 0 0 1 .707.293l7 7a1 1 0 0 1-1.414 1.414L13 7.414V20a1 1 0 1 1-2 0V7.414l-5.293 5.293a1 1 0 0 1-1.414-1.414l7-7A1 1 0 0 1 12 4z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile sheet — dos estados: preview (colapsado) / edit (expandido) -->
+    <div class="mob-sheet" id="mobSheet">
+
+        <!-- Handle: siempre visible, tap para alternar estados -->
+        <div class="mob-sheet-top" id="mobSheetTop">
+            <div class="mob-sheet-bar"></div>
+            <div class="mob-sheet-peek-row">
+                <svg class="mob-peek-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="18 15 12 9 6 15"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Cuerpo: editor + grilla + AI -->
+        <div class="mob-sheet-body">
+
+            <div class="mob-editor-head">
+                <span class="mob-editor-label" id="mobEditorLabel">Hook</span>
+            </div>
+
+            <textarea class="mob-editor-textarea" id="mobEditorTextarea"
+                autocomplete="off" autocorrect="on" spellcheck="true"
+                placeholder="Título principal"></textarea>
+
+            <!-- Grilla 3×2 -->
+            <div class="mob-grid">
+                <button class="mob-grid-btn" data-action="etiqueta">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    <span>Etiqueta</span>
+                </button>
+                <button class="mob-grid-btn mob-grid-btn--sel" data-action="hook">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>
+                    </svg>
+                    <span>Hook</span>
+                </button>
+                <button class="mob-grid-btn" data-action="subtitulo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="17" y1="18" x2="3" y2="18"/>
+                    </svg>
+                    <span>Subtítulo</span>
+                </button>
+                <button class="mob-grid-btn" data-action="foto">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                    <span>Foto</span>
+                </button>
+                <button class="mob-grid-btn" data-action="estilo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                    </svg>
+                    <span>Estilo</span>
+                </button>
+                <button class="mob-grid-btn" data-action="formato">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="7" height="9" rx="1.5"/>
+                        <rect x="14" y="3" width="7" height="13" rx="1.5"/>
+                    </svg>
+                    <div class="mob-card-foot">
+                        <span>Formato</span>
+                        <span class="mob-card-state" id="mobFormatoHint">Historia</span>
+                    </div>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Style bottom sheet -->
+    <div class="mob-style-backdrop" id="mobStyleBackdrop"></div>
+    <div class="mob-style-sheet" id="mobStyleSheet">
+        <div class="mob-sheet-handle"></div>
+        <div class="mob-sheet-row">
+            <span class="mob-sheet-label">Color</span>
+            <div class="mob-color-row">
+                <button class="mob-color-dot active" data-color="#DDFF9D" data-accent="#9E9D24" style="background:#DDFF9D"></button>
+                <button class="mob-color-dot" data-color="#C0FFCA" data-accent="#2E7D32" style="background:#C0FFCA"></button>
+                <button class="mob-color-dot" data-color="#E8E0FF" data-accent="#7B61FF" style="background:#E8E0FF"></button>
+                <button class="mob-color-dot" data-color="#FFD0EF" data-accent="#FF61C6" style="background:#FFD0EF"></button>
+            </div>
+        </div>
+        <div class="mob-sheet-row">
+            <span class="mob-sheet-label">Programa</span>
+            <select class="mob-program-sel" id="mobProgramSel">
+                <option value="DNE Isotipo">DNE Isotipo</option>
+                <option value="MEC - DNE" selected>MEC - DNE</option>
+                <option value="Cultura Científica">Cultura Científica</option>
+                <option value="Cultura Científica (Anep)">CC (Anep)</option>
+                <option value="CC 40 Anos">CC 40 años</option>
+                <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
+                <option value="Ccepi">Ccepi</option>
+                <option value="PAS">PAS</option>
+                <option value="PNEC">PNEC</option>
+                <option value="Cecap">Cecap</option>
+                <option value="Secretaría Permanente">Sec. Permanente</option>
+            </select>
+        </div>
+        <div class="mob-sheet-row">
+            <span class="mob-sheet-label">Formato</span>
+            <div class="mob-format-row">
+                <button class="mob-format-btn active" data-format="posteo">Posteo 5:4</button>
+                <button class="mob-format-btn active" data-format="historia">Historia 9:16</button>
+            </div>
+        </div>
+        <button class="mob-sheet-done" id="mobSheetDone">Listo</button>
+    </div>
+
+    <!-- Export sheet -->
+    <div class="mob-export-backdrop" id="mobExportBackdrop"></div>
+    <div class="mob-export-sheet" id="mobExportSheet">
+        <div class="mob-export-handle"></div>
+        <div class="mob-export-head">
+            <span class="mob-export-title">Exportar</span>
+            <p class="mob-export-desc">Elegí los formatos a descargar.</p>
+        </div>
+        <div class="mob-export-options">
+            <button class="mob-export-option mob-export-option--on" data-format="posteo" id="mobExpOptPosteo">
+                <div class="mob-export-opt-info">
+                    <span class="mob-export-opt-name">Posteo</span>
+                    <span class="mob-export-opt-ratio">5:4</span>
+                </div>
+                <div class="mob-export-check" aria-hidden="true">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+            </button>
+            <button class="mob-export-option mob-export-option--on" data-format="historia" id="mobExpOptHistoria">
+                <div class="mob-export-opt-info">
+                    <span class="mob-export-opt-name">Historia</span>
+                    <span class="mob-export-opt-ratio">9:16</span>
+                </div>
+                <div class="mob-export-check" aria-hidden="true">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+            </button>
+        </div>
+        <button class="mob-export-confirm" id="mobExportConfirm">Descargar 2 formatos</button>
+        <button class="mob-export-cancel" id="mobExportCancel">Cancelar</button>
+    </div>
+
+    <!-- Mensaje desktop-only (otros módulos en mobile) -->
+    <div class="mob-desktop-only" id="mobDesktopOnly">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;margin-bottom:16px">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        <p>Este producto está disponible en desktop</p>
     </div>
 
     <script>
+    /* ── Zoom ── */
     const ZoomController = (() => {
-        let current = 100;
+        let current = 140;
+        const DEFAULT = { poster: 140, cert: 100, ave: 100, badge: 100 };
 
         function apply(value) {
             current = Math.max(30, Math.min(180, value));
-            const slider = document.getElementById('zoomSlider');
-            const label  = document.getElementById('zoomPct');
-            if (slider) slider.value = current;
-            if (label)  label.textContent = current + '%';
-
-            const factor = current / 100;
             const tab = typeof APP !== 'undefined' ? APP.currentTab : '';
+            const factor = current / 100;
             if (tab === 'cert'   && typeof CertGenerator   !== 'undefined') CertGenerator.setZoom(factor);
             if (tab === 'poster' && typeof PosterGenerator !== 'undefined') PosterGenerator.setZoom(factor);
             if (tab === 'ave'    && typeof AveGenerator    !== 'undefined') AveGenerator.setZoom(factor);
@@ -1097,20 +1773,1018 @@ a certificar (curso, taller o programa)</div>
         }
 
         function step(delta) { apply(current + delta); }
-        function reset()     { apply(100); }
 
-        function init() {
-            document.getElementById('zoomSlider')
-                ?.addEventListener('input', e => apply(parseInt(e.target.value)));
-            document.getElementById('zoomInBtn')
-                ?.addEventListener('click', () => step(5));
-            document.getElementById('zoomOutBtn')
-                ?.addEventListener('click', () => step(-5));
+        function fit() {
+            const tab = typeof APP !== 'undefined' ? APP.currentTab : 'poster';
+            apply(DEFAULT[tab] ?? 100);
         }
 
-        return { init, apply, step, reset };
+        function init() {
+            document.getElementById('zoomInBtn') ?.addEventListener('click', () => step(10));
+            document.getElementById('zoomOutBtn')?.addEventListener('click', () => step(-10));
+            document.getElementById('zoomFitBtn')?.addEventListener('click', fit);
+        }
+
+        return { init, apply, step, fit };
     })();
-    document.addEventListener('DOMContentLoaded', () => ZoomController.init());
+
+    /* ── Undo / Redo (historial de textos) ── */
+    const TextHistory = (() => {
+        const FIELDS = ['etiquetaIn', 'titleIn', 'subtitleIn'];
+        let stack = [], cursor = -1, debounce = null;
+
+        function snapshot() {
+            return Object.fromEntries(FIELDS.map(id => [id, document.getElementById(id)?.value ?? '']));
+        }
+
+        function push() {
+            const s = snapshot();
+            if (cursor >= 0 && JSON.stringify(stack[cursor]) === JSON.stringify(s)) return;
+            stack = stack.slice(0, cursor + 1);
+            stack.push(s);
+            cursor = stack.length - 1;
+            sync();
+        }
+
+        function restore(s) {
+            FIELDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.value = s[id]; el.dispatchEvent(new Event('input', { bubbles: true })); }
+            });
+        }
+
+        function undo() { if (cursor > 0) { cursor--; restore(stack[cursor]); sync(); } }
+        function redo() { if (cursor < stack.length - 1) { cursor++; restore(stack[cursor]); sync(); } }
+
+        function sync() {
+            document.getElementById('undoBtn')?.toggleAttribute('disabled', cursor <= 0);
+            document.getElementById('redoBtn')?.toggleAttribute('disabled', cursor >= stack.length - 1);
+        }
+
+        function init() {
+            push(); // estado inicial
+            FIELDS.forEach(id => {
+                document.getElementById(id)?.addEventListener('input', () => {
+                    clearTimeout(debounce);
+                    debounce = setTimeout(push, 600);
+                });
+            });
+            document.getElementById('undoBtn')?.addEventListener('click', undo);
+            document.getElementById('redoBtn')?.addEventListener('click', redo);
+        }
+
+        return { init, push };
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        ZoomController.init();
+        TextHistory.init();
+    });
+    </script>
+
+    <script>
+    /* ── Mobile Poster UI ── */
+    const MobilePosterUI = (() => {
+        'use strict';
+
+        const BLOCKS = {
+            etiqueta: { realId: 'etiquetaIn',  label: 'Etiqueta', placeholder: 'Etiqueta superior',  type: 'words', max: 4, letterSpacing: '-0.04em', textTransform: 'uppercase' },
+            hook:     { realId: 'titleIn',     label: 'Título',   placeholder: 'Título principal',    type: 'lines', max: 3, letterSpacing: '-0.05em', textTransform: 'none' },
+            subtitulo:{ realId: 'subtitleIn',  label: 'Subtítulo',placeholder: 'Subtítulo',           type: 'lines', max: 3, letterSpacing: '-0.04em', textTransform: 'none' },
+        };
+
+        let active = 'hook';
+        let mobilePreviewFormat = 'historia';    // formato visible en preview
+        let mobExportFormats    = ['posteo', 'historia']; // formatos a descargar
+
+        function isMobile() { return window.matchMedia('(max-width: 640px)').matches; }
+
+        function countLines(text) {
+            const clean = (text || '').replace(/\*([^*]*)\*/g, '$1');
+            return clean.split('\n').reduce((sum, line) =>
+                sum + Math.max(1, Math.ceil(line.length / 24)), 0);
+        }
+
+        function countWords(text) {
+            return (text || '').trim().split(/\s+/).filter(Boolean).length;
+        }
+
+        /* ── Zoom helpers ── */
+        function calcMobScale(isEdit) {
+            const fmts = typeof FormatManager !== 'undefined' ? FormatManager.getActive() : [];
+            if (fmts.length === 0 || window.innerWidth > 640) return null;
+            const fmt  = fmts[0];
+            const w    = window.innerWidth;
+            const h    = window.innerHeight;
+            const aiBar = document.querySelector('.mob-ai-bar');
+            const AI_H  = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
+            const pad   = isEdit ? 20 : 0;
+            const availW = w - pad;
+            const availH = isEdit ? (h - 52 - 424 - AI_H - pad) : (h - AI_H - 56);
+            return Math.max(0.1, Math.min(availW / fmt.displayWidth, availH / fmt.displayHeight));
+        }
+
+        function animateZoom(targetScale) {
+            if (targetScale === null) return;
+            const cont = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            if (!cont) return;
+            cont.style.transition    = 'transform 0.36s cubic-bezier(0.32,0,0.67,0)';
+            cont.style.transformOrigin = 'center center';
+            cont.style.transform     = `scale(${targetScale})`;
+        }
+
+        function setEdit(on) {
+            /* Limpiar inline styles del drag antes de dejar que CSS tome control */
+            const sheet = document.getElementById('mobSheet');
+            const cvs   = document.querySelector('.canvas-area');
+            if (sheet) { sheet.style.transform = sheet.style.transition = ''; }
+            if (cvs)   { cvs.style.top = cvs.style.bottom = cvs.style.transition = ''; }
+
+            document.body.classList.toggle('mob-edit', on);
+            document.body.classList.remove('mob-mini'); // mini is never auto-entered; only via + button
+            if (typeof MobileDesignManager !== 'undefined') MobileDesignManager.hideSideCards();
+
+            animateZoom(calcMobScale(on));
+
+            if (on) {
+                setTimeout(() => document.getElementById('mobEditorTextarea')?.focus(), 200);
+            } else {
+                document.getElementById('mobEditorTextarea')?.blur();
+            }
+            setTimeout(() => {
+                const cont = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+                if (cont) cont.style.transition = '';
+                if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+            }, 400);
+        }
+
+        function selectBlock(block) {
+            active = block;
+            const cfg   = BLOCKS[block];
+            const real  = document.getElementById(cfg.realId);
+            const ta    = document.getElementById('mobEditorTextarea');
+
+            document.getElementById('mobEditorLabel').textContent    = cfg.label;
+            if (ta) {
+                ta.value = real?.value || '';
+                ta.placeholder = cfg.placeholder;
+                ta.style.letterSpacing = cfg.letterSpacing || '';
+                ta.style.textTransform = cfg.textTransform || 'none';
+                if (document.body.classList.contains('mob-edit')) {
+                    requestAnimationFrame(() => ta.focus());
+                }
+            }
+            document.querySelectorAll('.mob-grid-btn[data-action]').forEach(btn => {
+                btn.classList.toggle('mob-grid-btn--sel', btn.dataset.action === block);
+            });
+            updateHint();
+        }
+
+        function updateHint() {
+            const hint     = document.getElementById('mobEditorHint');
+            const combined = document.getElementById('mobEditorCombined');
+            const ta       = document.getElementById('mobEditorTextarea');
+            if (!hint || !ta) return;
+
+            const val = ta.value;
+            const cfg = BLOCKS[active];
+
+            if (cfg.type === 'words') {
+                const n = countWords(val);
+                hint.textContent = `${n}/${cfg.max} palabras`;
+                hint.classList.toggle('mob-hint--warn', n > cfg.max);
+            } else {
+                const n = countLines(val);
+                hint.textContent = `${n}/${cfg.max} líneas`;
+                hint.classList.toggle('mob-hint--warn', n > cfg.max);
+            }
+
+            if (combined) {
+                const hLines = countLines(document.getElementById('titleIn')?.value   || '');
+                const sLines = countLines(document.getElementById('subtitleIn')?.value || '');
+                const total  = hLines + sLines;
+                if (total > 0) {
+                    combined.textContent = `Total ${total}/5 líneas`;
+                    combined.classList.toggle('mob-hint--warn', total > 5);
+                } else {
+                    combined.textContent = '';
+                }
+            }
+        }
+
+        function syncToReal() {
+            const cfg  = BLOCKS[active];
+            const real = document.getElementById(cfg.realId);
+            const ta   = document.getElementById('mobEditorTextarea');
+            if (real && ta) {
+                real.value = ta.value;
+                real.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            updateHint();
+        }
+
+        function syncFromReal() {
+            const real = document.getElementById(BLOCKS[active].realId);
+            const ta   = document.getElementById('mobEditorTextarea');
+            if (real && ta) ta.value = real.value;
+            updateHint();
+        }
+
+        function openStyle()  {
+            document.getElementById('mobStyleSheet')?.classList.add('mob-sheet--open');
+            document.getElementById('mobStyleBackdrop')?.classList.add('mob-sheet--open');
+        }
+        function closeStyle() {
+            document.getElementById('mobStyleSheet')?.classList.remove('mob-sheet--open');
+            document.getElementById('mobStyleBackdrop')?.classList.remove('mob-sheet--open');
+        }
+
+        function setColor(color) {
+            const dot = document.querySelector(`#colorPaletteBar .color-dot[data-color="${color}"]`);
+            if (dot) dot.click();
+            document.querySelectorAll('.mob-color-dot').forEach(d =>
+                d.classList.toggle('active', d.dataset.color === color));
+        }
+
+        function setProgram(value) {
+            const sel = document.getElementById('programSelectorBar');
+            if (sel) { sel.value = value; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+        }
+
+        function toggleExportFormat(formatId) {
+            const idx = mobExportFormats.indexOf(formatId);
+            if (idx > -1) {
+                if (mobExportFormats.length > 1) mobExportFormats.splice(idx, 1);
+            } else {
+                mobExportFormats.push(formatId);
+            }
+            document.querySelectorAll('.mob-format-btn').forEach(btn =>
+                btn.classList.toggle('active', mobExportFormats.includes(btn.dataset.format)));
+        }
+
+        /* ── Formato de preview ── */
+        function togglePreviewFormat() {
+            mobilePreviewFormat = mobilePreviewFormat === 'historia' ? 'posteo' : 'historia';
+            const label = mobilePreviewFormat === 'historia' ? 'Historia' : 'Posteo';
+            document.getElementById('mobFormatoHint').textContent = label;
+            if (typeof FormatManager !== 'undefined') {
+                FormatManager.setActive([mobilePreviewFormat]);
+            }
+            setTimeout(() => {
+                if (document.body.classList.contains('mob-mini') && typeof MobileDesignManager !== 'undefined') {
+                    MobileDesignManager.recalcMiniLayout(true);
+                } else if (typeof PosterGenerator !== 'undefined') {
+                    PosterGenerator.updateScale();
+                }
+            }, 150);
+        }
+
+        /* ── Export sheet ── */
+        function updateExportConfirmLabel() {
+            const btn = document.getElementById('mobExportConfirm');
+            if (!btn) return;
+            if (mobExportFormats.length === 2)
+                btn.textContent = 'Descargar 2 formatos';
+            else if (mobExportFormats.includes('posteo'))
+                btn.textContent = 'Descargar Posteo';
+            else
+                btn.textContent = 'Descargar Historia';
+        }
+
+        function openExportSheet() {
+            updateExportConfirmLabel();
+            document.getElementById('mobExportSheet')?.classList.add('mob-export--open');
+            document.getElementById('mobExportBackdrop')?.classList.add('mob-export--open');
+        }
+
+        function closeExportSheet() {
+            document.getElementById('mobExportSheet')?.classList.remove('mob-export--open');
+            document.getElementById('mobExportBackdrop')?.classList.remove('mob-export--open');
+        }
+
+        async function doExport() {
+            closeExportSheet();
+            if (typeof FormatManager === 'undefined' || typeof ExportEngine === 'undefined') {
+                document.getElementById('mainDownloadBtn')?.click();
+                return;
+            }
+            FormatManager.setActive([...mobExportFormats]);
+            await new Promise(r => setTimeout(r, 280));
+            try {
+                await ExportEngine.exportPosterJPG();
+            } finally {
+                /* restaurar formato de preview */
+                FormatManager.setActive([mobilePreviewFormat]);
+            }
+        }
+
+        function generateCopy() {
+            const mobIn  = document.getElementById('mobBriefIn');
+            const realIn = document.getElementById('aiBriefInput');
+            if (realIn && mobIn) realIn.value = mobIn.value;
+            document.getElementById('aiGenerateBtn')?.click();
+        }
+
+        function watchRealInputs() {
+            ['etiquetaIn', 'titleIn', 'subtitleIn'].forEach(id => {
+                document.getElementById(id)?.addEventListener('input', () => {
+                    const blockKey = Object.keys(BLOCKS).find(k => BLOCKS[k].realId === id);
+                    if (blockKey === active) syncFromReal();
+                    else updateHint();
+                });
+            });
+        }
+
+        /* ── Drag continuo del handle ── */
+        function wireSheetDrag() {
+            const sheet  = document.getElementById('mobSheet');
+            const handle = document.getElementById('mobSheetTop');
+            const cvs    = document.querySelector('.canvas-area');
+            if (!sheet || !handle) return;
+
+            /* AI bar height includes safe-area-inset-bottom */
+            const aiBar  = document.querySelector('.mob-ai-bar');
+            const AI_H   = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
+            const SHEET_H = 424;  // sheet height (constant)
+            const CLOSED = 368;   // SHEET_H - 56: handle (56px) peeks above AI bar
+            const OPEN   = 0;
+            let startY = 0, startT = CLOSED, lastY = 0, lastMs = 0, vel = 0, dragging = false;
+            let scalePreview = 1, scaleEdit = 1;
+
+            function applyPos(t, animate) {
+                const c        = Math.max(OPEN, Math.min(CLOSED, t));
+                const progress = 1 - c / CLOSED; // 0 = cerrado/preview, 1 = abierto/edit
+                const ease     = 'transform 0.36s cubic-bezier(0.32,0,0.67,0)';
+
+                sheet.style.transition = animate ? ease : 'none';
+                sheet.style.transform  = `translateY(${c}px)`;
+
+                if (cvs) {
+                    const safeTop  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-top')) || 0;
+                    const HEADER_H = 52 + safeTop;
+                    const topPx    = Math.round(progress * HEADER_H);
+                    const cvEase   = 'top 0.36s cubic-bezier(0.32,0,0.67,0), bottom 0.36s cubic-bezier(0.32,0,0.67,0)';
+                    cvs.style.transition = animate ? cvEase : 'none';
+                    cvs.style.top    = `${topPx}px`;
+                    cvs.style.bottom = `${AI_H + SHEET_H - c}px`;
+                }
+
+                // Interpolar escala del poster en tiempo real durante el drag
+                if (!animate && typeof PosterGenerator !== 'undefined') {
+                    const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+                    if (frame) {
+                        frame.style.transition    = 'none';
+                        frame.style.transformOrigin = 'center center';
+                        frame.style.transform     = `scale(${scalePreview + progress * (scaleEdit - scalePreview)})`;
+                    }
+                }
+            }
+
+            function snap(toOpen) {
+                applyPos(toOpen ? OPEN : CLOSED, true);
+                document.body.classList.toggle('mob-edit', toOpen);
+                document.body.classList.remove('mob-mini'); // mini only via + button, never auto on edit exit
+                if (typeof MobileDesignManager !== 'undefined') MobileDesignManager.hideSideCards();
+                animateZoom(calcMobScale(toOpen));
+                if (toOpen) setTimeout(() => document.getElementById('mobEditorTextarea')?.focus(), 200);
+                else        document.getElementById('mobEditorTextarea')?.blur();
+                setTimeout(() => {
+                    sheet.style.transform = sheet.style.transition = '';
+                    if (cvs) { cvs.style.top = cvs.style.bottom = cvs.style.transition = ''; }
+                    const cont = document.getElementById('posterFormatsContainer');
+                    if (cont) cont.style.transition = '';
+                    if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+                }, 390);
+            }
+
+            handle.addEventListener('touchstart', (e) => {
+                const t = e.touches[0];
+                startY = lastY = t.clientY;
+                lastMs = Date.now();
+                startT = document.body.classList.contains('mob-edit') ? OPEN : CLOSED;
+                vel = 0; dragging = true;
+                // Pre-calcular escalas para interpolar durante el drag
+                scalePreview = calcMobScale(false) ?? 1;
+                scaleEdit    = calcMobScale(true)  ?? 1;
+                applyPos(startT, false);
+            }, { passive: true });
+
+            handle.addEventListener('touchmove', (e) => {
+                if (!dragging) return;
+                e.preventDefault();
+                const t = e.touches[0], now = Date.now();
+                vel   = (t.clientY - lastY) / Math.max(1, now - lastMs);
+                lastY = t.clientY; lastMs = now;
+                applyPos(startT + (t.clientY - startY), false);
+            }, { passive: false });
+
+            const onEnd = () => {
+                if (!dragging) return;
+                dragging = false;
+                const dy = lastY - startY;
+                let toOpen;
+                if (Math.abs(dy) < 6)        toOpen = !document.body.classList.contains('mob-edit');
+                else if (Math.abs(vel) > 0.4) toOpen = vel < 0;
+                else                          toOpen = (startT + dy) < CLOSED / 2;
+                snap(toOpen);
+            };
+            handle.addEventListener('touchend',    onEnd, { passive: true });
+            handle.addEventListener('touchcancel', onEnd, { passive: true });
+        }
+
+        function init() {
+            if (!isMobile()) return;
+
+            wireSheetDrag();
+
+            /* Canvas: 3-state cycle — mini→full, full→edit, edit→mini/full */
+            document.querySelector('.canvas-area')
+                ?.addEventListener('click', () => {
+                    // Swipe gesture fires touchend then synthesizes click — ignore if swipe just happened
+                    if (typeof MobileDesignManager !== 'undefined' && MobileDesignManager.wasSwipeHandled()) return;
+                    if (document.body.classList.contains('mob-edit')) {
+                        setEdit(false);
+                    } else if (document.body.classList.contains('mob-mini')) {
+                        if (typeof MobileDesignManager !== 'undefined') MobileDesignManager.exitMini();
+                    } else {
+                        setEdit(true);
+                    }
+                });
+
+            document.querySelectorAll('.mob-grid-btn[data-action]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const a = btn.dataset.action;
+                    if      (a === 'foto')    { document.getElementById('bgInput')?.click(); }
+                    else if (a === 'estilo')  { openStyle(); }
+                    else if (a === 'formato') { togglePreviewFormat(); }
+                    else                      { selectBlock(a); setEdit(true); }
+                });
+            });
+
+            document.getElementById('mobEditorTextarea')
+                ?.addEventListener('input', syncToReal);
+
+            document.getElementById('mobAISend')
+                ?.addEventListener('click', generateCopy);
+
+            /* ── AI chat: poster en preview pequeña mientras el teclado está abierto ── */
+            (function wireAIFocus() {
+                const aiInput = document.getElementById('mobBriefIn');
+                const aiBar   = document.querySelector('.mob-ai-bar');
+                const cvs     = document.querySelector('.canvas-area');
+                if (!aiInput) return;
+
+                function onVVResize() {
+                    if (!document.body.classList.contains('mob-ai-focus')) return;
+                    const vv = window.visualViewport;
+                    if (!vv || !cvs) return;
+                    const AI_H      = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
+                    const keyboardH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+                    // Flota el AI bar justo sobre el teclado
+                    if (aiBar) aiBar.style.bottom = `${keyboardH}px`;
+                    // Compacta el canvas entre top=0 y el borde superior del AI bar
+                    cvs.style.transition = 'none';
+                    cvs.style.top        = '0px';
+                    cvs.style.bottom     = `${keyboardH + AI_H}px`;
+                    cvs.style.padding    = '8px 10px';
+                    // Recalcula escala con el área disponible real
+                    if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+                }
+
+                aiInput.addEventListener('focus', () => {
+                    if (!isMobile()) return;
+                    document.body.classList.add('mob-ai-focus');
+                    if (window.visualViewport) {
+                        window.visualViewport.addEventListener('resize', onVVResize);
+                        window.visualViewport.addEventListener('scroll', onVVResize);
+                    }
+                    setTimeout(onVVResize, 80); // pequeño delay para que iOS reporte el tamaño correcto
+                });
+
+                aiInput.addEventListener('blur', () => {
+                    document.body.classList.remove('mob-ai-focus');
+                    if (window.visualViewport) {
+                        window.visualViewport.removeEventListener('resize', onVVResize);
+                        window.visualViewport.removeEventListener('scroll', onVVResize);
+                    }
+                    // Restaura AI bar y canvas a control CSS
+                    if (aiBar) aiBar.style.bottom = '';
+                    if (cvs)   { cvs.style.top = cvs.style.bottom = cvs.style.padding = cvs.style.transition = ''; }
+                    setTimeout(() => {
+                        if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+                    }, 80);
+                });
+            })();
+
+            document.getElementById('mobBriefIn')
+                ?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); generateCopy(); } });
+
+
+            document.querySelectorAll('.mob-color-dot').forEach(dot =>
+                dot.addEventListener('click', () => setColor(dot.dataset.color)));
+
+            document.getElementById('mobProgramSel')
+                ?.addEventListener('change', e => setProgram(e.target.value));
+
+            document.querySelectorAll('.mob-format-btn').forEach(btn =>
+                btn.addEventListener('click', () => toggleExportFormat(btn.dataset.format)));
+
+            document.getElementById('mobExportBtn')
+                ?.addEventListener('click', openExportSheet);
+
+            /* Export sheet interactions */
+            document.querySelectorAll('.mob-export-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const fmt = opt.dataset.format;
+                    const isOn = opt.classList.contains('mob-export-option--on');
+                    if (isOn && mobExportFormats.length === 1) return; // mínimo 1
+                    if (isOn) {
+                        mobExportFormats = mobExportFormats.filter(f => f !== fmt);
+                        opt.classList.remove('mob-export-option--on');
+                    } else {
+                        mobExportFormats.push(fmt);
+                        opt.classList.add('mob-export-option--on');
+                    }
+                    updateExportConfirmLabel();
+                });
+            });
+            document.getElementById('mobExportConfirm')?.addEventListener('click', doExport);
+            document.getElementById('mobExportCancel')?.addEventListener('click',  closeExportSheet);
+            document.getElementById('mobExportBackdrop')?.addEventListener('click', closeExportSheet);
+
+            document.getElementById('mobSheetDone')
+                ?.addEventListener('click', closeStyle);
+            document.getElementById('mobStyleBackdrop')
+                ?.addEventListener('click', closeStyle);
+
+            watchRealInputs();
+            selectBlock('hook');
+
+            /* Preview mobile: solo el formato activo (historia por defecto) */
+            if (typeof FormatManager !== 'undefined') FormatManager.setActive([mobilePreviewFormat]);
+
+            setTimeout(() => {
+                if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+            }, 150);
+
+            window.addEventListener('resize', () => {
+                if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+                if (document.body.classList.contains('mob-mini') && typeof MobileDesignManager !== 'undefined') {
+                    MobileDesignManager.recalcMiniLayout(false);
+                }
+            });
+        }
+
+        function syncEditor() { selectBlock(active); }
+
+        return { init, selectBlock, setEdit, syncEditor, get previewFormat() { return mobilePreviewFormat; } };
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       MOBILE DESIGN MANAGER — multi-diseño (hasta 5)
+       Single poster render: mini ↔ full ↔ edit
+       Instagram-style horizontal swipe navigation
+       ═══════════════════════════════════════════════════ */
+    const MobileDesignManager = (() => {
+        'use strict';
+        const MAX = 5;
+        let slots = [];
+        let cur   = 0;
+        let swipeHandled = false; // prevent click-after-swipe from also triggering state cycle
+
+        /* ── State management ── */
+        function snapshot() {
+            if (typeof PosterGenerator === 'undefined') return;
+            const prevPreview = slots[cur]?.previewDataUrl || null;
+            slots[cur] = PosterGenerator.getFullState();
+            slots[cur].previewDataUrl = prevPreview;
+        }
+
+        async function captureThumbFor(slotIndex) {
+            try {
+                const posterEl = document.querySelector('.poster[data-format]');
+                if (!posterEl) return;
+                let dataUrl = null;
+                if (typeof html2canvas === 'function') {
+                    const canvas = await html2canvas(posterEl, {
+                        scale: 0.6,
+                        allowTaint: true,
+                        useCORS: true,
+                        backgroundColor: null,
+                        logging: false
+                    });
+                    dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                } else if (window.htmlToImage) {
+                    dataUrl = await window.htmlToImage.toJpeg(posterEl, { quality: 0.75, pixelRatio: 0.6 });
+                }
+                if (dataUrl && slots[slotIndex]) {
+                    slots[slotIndex].previewDataUrl = dataUrl;
+                    if (document.body.classList.contains('mob-mini')) updateSideCards();
+                }
+            } catch(e) { /* fail silently — side card falls back to bgDataUrl */ }
+        }
+
+        function restore(index) {
+            const s = slots[index];
+            if (!s) return;
+            ['etiquetaIn', 'titleIn', 'subtitleIn'].forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (el) el.value = s[['etiqueta', 'title', 'subtitle'][i]] || '';
+            });
+            if (typeof PosterGenerator !== 'undefined') {
+                PosterGenerator.restoreState(s);
+                PosterGenerator.syncText();
+            }
+            if (typeof MobilePosterUI !== 'undefined') MobilePosterUI.syncEditor();
+        }
+
+        /* ── Metrics ── */
+        function getActiveFmt() {
+            try {
+                const id = (typeof MobilePosterUI !== 'undefined') ? MobilePosterUI.previewFormat : 'historia';
+                return (typeof FormatManager !== 'undefined') ? FormatManager.get(id) : null;
+            } catch(e) { return null; }
+        }
+
+        function miniMetrics() {
+            const fmt       = getActiveFmt() || { displayWidth: 243, displayHeight: 432 };
+            const vw        = window.innerWidth;
+            const gap       = 10;
+            const sideRatio = 0.84;
+            const hasL      = cur > 0;
+            const hasR      = cur < slots.length - 1;
+            const nSides    = (hasL ? 1 : 0) + (hasR ? 1 : 0);
+            const maxW      = vw * 0.92;
+            const scSolo    = Math.min(vw * 0.56, 240) / fmt.displayWidth;
+
+            let sc;
+            if (nSides === 0) {
+                sc = scSolo;
+            } else {
+                sc = (maxW - gap * nSides) / (fmt.displayWidth * (1 + sideRatio * nSides));
+                sc = Math.min(sc, scSolo);
+            }
+            sc = Math.max(0.15, sc);
+
+            const mw = fmt.displayWidth  * sc;
+            const mh = fmt.displayHeight * sc;
+            const sw = Math.round(mw * sideRatio);
+            const sh = Math.round(mh * sideRatio);
+            const cvs = document.querySelector('.canvas-area');
+            const centerY = cvs ? cvs.clientHeight * 0.5 : (window.innerHeight - 120) * 0.5;
+            return { sc, mw, mh, sw, sh, centerY, gap, hasL, hasR };
+        }
+
+        function recalcMiniLayout(animate) {
+            if (!document.body.classList.contains('mob-mini')) return;
+            const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            const { sc } = miniMetrics();
+            if (frame) {
+                frame.style.transformOrigin = 'center center';
+                if (animate) {
+                    frame.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.20, 0.64, 1)';
+                    frame.style.transform  = `scale(${sc})`;
+                    setTimeout(() => { if (frame) frame.style.transition = ''; }, 360);
+                } else {
+                    frame.style.transform = `scale(${sc})`;
+                }
+            }
+            updateSideCards();
+        }
+
+        /* ── Side card content + position (non-circular) ── */
+        function setSideCard(el, slot, visible, isLeft) {
+            el.style.transition = ''; // Restore CSS transitions
+            const bg = el.querySelector('.mob-sc-bg');
+            const hasThumb = !!slot?.previewDataUrl;
+            if (bg) {
+                if (hasThumb) {
+                    // Full poster screenshot — shows logo, colors, typography, everything
+                    bg.style.backgroundImage    = `url(${slot.previewDataUrl})`;
+                    bg.style.backgroundSize     = 'cover';
+                    bg.style.backgroundPosition = 'center';
+                    bg.style.background         = '';
+                } else if (slot?.bgDataUrl) {
+                    bg.style.backgroundImage = `url(${slot.bgDataUrl})`;
+                    bg.style.backgroundSize  = 'cover';
+                    bg.style.background      = '';
+                } else {
+                    bg.style.backgroundImage = '';
+                    bg.style.background      = 'linear-gradient(145deg, #f5f4f2 0%, #e8e6e2 100%)';
+                }
+            }
+            // When full poster thumbnail is available, overlay and title are already baked in
+            const overlay = el.querySelector('.mob-sc-overlay');
+            const textEl  = el.querySelector('.mob-sc-text');
+            if (overlay) overlay.style.display = hasThumb ? 'none' : '';
+            if (textEl)  textEl.style.display  = hasThumb ? 'none' : '';
+            const titleEl = el.querySelector('.mob-sc-title');
+            if (titleEl) titleEl.textContent = (slot?.title || '').replace(/\*([^*]*)\*/g, '$1');
+
+            if (!visible) {
+                el.style.opacity       = '0';
+                el.style.pointerEvents = 'none';
+                return;
+            }
+            const { mw, sw, sh, centerY, gap } = miniMetrics();
+            const ty = centerY - sh / 2;
+            const tx = isLeft ? -(mw / 2 + gap + sw) : (mw / 2 + gap);
+            el.style.width         = `${sw}px`;
+            el.style.height        = `${sh}px`;
+            el.style.transform     = `translateX(${tx}px) translateY(${ty}px)`;
+            el.style.opacity       = '0.88';
+            el.style.pointerEvents = 'auto';
+        }
+
+        function updateSideCards() {
+            const L = document.getElementById('mobScardL');
+            const R = document.getElementById('mobScardR');
+            if (!L || !R) return;
+            const inMini = document.body.classList.contains('mob-mini');
+            // Non-circular: only show a side card if that neighbour actually exists
+            setSideCard(L, slots[cur - 1], inMini && cur > 0,                true);
+            setSideCard(R, slots[cur + 1], inMini && cur < slots.length - 1, false);
+        }
+
+        function animateSideCardsOut() {
+            const vw = window.innerWidth;
+            const L  = document.getElementById('mobScardL');
+            const R  = document.getElementById('mobScardR');
+            if (L) { L.style.transform = `translateX(${-vw * 1.3}px)`; L.style.opacity = '0'; L.style.pointerEvents = 'none'; }
+            if (R) { R.style.transform = `translateX(${vw  * 1.3}px)`; R.style.opacity = '0'; R.style.pointerEvents = 'none'; }
+        }
+
+        /* ── Live drag transform ── */
+        function applyDragTransform(dx) {
+            const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            const { sc, mw, sw, sh, centerY, gap } = miniMetrics();
+            if (frame) {
+                frame.style.transition = 'none';
+                frame.style.transform  = `translateX(${dx}px) scale(${sc})`;
+            }
+            const ty  = centerY - sh / 2;
+            const txL = -(mw / 2 + gap + sw);
+            const txR =  (mw / 2 + gap);
+            const L   = document.getElementById('mobScardL');
+            const R   = document.getElementById('mobScardR');
+            if (L && cur > 0)                { L.style.transition = 'none'; L.style.transform = `translateX(${txL + dx}px) translateY(${ty}px)`; }
+            if (R && cur < slots.length - 1) { R.style.transition = 'none'; R.style.transform = `translateX(${txR + dx}px) translateY(${ty}px)`; }
+        }
+
+        /* ── Template swap: fade + depth transition ── */
+        function swapTransition(cb) {
+            const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            if (!frame) { cb(); return; }
+
+            // Capture the base scale set by PosterGenerator.updateScale() so we can compose on top of it
+            // without overwriting the poster's correct zoom level.
+            const m    = frame.style.transform?.match(/scale\(([\d.]+)\)/);
+            const base = m ? parseFloat(m[1]) : 1;
+
+            // Phase 1 — fade out (subtle sink: 3% scale so full-width previews don't visibly shrink)
+            frame.style.transition = 'opacity 0.17s ease-out, transform 0.17s ease-out';
+            frame.style.opacity    = '0';
+            frame.style.transform  = `scale(${base * 0.97})`;
+
+            setTimeout(() => {
+                cb(); // swap content while invisible
+
+                // Phase 2 — entry position (behind, invisible, no transition)
+                frame.style.transition = 'none';
+                frame.style.opacity    = '0';
+                frame.style.transform  = `scale(${base * 0.99})`;
+
+                // Phase 3 — animate forward + fade in
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    frame.style.transition = 'opacity 0.22s ease-out, transform 0.22s ease-out';
+                    frame.style.opacity    = '1';
+                    frame.style.transform  = `scale(${base})`;
+                    setTimeout(() => {
+                        frame.style.transition = '';
+                        frame.style.opacity    = '';
+                        // Re-sync zoom in case canvas dimensions changed during transition
+                        if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+                    }, 240);
+                }));
+            }, 175);
+        }
+
+        function snapBack() {
+            const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            const { sc } = miniMetrics();
+            if (frame) {
+                frame.style.transition = 'transform 0.36s cubic-bezier(0.34, 1.20, 0.64, 1)';
+                frame.style.transform  = `scale(${sc})`;
+                setTimeout(() => { if (frame) frame.style.transition = ''; }, 370);
+            }
+            updateSideCards(); // re-enables CSS transitions on side cards → animate to rest position
+        }
+
+        /* ── Animated navigation (used by swipe + button taps) ── */
+        function navigateAnimated(dir) {
+            const nextIdx = cur + dir;
+            if (nextIdx < 0 || nextIdx >= slots.length) { snapBack(); return; }
+            captureThumbFor(cur); // fire-and-forget — captures poster state before animation replaces it
+
+            const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            const { sc } = miniMetrics();
+            const vw = window.innerWidth;
+            const exitX  = dir > 0 ? -vw * 1.0 : vw * 1.0;
+            const enterX = dir > 0 ?  vw * 0.75 : -vw * 0.75;
+
+            // Slide out
+            if (frame) {
+                frame.style.transition = 'transform 0.18s ease-in';
+                frame.style.transform  = `translateX(${exitX}px) scale(${sc})`;
+            }
+            animateSideCardsOut();
+
+            setTimeout(() => {
+                snapshot();
+                cur = nextIdx;
+                restore(cur);
+                updateUI();
+
+                // Set entry position (no transition)
+                if (frame) {
+                    frame.style.transition = 'none';
+                    frame.style.transform  = `translateX(${enterX}px) scale(${sc})`;
+                }
+
+                // Animate to center on next two rAFs (ensures transition is re-applied after layout)
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    recalcMiniLayout(true);
+                }));
+            }, 190);
+
+            swipeHandled = true;
+        }
+
+        /* ── Mini state transitions ── */
+        function enterMini(animate) {
+            if (typeof MobilePosterUI !== 'undefined') {
+                MobilePosterUI.setEdit(false);
+            }
+            document.body.classList.add('mob-mini');
+            recalcMiniLayout(animate);
+        }
+
+        function exitMini() {
+            animateSideCardsOut();
+            document.body.classList.remove('mob-mini');
+            const frame = document.getElementById('posterStackFrame') || document.getElementById('posterFormatsContainer');
+            if (frame) {
+                frame.style.transition = 'transform 0.36s cubic-bezier(0.32,0,0.67,0)';
+            }
+            // Call updateScale() immediately while transition is active so browser animates the scale change
+            if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
+            setTimeout(() => {
+                if (frame) frame.style.transition = '';
+            }, 380);
+        }
+
+        /* ── Swipe gesture (Instagram-style horizontal carousel) ── */
+        function initSwipe() {
+            const cvs = document.querySelector('.canvas-area');
+            if (!cvs) return;
+
+            let startX = 0, startY = 0, curDx = 0;
+            let dragging = false, axisLocked = false, isHoriz = false;
+            const THRESHOLD = 48;
+
+            cvs.addEventListener('touchstart', e => {
+                if (!document.body.classList.contains('mob-mini')) return;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                curDx = 0; dragging = true; axisLocked = false; isHoriz = false;
+            }, { passive: true });
+
+            cvs.addEventListener('touchmove', e => {
+                if (!dragging) return;
+                const dx = e.touches[0].clientX - startX;
+                const dy = e.touches[0].clientY - startY;
+                if (!axisLocked && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+                    axisLocked = true;
+                    isHoriz    = Math.abs(dx) > Math.abs(dy);
+                }
+                if (!isHoriz) { dragging = false; snapBack(); return; }
+                e.preventDefault(); // prevent page scroll during horizontal carousel swipe
+                curDx = dx;
+                applyDragTransform(dx);
+            }, { passive: false }); // non-passive required to call preventDefault
+
+            const onEnd = () => {
+                if (!dragging) return;
+                dragging = false;
+                const dx  = curDx;
+                const dir = dx < 0 ? 1 : -1;
+                if (Math.abs(dx) >= THRESHOLD && (cur + dir) >= 0 && (cur + dir) < slots.length) {
+                    navigateAnimated(dir);
+                } else {
+                    snapBack();
+                }
+            };
+            cvs.addEventListener('touchend',    onEnd, { passive: true });
+            cvs.addEventListener('touchcancel', () => { dragging = false; snapBack(); }, { passive: true });
+        }
+
+        /* ── Controls UI ── */
+        function updateUI() {
+            const count = slots.length;
+            const multi = count > 1;
+            const atMax = count >= MAX;
+            const el = id => document.getElementById(id);
+
+            if (el('mobDcAdd'))    el('mobDcAdd').style.opacity    = atMax ? '0.35' : '1';
+            if (el('mobDcPrev'))   el('mobDcPrev').style.display   = multi ? 'flex' : 'none';
+            if (el('mobDcNext'))   el('mobDcNext').style.display   = multi ? 'flex' : 'none';
+            if (el('mobDcRemove')) el('mobDcRemove').style.display = multi ? 'flex' : 'none';
+
+            // Carousel dots
+            const dotsEl = el('mobDots');
+            if (dotsEl) {
+                dotsEl.innerHTML = '';
+                if (multi) {
+                    for (let i = 0; i < count; i++) {
+                        const d = document.createElement('span');
+                        d.className = 'mob-dot' + (i === cur ? ' mob-dot--active' : '');
+                        dotsEl.appendChild(d);
+                    }
+                }
+                dotsEl.style.display = multi ? 'flex' : 'none';
+            }
+
+            // Manage ghost cards to match the number of templates in the stack
+            const ghost1 = el('mobGhost1');
+            const ghost2 = el('mobGhost2');
+            if (ghost1) ghost1.classList.toggle('visible', count >= 2);
+            if (ghost2) ghost2.classList.toggle('visible', count >= 3);
+        }
+
+        function addDesign() {
+            if (slots.length >= MAX) return;
+            snapshot();
+            slots.push({ ...slots[cur] });
+            cur = slots.length - 1;
+            swapTransition(() => { restore(cur); updateUI(); });
+        }
+
+        function removeDesign() {
+            if (slots.length <= 1) return;
+            slots.splice(cur, 1);
+            if (cur >= slots.length) cur = slots.length - 1;
+            swapTransition(() => { restore(cur); updateUI(); });
+        }
+
+        function navigate(dir) {
+            const nextIdx = Math.max(0, Math.min(slots.length - 1, cur + dir));
+            if (nextIdx === cur) return;
+            snapshot();
+            cur = nextIdx;
+            swapTransition(() => { restore(cur); updateUI(); });
+        }
+
+        function refreshCarousel() {
+            snapshot();
+            if (document.body.classList.contains('mob-mini')) recalcMiniLayout(false);
+        }
+
+        function wasSwipeHandled() {
+            const v = swipeHandled;
+            swipeHandled = false;
+            return v;
+        }
+
+        function init() {
+            if (!window.matchMedia('(max-width: 640px)').matches) return;
+            setTimeout(() => {
+                snapshot();
+                if (slots.length === 0) slots = [{ etiqueta: '', title: '', subtitle: '', bgDataUrl: null, bgScale: 1, bgPosX: 0, bgPosY: 0 }];
+                updateUI();
+            }, 250);
+
+            initSwipe();
+
+            /* Side card taps: navigate in carousel, stay in mini */
+            const L = document.getElementById('mobScardL');
+            const R = document.getElementById('mobScardR');
+            L?.addEventListener('click', e => { e.stopPropagation(); navigateAnimated(-1); });
+            R?.addEventListener('click', e => { e.stopPropagation(); navigateAnimated(+1); });
+
+            const stop = e => e.stopPropagation();
+            document.getElementById('mobDcAdd')   ?.addEventListener('click', e => { stop(e); addDesign();    });
+            document.getElementById('mobDcRemove')?.addEventListener('click', e => { stop(e); removeDesign(); });
+            document.getElementById('mobDcPrev')  ?.addEventListener('click', e => { stop(e); navigate(-1);  });
+            document.getElementById('mobDcNext')  ?.addEventListener('click', e => { stop(e); navigate(+1);  });
+        }
+
+        return { init, snapshot, refreshCarousel, enterMini, exitMini, recalcMiniLayout, wasSwipeHandled, hideSideCards: animateSideCardsOut, count: () => slots.length, current: () => cur };
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        MobilePosterUI.init();
+        MobileDesignManager.init();
+    });
     </script>
 </body>
 
