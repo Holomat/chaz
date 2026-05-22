@@ -4410,7 +4410,8 @@ body.tab-badge .badge-bars-stack {
 
     /* ── Ocultar chrome desktop ── */
     .side-nav, .nav-menu-toggle, .side-column--right,
-    .zoom-panel, .poster-bars-stack, #aiKeyPanel, #exportProgress {
+    .zoom-panel, .poster-bars-stack, .ave-bars-stack, .cert-bars-stack, .badge-bars-stack,
+    #aiKeyPanel, #exportProgress {
         display: none !important;
     }
 
