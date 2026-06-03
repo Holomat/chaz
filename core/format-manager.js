@@ -114,7 +114,7 @@ const FormatManager = (() => {
     }
 
     /**
-     * Initialize format toggles
+     * Initialize format toggles + dropdown
      */
     function init() {
         const toggleButtons = document.querySelectorAll('.format-toggle-btn[data-format]');
@@ -122,35 +122,59 @@ const FormatManager = (() => {
         toggleButtons.forEach(btn => {
             const formatId = btn.dataset.format;
 
-            // Set initial state
-            if (isActive(formatId)) {
-                btn.classList.add('active');
-            }
+            if (isActive(formatId)) btn.classList.add('active');
 
-            // Add click handler
             btn.addEventListener('click', () => {
                 toggle(formatId);
                 updateToggleUI();
             });
         });
 
+        // Dropdown open/close
+        const dropdown = document.getElementById('formatDropdown');
+        const trigger  = document.getElementById('formatTrigger');
+        const panel    = document.getElementById('formatPanel');
+
+        if (trigger && dropdown) {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+
+            // Close on outside click
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) dropdown.classList.remove('open');
+            });
+
+            // Keep open when clicking options inside panel
+            if (panel) {
+                panel.addEventListener('click', (e) => e.stopPropagation());
+            }
+        }
+
+        updateToggleUI();
         console.log('📐 FormatManager initialized:', activeFormats);
     }
 
     /**
-     * Update toggle button UI
+     * Update toggle button UI + trigger label
      */
     function updateToggleUI() {
         const toggleButtons = document.querySelectorAll('.format-toggle-btn[data-format]');
 
         toggleButtons.forEach(btn => {
             const formatId = btn.dataset.format;
-            if (isActive(formatId)) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
+            btn.classList.toggle('active', isActive(formatId));
         });
+
+        // Update dropdown trigger label
+        const labelEl = document.getElementById('formatTriggerLabel');
+        if (labelEl) {
+            const labels = activeFormats
+                .map(id => FORMATS[id]?.label)
+                .filter(Boolean);
+            labelEl.textContent = labels.length > 0 ? labels.join(' · ') : 'Formato';
+        }
     }
 
     /* ── Public API ── */

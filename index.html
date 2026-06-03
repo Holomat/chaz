@@ -21,6 +21,13 @@
 
 <body>
 
+    <!-- Aurora background -->
+    <div class="aurora-bg" aria-hidden="true">
+        <div class="aurora-orb aurora-orb--1"></div>
+        <div class="aurora-orb aurora-orb--2"></div>
+        <div class="aurora-orb aurora-orb--3"></div>
+    </div>
+
     <!-- Ghost container: JS-required IDs, zero visual footprint -->
     <div style="position:absolute;top:-9999px;left:-9999px;width:0;height:0;" aria-hidden="true">
         <input type="file" id="bgInput" accept="image/*">
@@ -764,16 +771,24 @@ a certificar (curso, taller o programa)</div>
 
             <div class="prompt-divider"></div>
 
-            <!-- Formatos -->
-            <div class="prompt-format-group">
-                <button class="format-toggle-btn active" data-format="posteo">
-                    <span class="format-label">Posteo</span>
-                    <span class="format-ratio">5:4</span>
+            <!-- Formatos — dropdown M3 -->
+            <div class="prompt-format-dropdown" id="formatDropdown">
+                <button class="prompt-format-trigger" id="formatTrigger">
+                    <span class="prompt-format-trigger-label" id="formatTriggerLabel">Posteo · Historia</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="prompt-format-chevron"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
-                <button class="format-toggle-btn active" data-format="historia">
-                    <span class="format-label">Historia</span>
-                    <span class="format-ratio">9:16</span>
-                </button>
+                <div class="prompt-format-panel" id="formatPanel">
+                    <button class="format-toggle-btn active" data-format="posteo">
+                        <svg class="format-opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span class="format-opt-name">Posteo</span>
+                        <span class="format-opt-ratio">5:4</span>
+                    </button>
+                    <button class="format-toggle-btn active" data-format="historia">
+                        <svg class="format-opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span class="format-opt-name">Historia</span>
+                        <span class="format-opt-ratio">9:16</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Generar (empujado a la derecha) -->
@@ -1880,7 +1895,7 @@ a certificar (curso, taller o programa)</div>
             const AI_H  = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
             const pad   = isEdit ? 20 : 0;
             const availW = w - pad;
-            const availH = isEdit ? (h - 52 - 424 - AI_H - pad) : (h - AI_H - 56);
+            const availH = isEdit ? (h - 52 - 340 - AI_H - pad) : (h - AI_H - 56);
             return Math.max(0.1, Math.min(availW / fmt.displayWidth, availH / fmt.displayHeight));
         }
 
@@ -2105,8 +2120,8 @@ a certificar (curso, taller o programa)</div>
             /* AI bar height includes safe-area-inset-bottom */
             const aiBar  = document.querySelector('.mob-ai-bar');
             const AI_H   = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
-            const SHEET_H = 424;  // sheet height (constant)
-            const CLOSED = 368;   // SHEET_H - 56: handle (56px) peeks above AI bar
+            const SHEET_H = 340;  // sheet height (constant)
+            const CLOSED = 284;   // SHEET_H - 56: handle (56px) peeks above AI bar
             const OPEN   = 0;
             let startY = 0, startT = CLOSED, lastY = 0, lastMs = 0, vel = 0, dragging = false;
             let scalePreview = 1, scaleEdit = 1;
@@ -2414,8 +2429,8 @@ a certificar (curso, taller o programa)</div>
             const hasL      = cur > 0;
             const hasR      = cur < slots.length - 1;
             const nSides    = (hasL ? 1 : 0) + (hasR ? 1 : 0);
-            const maxW      = vw * 0.92;
-            const scSolo    = Math.min(vw * 0.56, 240) / fmt.displayWidth;
+            const maxW      = vw * 0.94;
+            const scSolo    = Math.min(vw * 0.74, 320) / fmt.displayWidth;
 
             let sc;
             if (nSides === 0) {
