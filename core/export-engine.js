@@ -368,7 +368,7 @@ const ExportEngine = (() => {
                 showToast(`${activeCount} imagen(es) descargada(s) ✓`, 'success');
                 SheetsLogger?.log({
                     hoja:     'Redes sociales',
-                    programa: document.getElementById('programSelector')?.value || '',
+                    programa: (document.getElementById('programSelectorBar') || document.getElementById('programSelector'))?.value || '',
                     etiqueta: document.getElementById('etiquetaIn')?.value || '',
                     titulo:   document.getElementById('titleIn')?.value || '',
                     subtitulo: document.getElementById('subtitleIn')?.value || '',
@@ -399,7 +399,8 @@ const ExportEngine = (() => {
                 });
 
             } else if (APP.currentTab === 'cert') {
-                await CertGenerator.exportJPG();
+                const did = await CertGenerator.exportJPG();
+                if (did === false) return; // usuario canceló el cartel
                 showToast('Certificado descargado ✓', 'success');
                 SheetsLogger?.log({
                     hoja:     'Certificados',

@@ -68,20 +68,6 @@
         <span id="progressText" class="progress-text">0%</span>
     </div>
 
-    <!-- AI Key panel — fixed floating panel, shown via API Key toggle -->
-    <div id="aiKeyPanel" class="ai-key-panel" style="display:none">
-        <div class="ai-key-row">
-            <input type="password" id="aiApiKey" class="ui-card ai-key-input"
-                placeholder="Groq API Key (se guarda localmente)">
-            <button class="ai-key-save-btn" id="aiKeySaveBtn" title="Guardar clave">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </button>
-        </div>
-        <div id="aiResults" class="ai-results hidden"></div>
-    </div>
-
     <!-- ═══════════════════════════════════════════ -->
     <!-- MAIN CANVAS AREA                            -->
     <!-- ═══════════════════════════════════════════ -->
@@ -237,6 +223,15 @@ a certificar (curso, taller o programa)</div>
                                 <div class="cert-sig-inst" id="certR3InstDisplay" style="display:none"></div>
                             </div>
                         </footer>
+                    </div>
+                </div>
+
+                <!-- Dorso (back side) — visible solo con el toggle activado -->
+                <div class="cert-canvas cert-canvas--back" id="certBackCanvas" style="display:none">
+                    <div class="cert-bg-trama"></div>
+                    <div class="cert-content cert-content--back">
+                        <div class="cert-back-title" id="certBackTitleDisplay">Nombre de la actividad</div>
+                        <div class="cert-back-content" id="certBackContentDisplay">Contenidos del dorso del certificado.</div>
                     </div>
                 </div>
             </div>
@@ -598,7 +593,7 @@ a certificar (curso, taller o programa)</div>
                 <span class="side-nav-label">Certificados</span>
             </div>
 
-            <div class="nav-item" data-tab="ave" id="tabAve">
+            <div class="nav-item" data-tab="ave" id="tabAve" style="display:none">
                 <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
                 </svg>
@@ -613,7 +608,7 @@ a certificar (curso, taller o programa)</div>
                 <span class="side-nav-label">Logotipos</span>
             </div>
 
-            <div class="nav-item" data-tab="badge" id="tabBadge">
+            <div class="nav-item" data-tab="badge" id="tabBadge" style="display:none">
                 <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
                 </svg>
@@ -623,44 +618,8 @@ a certificar (curso, taller o programa)</div>
 
         <div class="side-nav-divider"></div>
 
-        <!-- Paneles -->
+        <!-- Modo -->
         <div class="side-nav-section">
-            <div class="nav-toggle-btn" id="ejeToggle">
-                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                </svg>
-                <span class="side-nav-label">Líneas transversales</span>
-            </div>
-            <div class="side-nav-item-sep"></div>
-
-            <div class="nav-toggle-btn" id="tipsToggle">
-                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                </svg>
-                <span class="side-nav-label">Tips</span>
-            </div>
-            <div class="side-nav-item-sep"></div>
-
-            <div class="nav-toggle-btn" id="fotoToggle">
-                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                </svg>
-                <span class="side-nav-label">Fotografía</span>
-            </div>
-        </div>
-
-        <div class="side-nav-divider"></div>
-
-        <!-- API Key + Modo -->
-        <div class="side-nav-section">
-            <div class="nav-toggle-btn" id="apiKeyToggle">
-                <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-                </svg>
-                <span class="side-nav-label">API Key</span>
-            </div>
             <div class="nav-toggle-btn" id="darkModeToggle">
                 <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
@@ -686,39 +645,22 @@ a certificar (curso, taller o programa)</div>
     <!-- Barra de texto -->
     <div class="poster-text-bar" id="posterTextBar">
         <div class="text-bar-field">
-            <span class="text-bar-label">Etiqueta</span>
-            <input type="text" id="etiquetaIn" class="text-bar-input" placeholder="Etiqueta superior" value="La educación va a estar *buena*">
+            <input type="text" id="etiquetaIn" class="text-bar-input" placeholder="Etiqueta" maxlength="40" value="La educación va a estar *buena*">
         </div>
         <div class="text-bar-sep"></div>
         <div class="text-bar-field">
-            <span class="text-bar-label">Título</span>
-            <input type="text" id="titleIn" class="text-bar-input" placeholder="Título principal" value="Dirección Nacional de *Educación*">
+            <input type="text" id="titleIn" class="text-bar-input" placeholder="Título" value="Dirección Nacional de *Educación*">
         </div>
         <div class="text-bar-sep"></div>
         <div class="text-bar-field">
-            <span class="text-bar-label">Subtítulo</span>
             <input type="text" id="subtitleIn" class="text-bar-input" placeholder="Subtítulo" value="Educación de *oportunidades*">
         </div>
     </div>
 
-    <!-- Barra IA prompt -->
+    <!-- Barra de controles -->
     <div class="poster-prompt-bar" id="posterPromptBar">
 
-        <!-- Fila 1: campo de escritura -->
-        <div class="prompt-row prompt-row--top">
-            <textarea id="aiBriefInput" class="prompt-brief-input"
-                placeholder="Describí el contenido: qué querés comunicar, para quién, contexto..."></textarea>
-        </div>
-
-        <!-- Fila variaciones: navegación inline (oculta hasta generar) -->
-        <div class="prompt-row prompt-row--variation hidden" id="promptVariationRow">
-            <button class="prompt-var-nav" id="promptVarPrev">‹</button>
-            <div class="prompt-var-display" id="promptVarDisplay"></div>
-            <button class="prompt-var-nav" id="promptVarNext">›</button>
-            <span class="prompt-var-counter" id="promptVarCounter">1 / 1</span>
-        </div>
-
-        <!-- Fila 2: controles + generar -->
+        <!-- Fila: controles + descargar -->
         <div class="prompt-row prompt-row--bottom">
 
             <!-- Foto + zoom -->
@@ -751,16 +693,6 @@ a certificar (curso, taller o programa)</div>
 
             <div class="prompt-divider"></div>
 
-            <!-- Eje -->
-            <select class="prompt-eje-select custom-select-trigger" id="aiEjeSelect">
-                <option value="">Ejes Transversales</option>
-                <option value="1">Derecho</option>
-                <option value="2">Trayectorias</option>
-                <option value="3">Territorio</option>
-            </select>
-
-            <div class="prompt-divider"></div>
-
             <!-- Colores -->
             <div class="prompt-color-group" id="colorPaletteBar">
                 <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24"></div>
@@ -788,21 +720,15 @@ a certificar (curso, taller o programa)</div>
                         <span class="format-opt-name">Historia</span>
                         <span class="format-opt-ratio">9:16</span>
                     </button>
+                    <button class="format-toggle-btn" data-format="reels">
+                        <svg class="format-opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span class="format-opt-name">Reels</span>
+                        <span class="format-opt-ratio">9:16</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Generar (empujado a la derecha) -->
-            <button id="aiGenerateBtn" class="prompt-generate-btn">
-                Generar copy
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                    <polyline points="12 5 19 12 12 19"/>
-                </svg>
-            </button>
-
-            <div class="prompt-divider"></div>
-
-            <!-- Descargar -->
+            <!-- Descargar (empujado a la derecha) -->
             <button id="mainDownloadBtn" class="prompt-download-btn">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -825,12 +751,10 @@ a certificar (curso, taller o programa)</div>
         <!-- Barra de texto -->
         <div class="poster-text-bar">
             <div class="text-bar-field">
-                <span class="text-bar-label">Título</span>
-                <input type="text" id="aveTitleIn" class="text-bar-input" placeholder="Título principal" value="Dirección Nacional de Educación">
+                <input type="text" id="aveTitleIn" class="text-bar-input" placeholder="Título" value="Dirección Nacional de Educación">
             </div>
             <div class="text-bar-sep"></div>
             <div class="text-bar-field">
-                <span class="text-bar-label">Subtítulo</span>
                 <input type="text" id="aveSubtitleIn" class="text-bar-input" placeholder="Subtítulo" value="Ministerio de Educación y Cultura">
             </div>
         </div>
@@ -917,25 +841,28 @@ a certificar (curso, taller o programa)</div>
             <!-- Fila 1: Título + Participante -->
             <div class="cert-row cert-row--text">
                 <div class="text-bar-field">
-                    <span class="text-bar-label">Título</span>
-                    <input type="text" id="certTitle" class="text-bar-input" placeholder="Título del curso" value="Nombre de la actividad a certificar (curso, taller o programa)">
+                    <input type="text" id="certTitle" class="text-bar-input" placeholder="Título" value="Nombre de la actividad a certificar (curso, taller o programa)">
                 </div>
                 <div class="text-bar-sep"></div>
                 <div class="text-bar-field cert-name-field">
-                    <span class="text-bar-label">Participante</span>
-                    <input type="text" id="certName" class="text-bar-input" placeholder="Nombre y Apellido" value="Nombre y Apellido">
+                    <input type="text" id="certName" class="text-bar-input" placeholder="Participante" value="Nombre y Apellido">
                 </div>
             </div>
 
             <div class="cert-row-sep"></div>
 
-            <!-- Fila 2: Detalles -->
-            <div class="cert-row cert-row--details">
-                <span class="text-bar-label cert-detail-label">Detalle</span>
-                <textarea id="certDetails" class="text-bar-input cert-details-input" placeholder="Descripción del curso...">Ha aprobado / participado del [Nombre del curso o actividad], en el marco del [Nombre del Programa] de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Realizado entre [fecha de inicio] y [fecha de finalización], con una carga [tipo de carga: teórica / práctica / teórico-práctica] de [cantidad de horas] horas.</textarea>
+            <!-- Fila 2: Detalles (frente) -->
+            <div class="cert-row cert-row--details" id="certDetailsRow">
+                <textarea id="certDetails" class="text-bar-input cert-details-input" placeholder="Detalle">Ha aprobado / participado del [Nombre del curso o actividad], en el marco del [Nombre del Programa] de la Dirección Nacional de Educación del Ministerio de Educación y Cultura. Realizado entre [fecha de inicio] y [fecha de finalización], con una carga [tipo de carga: teórica / práctica / teórico-práctica] de [cantidad de horas] horas.</textarea>
             </div>
 
-            <div class="cert-row-sep"></div>
+            <div class="cert-row-sep" id="certDetailsSep"></div>
+
+            <!-- Fila Dorso: contenidos editables (visible con el toggle) -->
+            <div class="cert-row cert-row--details cert-row--back hidden" id="certBackRow">
+                <textarea id="certBackContent" class="text-bar-input cert-details-input" placeholder="Contenidos del dorso">Contenidos del dorso del certificado.</textarea>
+            </div>
+            <div class="cert-row-sep cert-back-sep hidden" id="certBackSep"></div>
 
             <!-- Fila 3: Controles -->
             <div class="cert-row cert-row--controls">
@@ -976,6 +903,14 @@ a certificar (curso, taller o programa)</div>
                     <option value="Cecap">Cecap</option>
                     <option value="Secretaría Permanente">Sec. Permanente</option>
                 </select>
+
+                <div class="prompt-divider"></div>
+
+                <!-- Toggle Dorso -->
+                <button type="button" class="cert-dorso-toggle" id="certDorsoToggle" role="switch" aria-checked="false" title="Mostrar/ocultar dorso">
+                    <span class="cert-dorso-sw"></span>
+                    <span class="cert-dorso-lbl">Dorso</span>
+                </button>
 
                 <div class="prompt-divider"></div>
 
@@ -1036,6 +971,19 @@ a certificar (curso, taller o programa)</div>
 
         </div>
     </div><!-- /cert-bars-stack -->
+
+    <!-- Modal: descarga de certificado (frente / dorso) -->
+    <div class="cert-dl-backdrop" id="certDlBackdrop" hidden>
+        <div class="cert-dl-card" role="dialog" aria-modal="true" aria-labelledby="certDlTitle">
+            <h3 class="cert-dl-title" id="certDlTitle">Descargar certificado</h3>
+            <p class="cert-dl-desc">Elegí qué querés imprimir.</p>
+            <div class="cert-dl-actions">
+                <button class="cert-dl-btn cert-dl-btn--primary" id="certDlFront">Imprimir solo frente</button>
+                <button class="cert-dl-btn cert-dl-btn--tonal" id="certDlBack">Imprimir dorso</button>
+                <button class="cert-dl-btn cert-dl-btn--ghost" id="certDlCancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- BADGE BARS STACK (Gafetes only)             -->
@@ -1168,7 +1116,6 @@ a certificar (curso, taller o programa)</div>
     <script src="modules/ave-generator.js"></script>
     <script src="modules/cert-generator.js"></script>
     <script src="modules/gate-shaders.js"></script>
-    <script src="modules/ai-copy-generator.js"></script>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- APP BOOTSTRAP                               -->
@@ -1342,20 +1289,7 @@ a certificar (curso, taller o programa)</div>
         window.addEventListener('DOMContentLoaded', () => {
             initSideNav();
             document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', () => switchTab(i.dataset.tab)));
-            document.getElementById('ejeToggle')?.addEventListener('click', () => toggleSidebar('eje'));
-            document.getElementById('tipsToggle')?.addEventListener('click', () => toggleSidebar('tips'));
-            document.getElementById('fotoToggle')?.addEventListener('click', () => toggleSidebar('foto'));
             document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
-
-            // API Key toggle — muestra/oculta el panel flotante de clave Groq
-            document.getElementById('apiKeyToggle')?.addEventListener('click', () => {
-                const panel = document.getElementById('aiKeyPanel');
-                if (!panel) return;
-                const visible = panel.style.display === 'flex';
-                panel.style.display = visible ? 'none' : 'flex';
-                if (!visible) document.getElementById('aiApiKey')?.focus();
-                document.getElementById('apiKeyToggle')?.classList.toggle('on', !visible);
-            });
 
             // Scale slider: percentage display + fill gradient
             function wireScaleSlider(sliderId, displayId) {
@@ -1605,18 +1539,6 @@ a certificar (curso, taller o programa)</div>
         <button class="mob-export-btn" id="mobExportBtn">Exportar</button>
     </div>
 
-    <!-- AI bar — siempre visible en el fondo -->
-    <div class="mob-ai-bar">
-        <div class="mob-ai-pill">
-            <input type="text" id="mobBriefIn" class="mob-ai-input" placeholder="Generá copy con IA...">
-            <button class="mob-ai-send" id="mobAISend" title="Generar copy">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 4a1 1 0 0 1 .707.293l7 7a1 1 0 0 1-1.414 1.414L13 7.414V20a1 1 0 1 1-2 0V7.414l-5.293 5.293a1 1 0 0 1-1.414-1.414l7-7A1 1 0 0 1 12 4z"/>
-                </svg>
-            </button>
-        </div>
-    </div>
-
     <!-- Mobile sheet — dos estados: preview (colapsado) / edit (expandido) -->
     <div class="mob-sheet" id="mobSheet">
 
@@ -1726,6 +1648,7 @@ a certificar (curso, taller o programa)</div>
             <div class="mob-format-row">
                 <button class="mob-format-btn active" data-format="posteo">Posteo 5:4</button>
                 <button class="mob-format-btn active" data-format="historia">Historia 9:16</button>
+                <button class="mob-format-btn" data-format="reels">Reels 9:16</button>
             </div>
         </div>
         <button class="mob-sheet-done" id="mobSheetDone">Listo</button>
@@ -1752,6 +1675,15 @@ a certificar (curso, taller o programa)</div>
             <button class="mob-export-option mob-export-option--on" data-format="historia" id="mobExpOptHistoria">
                 <div class="mob-export-opt-info">
                     <span class="mob-export-opt-name">Historia</span>
+                    <span class="mob-export-opt-ratio">9:16</span>
+                </div>
+                <div class="mob-export-check" aria-hidden="true">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+            </button>
+            <button class="mob-export-option" data-format="reels" id="mobExpOptReels">
+                <div class="mob-export-opt-info">
+                    <span class="mob-export-opt-name">Reels</span>
                     <span class="mob-export-opt-ratio">9:16</span>
                 </div>
                 <div class="mob-export-check" aria-hidden="true">
@@ -1863,7 +1795,7 @@ a certificar (curso, taller o programa)</div>
         'use strict';
 
         const BLOCKS = {
-            etiqueta: { realId: 'etiquetaIn',  label: 'Etiqueta', placeholder: 'Etiqueta superior',  type: 'words', max: 4, letterSpacing: '-0.04em', textTransform: 'uppercase' },
+            etiqueta: { realId: 'etiquetaIn',  label: 'Etiqueta', placeholder: 'Etiqueta',  type: 'chars', max: 40, letterSpacing: '-0.04em', textTransform: 'none' },
             hook:     { realId: 'titleIn',     label: 'Título',   placeholder: 'Título principal',    type: 'lines', max: 3, letterSpacing: '-0.05em', textTransform: 'none' },
             subtitulo:{ realId: 'subtitleIn',  label: 'Subtítulo',placeholder: 'Subtítulo',           type: 'lines', max: 3, letterSpacing: '-0.04em', textTransform: 'none' },
         };
@@ -1891,11 +1823,9 @@ a certificar (curso, taller o programa)</div>
             const fmt  = fmts[0];
             const w    = window.innerWidth;
             const h    = window.innerHeight;
-            const aiBar = document.querySelector('.mob-ai-bar');
-            const AI_H  = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
             const pad   = isEdit ? 20 : 0;
             const availW = w - pad;
-            const availH = isEdit ? (h - 52 - 340 - AI_H - pad) : (h - AI_H - 56);
+            const availH = isEdit ? (h - 52 - 340 - pad) : (h - 56);
             return Math.max(0.1, Math.min(availW / fmt.displayWidth, availH / fmt.displayHeight));
         }
 
@@ -1945,6 +1875,8 @@ a certificar (curso, taller o programa)</div>
                 ta.placeholder = cfg.placeholder;
                 ta.style.letterSpacing = cfg.letterSpacing || '';
                 ta.style.textTransform = cfg.textTransform || 'none';
+                if (cfg.type === 'chars') ta.maxLength = cfg.max;
+                else                      ta.removeAttribute('maxlength');
                 if (document.body.classList.contains('mob-edit')) {
                     requestAnimationFrame(() => ta.focus());
                 }
@@ -1964,7 +1896,11 @@ a certificar (curso, taller o programa)</div>
             const val = ta.value;
             const cfg = BLOCKS[active];
 
-            if (cfg.type === 'words') {
+            if (cfg.type === 'chars') {
+                const n = val.length;
+                hint.textContent = `${n}/${cfg.max} caracteres`;
+                hint.classList.toggle('mob-hint--warn', n > cfg.max);
+            } else if (cfg.type === 'words') {
                 const n = countWords(val);
                 hint.textContent = `${n}/${cfg.max} palabras`;
                 hint.classList.toggle('mob-hint--warn', n > cfg.max);
@@ -2039,8 +1975,10 @@ a certificar (curso, taller o programa)</div>
 
         /* ── Formato de preview ── */
         function togglePreviewFormat() {
-            mobilePreviewFormat = mobilePreviewFormat === 'historia' ? 'posteo' : 'historia';
-            const label = mobilePreviewFormat === 'historia' ? 'Historia' : 'Posteo';
+            const order = ['posteo', 'historia', 'reels'];
+            const i = order.indexOf(mobilePreviewFormat);
+            mobilePreviewFormat = order[(i + 1) % order.length];
+            const label = (typeof FormatManager !== 'undefined' && FormatManager.get(mobilePreviewFormat)?.label) || mobilePreviewFormat;
             document.getElementById('mobFormatoHint').textContent = label;
             if (typeof FormatManager !== 'undefined') {
                 FormatManager.setActive([mobilePreviewFormat]);
@@ -2058,12 +1996,13 @@ a certificar (curso, taller o programa)</div>
         function updateExportConfirmLabel() {
             const btn = document.getElementById('mobExportConfirm');
             if (!btn) return;
-            if (mobExportFormats.length === 2)
-                btn.textContent = 'Descargar 2 formatos';
-            else if (mobExportFormats.includes('posteo'))
-                btn.textContent = 'Descargar Posteo';
-            else
-                btn.textContent = 'Descargar Historia';
+            const n = mobExportFormats.length;
+            if (n > 1) {
+                btn.textContent = `Descargar ${n} formatos`;
+            } else {
+                const label = (typeof FormatManager !== 'undefined' && FormatManager.get(mobExportFormats[0])?.label) || 'formato';
+                btn.textContent = `Descargar ${label}`;
+            }
         }
 
         function openExportSheet() {
@@ -2093,13 +2032,6 @@ a certificar (curso, taller o programa)</div>
             }
         }
 
-        function generateCopy() {
-            const mobIn  = document.getElementById('mobBriefIn');
-            const realIn = document.getElementById('aiBriefInput');
-            if (realIn && mobIn) realIn.value = mobIn.value;
-            document.getElementById('aiGenerateBtn')?.click();
-        }
-
         function watchRealInputs() {
             ['etiquetaIn', 'titleIn', 'subtitleIn'].forEach(id => {
                 document.getElementById(id)?.addEventListener('input', () => {
@@ -2117,11 +2049,8 @@ a certificar (curso, taller o programa)</div>
             const cvs    = document.querySelector('.canvas-area');
             if (!sheet || !handle) return;
 
-            /* AI bar height includes safe-area-inset-bottom */
-            const aiBar  = document.querySelector('.mob-ai-bar');
-            const AI_H   = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
             const SHEET_H = 340;  // sheet height (constant)
-            const CLOSED = 284;   // SHEET_H - 56: handle (56px) peeks above AI bar
+            const CLOSED = 284;   // SHEET_H - 56: handle (56px) asoma sobre el borde inferior
             const OPEN   = 0;
             let startY = 0, startT = CLOSED, lastY = 0, lastMs = 0, vel = 0, dragging = false;
             let scalePreview = 1, scaleEdit = 1;
@@ -2141,7 +2070,7 @@ a certificar (curso, taller o programa)</div>
                     const cvEase   = 'top 0.36s cubic-bezier(0.32,0,0.67,0), bottom 0.36s cubic-bezier(0.32,0,0.67,0)';
                     cvs.style.transition = animate ? cvEase : 'none';
                     cvs.style.top    = `${topPx}px`;
-                    cvs.style.bottom = `${AI_H + SHEET_H - c}px`;
+                    cvs.style.bottom = `${SHEET_H - c}px`;
                 }
 
                 // Interpolar escala del poster en tiempo real durante el drag
@@ -2238,62 +2167,6 @@ a certificar (curso, taller o programa)</div>
 
             document.getElementById('mobEditorTextarea')
                 ?.addEventListener('input', syncToReal);
-
-            document.getElementById('mobAISend')
-                ?.addEventListener('click', generateCopy);
-
-            /* ── AI chat: poster en preview pequeña mientras el teclado está abierto ── */
-            (function wireAIFocus() {
-                const aiInput = document.getElementById('mobBriefIn');
-                const aiBar   = document.querySelector('.mob-ai-bar');
-                const cvs     = document.querySelector('.canvas-area');
-                if (!aiInput) return;
-
-                function onVVResize() {
-                    if (!document.body.classList.contains('mob-ai-focus')) return;
-                    const vv = window.visualViewport;
-                    if (!vv || !cvs) return;
-                    const AI_H      = aiBar ? Math.round(aiBar.getBoundingClientRect().height) : 92;
-                    const keyboardH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-                    // Flota el AI bar justo sobre el teclado
-                    if (aiBar) aiBar.style.bottom = `${keyboardH}px`;
-                    // Compacta el canvas entre top=0 y el borde superior del AI bar
-                    cvs.style.transition = 'none';
-                    cvs.style.top        = '0px';
-                    cvs.style.bottom     = `${keyboardH + AI_H}px`;
-                    cvs.style.padding    = '8px 10px';
-                    // Recalcula escala con el área disponible real
-                    if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
-                }
-
-                aiInput.addEventListener('focus', () => {
-                    if (!isMobile()) return;
-                    document.body.classList.add('mob-ai-focus');
-                    if (window.visualViewport) {
-                        window.visualViewport.addEventListener('resize', onVVResize);
-                        window.visualViewport.addEventListener('scroll', onVVResize);
-                    }
-                    setTimeout(onVVResize, 80); // pequeño delay para que iOS reporte el tamaño correcto
-                });
-
-                aiInput.addEventListener('blur', () => {
-                    document.body.classList.remove('mob-ai-focus');
-                    if (window.visualViewport) {
-                        window.visualViewport.removeEventListener('resize', onVVResize);
-                        window.visualViewport.removeEventListener('scroll', onVVResize);
-                    }
-                    // Restaura AI bar y canvas a control CSS
-                    if (aiBar) aiBar.style.bottom = '';
-                    if (cvs)   { cvs.style.top = cvs.style.bottom = cvs.style.padding = cvs.style.transition = ''; }
-                    setTimeout(() => {
-                        if (typeof PosterGenerator !== 'undefined') PosterGenerator.updateScale();
-                    }, 80);
-                });
-            })();
-
-            document.getElementById('mobBriefIn')
-                ?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); generateCopy(); } });
-
 
             document.querySelectorAll('.mob-color-dot').forEach(dot =>
                 dot.addEventListener('click', () => setColor(dot.dataset.color)));

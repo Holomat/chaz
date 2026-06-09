@@ -28,6 +28,15 @@ const FormatManager = (() => {
             height: 1920,
             displayWidth: 243,  // Scaled to align height with Posteo
             displayHeight: 432
+        },
+        reels: {
+            id: 'reels',
+            label: 'Reels',
+            ratio: '9:16',
+            width: 1080,
+            height: 1920,
+            displayWidth: 243,  // idéntico a Historia (9:16)
+            displayHeight: 432
         }
     };
 

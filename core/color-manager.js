@@ -131,18 +131,17 @@ const ColorManager = (() => {
 document.addEventListener('DOMContentLoaded', () => {
     const dots = document.querySelectorAll('.color-dot');
 
+    function activateColor(color, accent) {
+        // Sync active state on all dots with same color
+        dots.forEach(d => {
+            d.classList.toggle('active', d.dataset.color === color);
+        });
+        ColorManager.apply({ color, accent, id: color });
+    }
+
     dots.forEach(dot => {
         dot.addEventListener('click', () => {
-            // Update active state
-            document.querySelector('.color-dot.active')?.classList.remove('active');
-            dot.classList.add('active');
-
-            // Apply palette
-            ColorManager.apply({
-                color: dot.dataset.color,
-                accent: dot.dataset.accent,
-                id: dot.dataset.color
-            });
+            activateColor(dot.dataset.color, dot.dataset.accent);
         });
     });
 

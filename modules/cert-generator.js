@@ -18,6 +18,7 @@ const CertGenerator = (() => {
     let certRecords          = [];   // loaded from CSV/Excel
     let certRecordIndex      = 0;
     let certZoomFactor       = 1;
+    let dorsoEnabled         = false; // dorso (back side) preview switch
 
     const LOGO_MAP = {
         'DNE Isotipo':              'dne-iso',
@@ -110,6 +111,10 @@ const CertGenerator = (() => {
         setText('certNameDisplay',    val('certName')    || 'Nombre y Apellido');
         setText('certDetailsDisplay', val('certDetails') || '');
 
+        // Dorso: nombre del curso (= título del frente) + contenidos editables
+        setText('certBackTitleDisplay',   val('certTitle')       || 'Nombre de la actividad');
+        setText('certBackContentDisplay', val('certBackContent') || '');
+
         // Hide inst display rows (always hidden, field removed from UI)
         for (let i = 1; i <= 3; i++) {
             const instEl = document.getElementById(`certR${i}InstDisplay`);
@@ -132,11 +137,44 @@ const CertGenerator = (() => {
         const wrapper    = document.getElementById('certScaleWrapper');
         const canvasArea = document.getElementById('canvasArea');
         if (!wrapper || !canvasArea) return;
+        const cs   = getComputedStyle(canvasArea);
+        const padT = parseFloat(cs.paddingTop)    || 0;
+        const padB = parseFloat(cs.paddingBottom) || 0;
         const availW = canvasArea.clientWidth  - 48;
-        const availH = canvasArea.clientHeight - 48;
-        const base   = Math.min(availW / CERT_W, availH / CERT_H, 1);
+        const availH = canvasArea.clientHeight - padT - padB - 48; // descuenta la reserva de la barra
+        const base   = Math.min(availW / CERT_W, availH / CERT_H, 1) * 0.9; // 90% por defecto
         wrapper.style.transform       = `scale(${base * certZoomFactor})`;
         wrapper.style.transformOrigin = 'center center';
+    }
+
+    /* ── Dorso (back side) toggle — switch frente/dorso ── */
+    function setDorso(on) {
+        dorsoEnabled = !!on;
+        const front  = document.getElementById('certCanvas');
+        const back   = document.getElementById('certBackCanvas');
+        const row    = document.getElementById('certBackRow');
+        const rowSep = document.getElementById('certBackSep');
+        const detRow = document.getElementById('certDetailsRow');
+        const detSep = document.getElementById('certDetailsSep');
+        const toggle = document.getElementById('certDorsoToggle');
+        // Switch: muestra una sola cara a la vez
+        if (front) front.style.display = dorsoEnabled ? 'none' : '';
+        if (back)  back.style.display  = dorsoEnabled ? '' : 'none';
+        // Campos del frente (Detalle) ↔ campos del dorso (Contenidos)
+        if (detRow) detRow.classList.toggle('hidden', dorsoEnabled);
+        if (detSep) detSep.classList.toggle('hidden', dorsoEnabled);
+        if (row)    row.classList.toggle('hidden', !dorsoEnabled);
+        if (rowSep) rowSep.classList.toggle('hidden', !dorsoEnabled);
+        if (toggle) {
+            toggle.classList.toggle('is-on', dorsoEnabled);
+            toggle.setAttribute('aria-checked', dorsoEnabled ? 'true' : 'false');
+        }
+        render();
+        updateScale();
+    }
+
+    function toggleDorso() {
+        setDorso(!dorsoEnabled);
     }
 
     function setZoom(factor) {
@@ -174,9 +212,14 @@ const CertGenerator = (() => {
         goToCertRecord(0);
         showToast(`${records.length} participantes cargados ✓`, 'success');
 
-        // Update download button label
+        // Update download button labels
         const btn = document.getElementById('mainDownloadBtn');
         if (btn) btn.querySelector('span').textContent = `Descargar ${records.length} certificados`;
+        const certBtn = document.getElementById('certDownloadBtn');
+        if (certBtn) {
+            const span = certBtn.querySelector('span');
+            if (span) span.textContent = `Descargar ${records.length} certificados`;
+        }
     }
 
     function goToCertRecord(index) {
@@ -252,22 +295,50 @@ const CertGenerator = (() => {
         link.click();
     }
 
-    /* ── Single export ── */
+    /* Captura una cara (frente o dorso) aunque esté oculta por el switch */
+    async function captureFace(canvas) {
+        const prevDisplay = canvas.style.display;
+        if (prevDisplay === 'none') canvas.style.display = '';
+        canvas.style.setProperty('border-radius', '0px', 'important');
+        canvas.style.setProperty('box-shadow',    'none', 'important');
+        await delay(120);
+        const url = await captureJPG(canvas);
+        canvas.style.borderRadius = '';
+        canvas.style.boxShadow    = '';
+        canvas.style.display      = prevDisplay;
+        return url;
+    }
 
-    async function exportSingle() {
+    /* nombre de archivo seguro a partir del nombre completo */
+    function safe(fullName) {
+        return fullName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9\-áéíóúüñÁÉÍÓÚÜÑ]/g, '');
+    }
+
+    /* ── Single export ── mode: 'front' | 'dorso' ── */
+
+    async function exportSingle(mode) {
         const certCanvas = document.getElementById('certCanvas');
         if (!certCanvas) throw new Error('Cert canvas not found');
 
+        const backCanvas = document.getElementById('certBackCanvas');
         const wrapper = document.getElementById('certScaleWrapper');
         const saved   = prepareCanvasForExport(certCanvas, wrapper);
 
         await delay(200);
-        ExportEngine.showProgress(30, 'Generando imagen...');
+        ExportEngine.showProgress(30, mode === 'dorso' ? 'Generando dorso...' : 'Generando imagen...');
 
         try {
-            const dataUrl = await captureJPG(certCanvas);
-            ExportEngine.showProgress(90, 'Descargando...');
-            triggerDownload(dataUrl, `certificado-dne-${Date.now()}.jpg`);
+            const ts = Date.now();
+            if (mode === 'dorso') {
+                if (backCanvas) {
+                    const backUrl = await captureFace(backCanvas);
+                    triggerDownload(backUrl, `certificado-dne-${ts}-Contenidos.jpg`);
+                }
+            } else {
+                const frontUrl = await captureFace(certCanvas);
+                triggerDownload(frontUrl, `certificado-dne-${ts}.jpg`);
+            }
+
             ExportEngine.showProgress(100, '¡Certificado descargado!');
             setTimeout(() => ExportEngine.hideProgress(), 2000);
         } finally {
@@ -275,47 +346,87 @@ const CertGenerator = (() => {
         }
     }
 
-    /* ── Batch export ── */
+    /* ── Batch export ── mode: 'front' | 'dorso' ── */
 
-    async function exportBatch() {
+    async function exportBatch(mode) {
         const certCanvas = document.getElementById('certCanvas');
         if (!certCanvas) throw new Error('Cert canvas not found');
 
+        const backCanvas = document.getElementById('certBackCanvas');
         const wrapper = document.getElementById('certScaleWrapper');
         const saved   = prepareCanvasForExport(certCanvas, wrapper);
 
         ExportEngine.showProgress(0, `Exportando 0 / ${certRecords.length}...`);
+        const total = certRecords.length;
 
         try {
-            for (let i = 0; i < certRecords.length; i++) {
-                // Inject current participant's name
-                const r        = certRecords[i];
-                const fullName = [r.nombre, r.apellido].filter(Boolean).join(' ');
-                setInput('certName', fullName);
-                render();
-
-                await delay(150);
-
-                const dataUrl  = await captureJPG(certCanvas);
-                const safeName = fullName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9\-áéíóúüñÁÉÍÓÚÜÑ]/g, '');
-                triggerDownload(dataUrl, `certificado-${safeName}.jpg`);
-
-                await delay(200);
-
-                ExportEngine.showProgress(
-                    Math.round(((i + 1) / certRecords.length) * 100),
-                    `${i + 1} / ${certRecords.length}`
-                );
+            if (mode === 'dorso') {
+                // El dorso (Contenidos) es idéntico para todos: se captura una vez
+                // y se descarga por participante con el nombre del frente + "Contenidos".
+                const backUrl = backCanvas ? await captureFace(backCanvas) : null;
+                for (let i = 0; i < total; i++) {
+                    const r        = certRecords[i];
+                    const fullName = [r.nombre, r.apellido].filter(Boolean).join(' ');
+                    if (backUrl) triggerDownload(backUrl, `certificado-${safe(fullName)}-Contenidos.jpg`);
+                    await delay(150);
+                    ExportEngine.showProgress(Math.round(((i + 1) / total) * 100), `${i + 1} / ${total}`);
+                }
+            } else {
+                for (let i = 0; i < total; i++) {
+                    const r        = certRecords[i];
+                    const fullName = [r.nombre, r.apellido].filter(Boolean).join(' ');
+                    setInput('certName', fullName);
+                    render();
+                    await delay(150);
+                    const dataUrl = await captureFace(certCanvas);
+                    triggerDownload(dataUrl, `certificado-${safe(fullName)}.jpg`);
+                    await delay(200);
+                    ExportEngine.showProgress(Math.round(((i + 1) / total) * 100), `${i + 1} / ${total}`);
+                }
             }
 
-            ExportEngine.showProgress(100, `¡${certRecords.length} certificados exportados!`);
+            ExportEngine.showProgress(100, `¡${total} ${mode === 'dorso' ? 'dorsos' : 'certificados'} exportados!`);
             setTimeout(() => ExportEngine.hideProgress(), 2500);
 
         } finally {
             restoreCanvas(certCanvas, wrapper, saved);
-            // Restore the displayed record
             goToCertRecord(certRecordIndex);
         }
+    }
+
+    /* ── Modal de descarga (frente / dorso / cancelar) ── */
+
+    function showExportDialog() {
+        return new Promise((resolve) => {
+            const backdrop = document.getElementById('certDlBackdrop');
+            const btnFront = document.getElementById('certDlFront');
+            const btnBack  = document.getElementById('certDlBack');
+            const btnCancel= document.getElementById('certDlCancel');
+            if (!backdrop || !btnFront || !btnBack || !btnCancel) { resolve('cancel'); return; }
+
+            backdrop.hidden = false;
+
+            function cleanup(choice) {
+                backdrop.hidden = true;
+                btnFront.removeEventListener('click', onFront);
+                btnBack.removeEventListener('click', onBack);
+                btnCancel.removeEventListener('click', onCancel);
+                backdrop.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKey);
+                resolve(choice);
+            }
+            const onFront    = () => cleanup('front');
+            const onBack     = () => cleanup('dorso');
+            const onCancel   = () => cleanup('cancel');
+            const onBackdrop = (e) => { if (e.target === backdrop) cleanup('cancel'); };
+            const onKey      = (e) => { if (e.key === 'Escape') cleanup('cancel'); };
+
+            btnFront.addEventListener('click', onFront);
+            btnBack.addEventListener('click', onBack);
+            btnCancel.addEventListener('click', onCancel);
+            backdrop.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKey);
+        });
     }
 
     /* ── Public export entry point ── */
@@ -324,15 +435,20 @@ const CertGenerator = (() => {
         if (typeof window.htmlToImage === 'undefined' || !window.htmlToImage.toJpeg) {
             throw new Error('Librería html-to-image no disponible.');
         }
+
+        const choice = await showExportDialog(); // 'front' | 'dorso' | 'cancel'
+        if (choice === 'cancel') return false;
+
         ExportEngine.showProgress(0, certRecords.length > 0
             ? `Preparando ${certRecords.length} certificados...`
             : 'Preparando certificado...');
 
         if (certRecords.length > 0) {
-            await exportBatch();
+            await exportBatch(choice);
         } else {
-            await exportSingle();
+            await exportSingle(choice);
         }
+        return true;
     }
 
     /* ── Responsables ── */
@@ -408,7 +524,7 @@ const CertGenerator = (() => {
     function init() {
         const ids = [
             'certProgram',
-            'certTitle', 'certName', 'certDetails',
+            'certTitle', 'certName', 'certDetails', 'certBackContent',
             'certR1Name', 'certR1Role', 'certR1Inst',
             'certR2Name', 'certR2Role', 'certR2Inst',
             'certR3Name', 'certR3Role', 'certR3Inst',
@@ -446,6 +562,10 @@ const CertGenerator = (() => {
             ?.addEventListener('click', addResponsible);
         document.getElementById('certRemoveResponsible')
             ?.addEventListener('click', removeResponsible);
+
+        // Toggle dorso (back side)
+        document.getElementById('certDorsoToggle')
+            ?.addEventListener('click', toggleDorso);
 
         window.addEventListener('resize', updateScale);
         updateScale();

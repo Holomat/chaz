@@ -259,12 +259,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Program selector
+    // Program selectors (sidebar + prompt bar)
+    function syncProgram(value) {
+        LogoEngine.setProgram(value);
+        const sidebar = document.getElementById('programSelector');
+        const bar     = document.getElementById('programSelectorBar');
+        if (sidebar && sidebar.value !== value) sidebar.value = value;
+        if (bar     && bar.value     !== value) bar.value     = value;
+    }
+
     const programSelector = document.getElementById('programSelector');
     if (programSelector) {
-        programSelector.addEventListener('change', (e) => {
-            LogoEngine.setProgram(e.target.value);
-        });
+        programSelector.addEventListener('change', (e) => syncProgram(e.target.value));
+    }
+
+    const programSelectorBar = document.getElementById('programSelectorBar');
+    if (programSelectorBar) {
+        programSelectorBar.addEventListener('change', (e) => syncProgram(e.target.value));
     }
 
     // Listen to ColorManager palette changes
