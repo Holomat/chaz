@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}html,body{height:100%}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(135deg,#e8e6f0 0%,#f0ecf8 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+        .bg{position:fixed;inset:0;overflow:hidden;z-index:0}.orb{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform}
+        .orb1{width:60vw;height:60vw;top:-20%;left:-10%;background:radial-gradient(circle,rgba(59,130,246,.45) 0%,transparent 70%);animation:a1 26s infinite alternate ease-in-out}
+        .orb2{width:55vw;height:55vw;bottom:-15%;right:0%;background:radial-gradient(circle,rgba(34,211,238,.40) 0%,transparent 70%);animation:a2 30s infinite alternate ease-in-out}
+        .orb3{width:50vw;height:50vw;top:25%;right:-10%;background:radial-gradient(circle,rgba(139,92,246,.35) 0%,transparent 70%);animation:a3 24s infinite alternate ease-in-out}
+        @keyframes a1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(12vw,8vh) scale(1.15)}100%{transform:translate(6vw,-10vh) scale(.92)}}
+        @keyframes a2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-10vw,-8vh) scale(1.18)}100%{transform:translate(-6vw,12vh) scale(.90)}}
+        @keyframes a3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(10vw,10vh) scale(1.20)}100%{transform:translate(-8vw,-8vh) scale(.95)}}
+        .card{position:relative;z-index:1;width:420px;padding:32px;background:#fff;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.7);border-radius:32px;box-shadow:0 8px 48px rgba(59,130,246,.12),0 2px 8px rgba(0,0,0,.06);animation:b 3.5s ease-in-out infinite}
+        @keyframes b{0%{transform:scale(1)}50%{transform:scale(1.01)}100%{transform:scale(1)}}
+        .h{margin-bottom:24px}.s{font-size:13px;font-weight:500;color:#7a7a7a}
+        form{display:flex;align-items:stretch;gap:0}
+        input{flex:1;height:52px;padding:0 16px;border:none;background:0;font-family:inherit;font-size:14px;color:#1a1a1a;outline:0;border-bottom:1px solid rgba(0,0,0,.08);transition:border-color .2s,background .2s}
+        input::placeholder{color:#7a7a7a}input:focus{border-bottom-color:#3b82f6;background:rgba(59,130,246,.02)}input:first-of-type{border-right:1px solid rgba(0,0,0,.08)}
+        button{width:52px;height:52px;border:0;background:#1a1a1a;color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;border-radius:0 20px 20px 0;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+        button:hover{background:#2a2a2a}button::after{content:' →';margin-left:2px}
+        .e{font-size:12px;color:#e74c3c;margin-top:12px;text-align:center;min-height:16px}
+        .x{animation:shake .3s cubic-bezier(.36,.07,.19,.97)!important}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+    </style>
+</head>
+<body>
+    <div class="bg"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+    <div class="card">
+        <div class="h"><div class="s">Acceso privado</div></div>
+        <form id="f">
+            <input type="email" id="e" placeholder="Ingresá tu código aquí" autocomplete="username" required>
+            <input type="password" id="p" style="display:none" required>
+            <button type="submit"></button>
+        </form>
+        <div class="e" id="er"></div>
+    </div>
+    <script>
+    (function(){const form=document.getElementById('f'),email=document.getElementById('e'),pass=document.getElementById('p'),err=document.getElementById('er');
+    form.addEventListener('submit',async(e)=>{e.preventDefault();err.textContent='';try{const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value})});const d=await res.json().catch(()=>({}));if(res.ok&&d.ok){window.location.href='/';return}fail(d.error||'Error');}catch(e){fail('Error conexión');}});
+    function fail(m){err.textContent=m;email.classList.remove('x');pass.classList.remove('x');void email.offsetWidth;email.classList.add('x');pass.classList.add('x');pass.value='';email.focus()}
+    [email,pass].forEach(i=>i.addEventListener('input',()=>{i.classList.remove('x');err.textContent=''}));email.focus();
+    })();
+    </script>
+</body>
+</html>
