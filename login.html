@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso — átomo</title>
     <meta name="robots" content="noindex, nofollow">
-    <!-- v2 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --text-main: #1a1a1a;
             --text-mute: #7a7a7a;
-            --accent: #0097b5;
             --danger: #e74c3c;
         }
         html, body { height: 100%; }
@@ -28,32 +26,26 @@
             position: relative;
         }
 
-        /* Aurora azul viva — fondo animado */
-        .bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
-        .orb { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
-        .orb1 { width: 60vw; height: 60vw; top: -20%; left: -10%;
-                background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%);
-                animation: f1 26s infinite alternate ease-in-out; }
-        .orb2 { width: 55vw; height: 55vw; bottom: -15%; right: 0%;
-                background: radial-gradient(circle, rgba(34, 211, 238, 0.40) 0%, transparent 70%);
-                animation: f2 30s infinite alternate ease-in-out; }
-        .orb3 { width: 50vw; height: 50vw; top: 25%; right: -10%;
-                background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
-                animation: f3 24s infinite alternate ease-in-out; }
-        @keyframes f1 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(12vw,8vh) scale(1.15)} 100%{transform:translate(6vw,-10vh) scale(.92)} }
-        @keyframes f2 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-10vw,-8vh) scale(1.18)} 100%{transform:translate(-6vw,12vh) scale(.90)} }
-        @keyframes f3 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(10vw,10vh) scale(1.20)} 100%{transform:translate(-8vw,-8vh) scale(.95)} }
+        .aurora-bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+        .aurora-orb { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
+        .aurora-orb-blue { width: 60vw; height: 60vw; top: -20%; left: -10%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%);
+            animation: drift-blue 26s infinite alternate ease-in-out; }
+        .aurora-orb-cyan { width: 55vw; height: 55vw; bottom: -15%; right: 0%;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.40) 0%, transparent 70%);
+            animation: drift-cyan 30s infinite alternate ease-in-out; }
+        .aurora-orb-purple { width: 50vw; height: 50vw; top: 25%; right: -10%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
+            animation: drift-purple 24s infinite alternate ease-in-out; }
+        @keyframes drift-blue { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(12vw,8vh) scale(1.15)} 100%{transform:translate(6vw,-10vh) scale(0.92)} }
+        @keyframes drift-cyan { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-10vw,-8vh) scale(1.18)} 100%{transform:translate(-6vw,12vh) scale(0.90)} }
+        @keyframes drift-purple { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(10vw,10vh) scale(1.20)} 100%{transform:translate(-8vw,-8vh) scale(0.95)} }
 
-        /* Tarjeta minimalista y viva */
         .card {
             position: relative;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0;
-            padding: 32px 36px;
             width: 420px;
+            padding: 32px;
             background: #ffffff;
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
@@ -64,115 +56,127 @@
         }
         @keyframes breathe { 0%{transform:scale(1)} 50%{transform:scale(1.01)} 100%{transform:scale(1)} }
 
-        .header { margin-bottom: 28px; }
-        .subtitle { font-size: 13px; font-weight: 500; color: var(--text-mute); letter-spacing: -0.01em; }
+        .card-header { margin-bottom: 24px; }
+        .card-subtitle { font-size: 13px; font-weight: 500; color: var(--text-mute); }
 
-        form { display: flex; align-items: stretch; gap: 0; background: transparent; }
+        .card-form { display: flex; align-items: stretch; gap: 0; }
 
-        input {
+        .card-form input {
             flex: 1;
             height: 52px;
-            padding: 0 18px;
+            padding: 0 16px;
             border: none;
             background: transparent;
-            font-family: 'Inter', sans-serif;
+            font-family: inherit;
             font-size: 14px;
-            font-weight: 400;
             color: var(--text-main);
             outline: none;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            transition: border-color 0.2s ease, background 0.2s ease;
+            transition: border-color 0.2s, background 0.2s;
         }
-        input::placeholder { color: var(--text-mute); }
-        input:focus { border-bottom-color: var(--accent); background: rgba(59, 130, 246, 0.02); }
 
-        input:first-child { border-right: 1px solid rgba(0, 0, 0, 0.08); }
+        .card-form input::placeholder { color: var(--text-mute); }
+        .card-form input:focus { border-bottom-color: #3b82f6; background: rgba(59, 130, 246, 0.02); }
+        .card-form input:first-of-type { border-right: 1px solid rgba(0, 0, 0, 0.08); }
 
-        button {
+        .card-form button {
             width: 52px;
             height: 52px;
             border: none;
             background: #1a1a1a;
             color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-size: 18px;
+            font-family: inherit;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             border-radius: 0 20px 20px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s ease, transform 0.15s ease;
+            transition: background 0.2s;
             flex-shrink: 0;
         }
-        button:hover { background: #2a2a2a; }
-        button:active { transform: scale(0.95); }
-        button:disabled { opacity: 0.6; cursor: default; }
-        button::after { content: ' →'; font-size: 14px; margin-left: 2px; }
+        .card-form button:hover { background: #2a2a2a; }
+        .card-form button:active { transform: scale(0.95); }
+        .card-form button::after { content: ' →'; margin-left: 2px; }
 
-        .error { font-size: 12px; font-weight: 500; color: var(--danger); margin-top: 12px; min-height: 14px; text-align: center; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+        .card-error { font-size: 12px; color: var(--danger); margin-top: 12px; text-align: center; min-height: 16px; }
         .shake { animation: shake 0.3s cubic-bezier(0.36,0.07,0.19,0.97) !important; }
-        .shake:first-child { border-color: var(--danger) !important; box-shadow: inset 0 0 0 2px rgba(231,76,60,0.15) !important; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-2px)} 80%{transform:translateX(2px)} }
     </style>
 </head>
 <body>
-    <div class="bg"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+    <div class="aurora-bg">
+        <div class="aurora-orb aurora-orb-blue"></div>
+        <div class="aurora-orb aurora-orb-cyan"></div>
+        <div class="aurora-orb aurora-orb-purple"></div>
+    </div>
 
     <div class="card">
-        <div class="header">
-            <div class="subtitle">Acceso privado</div>
+        <div class="card-header">
+            <div class="card-subtitle">Acceso privado</div>
         </div>
-        <form id="loginForm" autocomplete="on">
-            <input type="email" id="email" name="email" placeholder="Ingresá tu código aquí" autocomplete="username" spellcheck="false" required>
-            <input type="password" id="password" name="password" placeholder="" autocomplete="current-password" style="display:none" required>
-            <button type="submit" id="submitBtn"></button>
+        <form class="card-form" id="form">
+            <input type="email" id="email" placeholder="Ingresá tu código aquí" autocomplete="username" required>
+            <input type="password" id="password" style="display:none" required>
+            <button type="submit"></button>
         </form>
-        <div class="error" id="error"></div>
+        <div class="card-error" id="error"></div>
     </div>
 
     <script>
-    (function () {
-        const form  = document.getElementById('loginForm');
+    (function() {
+        const form = document.getElementById('form');
         const email = document.getElementById('email');
-        const pass  = document.getElementById('password');
-        const error = document.getElementById('error');
-        const btn   = document.getElementById('submitBtn');
-
-        const params = new URLSearchParams(location.search);
-        const next = params.get('next') || '/';
-
-        function fail(msg) {
-            error.textContent = msg;
-            [email, pass].forEach(el => { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); });
-            pass.value = ''; email.focus();
-        }
+        const password = document.getElementById('password');
+        const errorEl = document.getElementById('error');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            error.textContent = '';
-            btn.disabled = true;
+            errorEl.textContent = '';
+
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email.value.trim(), password: pass.value })
+                    body: JSON.stringify({
+                        email: email.value.trim(),
+                        password: password.value
+                    })
                 });
+
                 const data = await res.json().catch(() => ({}));
+
                 if (res.ok && data.ok) {
-                    location.href = next.startsWith('/') ? next : '/';
+                    window.location.href = '/';
                     return;
                 }
-                fail(data.error || 'No se pudo iniciar sesión.');
-            } catch (_) {
-                fail('Error de conexión. Probá de nuevo.');
-            } finally {
-                btn.disabled = false;
+
+                showError(data.error || 'Error en la solicitud');
+            } catch (err) {
+                showError('Error de conexión');
             }
         });
 
-        [email, pass].forEach(el => el.addEventListener('input', () => { el.classList.remove('shake'); error.textContent = ''; }));
-        setTimeout(() => email.focus(), 100);
+        function showError(msg) {
+            errorEl.textContent = msg;
+            email.classList.remove('shake');
+            password.classList.remove('shake');
+            void email.offsetWidth;
+            email.classList.add('shake');
+            password.classList.add('shake');
+            password.value = '';
+            email.focus();
+        }
+
+        [email, password].forEach(input => {
+            input.addEventListener('input', () => {
+                input.classList.remove('shake');
+                errorEl.textContent = '';
+            });
+        });
+
+        email.focus();
     })();
     </script>
 </body>
