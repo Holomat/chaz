@@ -5,45 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso — átomo</title>
     <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}html,body{height:100%}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(135deg,#e8e6f0 0%,#f0ecf8 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-        .bg{position:fixed;inset:0;overflow:hidden;z-index:0}.orb{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform}
-        .orb1{width:60vw;height:60vw;top:-20%;left:-10%;background:radial-gradient(circle,rgba(59,130,246,.45) 0%,transparent 70%);animation:a1 26s infinite alternate ease-in-out}
-        .orb2{width:55vw;height:55vw;bottom:-15%;right:0%;background:radial-gradient(circle,rgba(34,211,238,.40) 0%,transparent 70%);animation:a2 30s infinite alternate ease-in-out}
-        .orb3{width:50vw;height:50vw;top:25%;right:-10%;background:radial-gradient(circle,rgba(139,92,246,.35) 0%,transparent 70%);animation:a3 24s infinite alternate ease-in-out}
-        @keyframes a1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(12vw,8vh) scale(1.15)}100%{transform:translate(6vw,-10vh) scale(.92)}}
-        @keyframes a2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-10vw,-8vh) scale(1.18)}100%{transform:translate(-6vw,12vh) scale(.90)}}
-        @keyframes a3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(10vw,10vh) scale(1.20)}100%{transform:translate(-8vw,-8vh) scale(.95)}}
-        .card{position:relative;z-index:1;width:420px;padding:32px;background:#fff;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.7);border-radius:32px;box-shadow:0 8px 48px rgba(59,130,246,.12),0 2px 8px rgba(0,0,0,.06);animation:b 3.5s ease-in-out infinite}
-        @keyframes b{0%{transform:scale(1)}50%{transform:scale(1.01)}100%{transform:scale(1)}}
-        .h{margin-bottom:24px}.s{font-size:13px;font-weight:500;color:#7a7a7a}
-        form{display:flex;align-items:stretch;gap:0}
-        input{flex:1;height:52px;padding:0 16px;border:none;background:0;font-family:inherit;font-size:14px;color:#1a1a1a;outline:0;border-bottom:1px solid rgba(0,0,0,.08);transition:border-color .2s,background .2s}
-        input::placeholder{color:#7a7a7a}input:focus{border-bottom-color:#3b82f6;background:rgba(59,130,246,.02)}input:first-of-type{border-right:1px solid rgba(0,0,0,.08)}
-        button{width:52px;height:52px;border:0;background:#1a1a1a;color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;border-radius:0 20px 20px 0;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
-        button:hover{background:#2a2a2a}button::after{content:' →';margin-left:2px}
-        .e{font-size:12px;color:#e74c3c;margin-top:12px;text-align:center;min-height:16px}
-        .x{animation:shake .3s cubic-bezier(.36,.07,.19,.97)!important}
-        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(120deg, #dde1fa 0%, #eceefb 55%, #e9ecfa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* ── Fondo: lavanda suave con deriva lenta ── */
+        .bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(110px); will-change: transform; }
+        .orb1 { width: 65vw; height: 65vw; top: -25%; left: -15%;
+                background: radial-gradient(circle, rgba(124, 134, 250, 0.50) 0%, transparent 70%);
+                animation: d1 30s infinite alternate ease-in-out; }
+        .orb2 { width: 55vw; height: 55vw; bottom: -20%; right: -10%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, transparent 70%);
+                animation: d2 26s infinite alternate ease-in-out; }
+        .orb3 { width: 45vw; height: 45vw; top: 30%; right: 15%;
+                background: radial-gradient(circle, rgba(190, 196, 255, 0.40) 0%, transparent 70%);
+                animation: d3 34s infinite alternate ease-in-out; }
+        @keyframes d1 { to { transform: translate(10vw, 12vh) scale(1.12); } }
+        @keyframes d2 { to { transform: translate(-8vw, -10vh) scale(1.10); } }
+        @keyframes d3 { to { transform: translate(-12vw, 8vh) scale(0.92); } }
+
+        /* ── Tarjeta: barra de chat elevada ── */
+        .card {
+            position: relative;
+            z-index: 1;
+            width: min(420px, calc(100vw - 40px));
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 24px 60px rgba(93, 100, 233, 0.14), 0 4px 14px rgba(30, 33, 70, 0.05);
+            transition: box-shadow 0.3s ease;
+            animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .card:focus-within {
+            box-shadow: 0 28px 70px rgba(93, 100, 233, 0.20), 0 6px 16px rgba(30, 33, 70, 0.06);
+        }
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(14px) scale(0.985); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .row-input { padding: 20px 24px 16px; }
+        input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font: 400 15px/1.4 'Inter', sans-serif;
+            color: #17171a;
+            caret-color: #5b67f1;
+        }
+        input::placeholder { color: #a2a4b3; transition: color 0.2s; }
+        input:focus::placeholder { color: #c6c8d6; }
+
+        .sep { height: 1px; background: rgba(20, 22, 50, 0.07); margin: 0 24px; }
+
+        .row-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 12px 12px 24px;
+        }
+        .hint {
+            font-size: 13px;
+            font-weight: 500;
+            color: #8e90a0;
+            transition: color 0.2s;
+        }
+        .hint.err { color: #e0455a; }
+
+        .go {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 40px;
+            padding: 0 18px 0 20px;
+            border: none;
+            border-radius: 999px;
+            background: #1b1b1f;
+            color: #fff;
+            font: 600 13.5px 'Inter', sans-serif;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .go:hover { background: #000; }
+        .go:active { transform: scale(0.96); }
+        .go:disabled { opacity: 0.55; cursor: default; }
+        .go .ar { display: inline-block; font-size: 14px; transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .go:hover .ar { transform: translateX(3px); }
+
+        .card.x { animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .orb, .card { animation: none; }
+        }
     </style>
 </head>
 <body>
     <div class="bg"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
-    <div class="card">
-        <div class="h"><div class="s">Acceso privado</div></div>
-        <form id="f">
-            <input type="email" id="e" placeholder="Ingresá tu código aquí" autocomplete="username" required>
-            <input type="password" id="p" style="display:none" required>
-            <button type="submit"></button>
-        </form>
-        <div class="e" id="er"></div>
-    </div>
+
+    <form class="card" id="f" autocomplete="off">
+        <div class="row-input">
+            <input type="password" id="code" placeholder="Ingresá tu código aquí" autocomplete="current-password" required>
+        </div>
+        <div class="sep"></div>
+        <div class="row-foot">
+            <span class="hint" id="hint">Acceso privado</span>
+            <button class="go" type="submit" id="go">Ingresar <span class="ar">→</span></button>
+        </div>
+    </form>
+
     <script>
-    (function(){const form=document.getElementById('f'),email=document.getElementById('e'),pass=document.getElementById('p'),err=document.getElementById('er');
-    form.addEventListener('submit',async(e)=>{e.preventDefault();err.textContent='';try{const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value})});const d=await res.json().catch(()=>({}));if(res.ok&&d.ok){window.location.href='/';return}fail(d.error||'Error');}catch(e){fail('Error conexión');}});
-    function fail(m){err.textContent=m;email.classList.remove('x');pass.classList.remove('x');void email.offsetWidth;email.classList.add('x');pass.classList.add('x');pass.value='';email.focus()}
-    [email,pass].forEach(i=>i.addEventListener('input',()=>{i.classList.remove('x');err.textContent=''}));email.focus();
+    (function () {
+        const card = document.getElementById('f');
+        const code = document.getElementById('code');
+        const hint = document.getElementById('hint');
+        const go   = document.getElementById('go');
+
+        const next = new URLSearchParams(location.search).get('next') || '/';
+
+        function fail(msg) {
+            hint.textContent = msg;
+            hint.classList.add('err');
+            card.classList.remove('x');
+            void card.offsetWidth;
+            card.classList.add('x');
+            code.value = '';
+            code.focus();
+        }
+
+        card.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            go.disabled = true;
+            hint.classList.remove('err');
+            hint.textContent = 'Verificando…';
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: code.value })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data.ok) {
+                    hint.textContent = 'Bienvenido';
+                    location.href = next.startsWith('/') ? next : '/';
+                    return;
+                }
+                fail(data.error || 'Código inválido.');
+            } catch (_) {
+                fail('Error de conexión. Probá de nuevo.');
+            } finally {
+                go.disabled = false;
+            }
+        });
+
+        code.addEventListener('input', () => {
+            if (hint.classList.contains('err')) {
+                hint.classList.remove('err');
+                hint.textContent = 'Acceso privado';
+            }
+        });
+
+        setTimeout(() => code.focus(), 100);
     })();
     </script>
 </body>
