@@ -33,12 +33,13 @@ const SheetsLogger = (() => {
     async function log(data) {
         if (!WEBHOOK_URL) return;
 
-        const email = sessionStorage.getItem('dne_access') || '';
+        const responsable = sessionStorage.getItem('dne_access') || localStorage.getItem('dne_access') || '';
         const ciudad = await getCity();
 
         const payload = {
             timestamp: new Date().toISOString(),
-            email,
+            email: responsable,
+            responsable,
             ciudad,
             ...data,
         };
