@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso — átomo</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --text-main: #1a1a1a;
+            --text-mute: #6b6b6b;
+            --accent: #0097b5;
+            --danger: #e74c3c;
+        }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #eceae5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fondo aurora suave */
+        .bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
+        .orb1 { width: 55vw; height: 55vw; top: -15%; left: -5%;
+                background: radial-gradient(circle, rgba(120,140,255,0.30) 0%, transparent 65%);
+                animation: f1 22s infinite alternate ease-in-out; }
+        .orb2 { width: 50vw; height: 50vw; bottom: -15%; right: -5%;
+                background: radial-gradient(circle, rgba(80,200,240,0.26) 0%, transparent 65%);
+                animation: f2 28s infinite alternate ease-in-out; }
+        .orb3 { width: 42vw; height: 42vw; top: 35%; left: 35%;
+                background: radial-gradient(circle, rgba(190,170,255,0.22) 0%, transparent 65%);
+                animation: f3 20s infinite alternate ease-in-out; }
+        @keyframes f1 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(8vw,6vh) scale(1.12)} 100%{transform:translate(4vw,-9vh) scale(.94)} }
+        @keyframes f2 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-9vw,-7vh) scale(1.15)} 100%{transform:translate(-4vw,9vh) scale(.92)} }
+        @keyframes f3 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(7vw,10vh) scale(1.18)} 100%{transform:translate(-7vw,-6vh) scale(.96)} }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            padding: 44px 28px 28px;
+            width: 340px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(40px) saturate(1.4);
+            -webkit-backdrop-filter: blur(40px) saturate(1.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 28px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+        }
+        .iso { width: 30px; height: auto; margin-bottom: 6px; }
+        .iso path, .iso polygon, .iso rect { fill: #1a1a1a; }
+        .title { font-family: 'Sora', sans-serif; font-size: 21px; font-weight: 600; letter-spacing: -0.03em; color: var(--text-main); }
+        .subtitle { font-size: 13px; color: var(--text-mute); margin-bottom: 10px; text-align: center; }
+        form { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        input {
+            width: 100%; height: 46px; padding: 0 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            background: rgba(255, 255, 255, 0.6);
+            font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+            color: var(--text-main); outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+        input::placeholder { color: var(--text-mute); font-weight: 400; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,151,181,0.10); background: rgba(255,255,255,0.85); }
+        button {
+            width: 100%; height: 46px; border-radius: 14px;
+            background: #1a1a1a; color: #fff;
+            font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+            border: none; cursor: pointer; margin-top: 4px;
+            transition: filter 0.15s ease, transform 0.12s ease;
+        }
+        button:hover { filter: brightness(1.25); }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.6; cursor: default; }
+        .error { font-size: 12px; font-weight: 500; color: var(--danger); margin-top: 2px; min-height: 14px; text-align: center; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+        .shake { animation: shake 0.4s cubic-bezier(0.36,0.07,0.19,0.97); border-color: var(--danger) !important; box-shadow: 0 0 0 3px rgba(231,76,60,0.22) !important; }
+    </style>
+</head>
+<body>
+    <div class="bg"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+
+    <div class="card">
+        <svg class="iso" viewBox="0 0 53.84 90.93" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="45.57 24.06 45.57 19.42 31.62 19.42 26.98 19.42 26.98 24.06 26.98 28.72 26.98 33.36 26.98 38.02 26.98 42.66 31.62 42.66 45.57 42.66 45.57 38.02 31.62 38.02 31.62 33.36 45.57 33.36 45.57 28.72 31.62 28.72 31.62 24.06 45.57 24.06"/>
+            <path d="M15.36,19.42c-3.87,0-7,3.13-7,7s3.13,7,7,7,7-3.13,7-7-3.13-7-7-7ZM15.36,28.76c-1.29,0-2.34-1.05-2.34-2.34s1.05-2.34,2.34-2.34,2.34,1.05,2.34,2.34-1.05,2.34-2.34,2.34Z"/>
+            <rect x="8.36" y="38.02" width="14" height="4.67"/>
+            <rect x="8.36" y="47.35" width="37.21" height="4.67"/>
+        </svg>
+        <div class="title">Acceso</div>
+        <div class="subtitle">Ingresá con tu correo institucional</div>
+        <form id="loginForm" autocomplete="on">
+            <input type="email" id="email" name="email" placeholder="nombre@mec.gub.uy" autocomplete="username" spellcheck="false" required>
+            <input type="password" id="password" name="password" placeholder="Contraseña" autocomplete="current-password" required>
+            <button type="submit" id="submitBtn">Ingresar</button>
+            <div class="error" id="error"></div>
+        </form>
+    </div>
+
+    <script>
+    (function () {
+        const form  = document.getElementById('loginForm');
+        const email = document.getElementById('email');
+        const pass  = document.getElementById('password');
+        const error = document.getElementById('error');
+        const btn   = document.getElementById('submitBtn');
+
+        // ¿A dónde volver después de entrar?
+        const params = new URLSearchParams(location.search);
+        const next = params.get('next') || '/';
+
+        function fail(msg) {
+            error.textContent = msg;
+            [email, pass].forEach(el => { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); });
+            pass.value = ''; pass.focus();
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            error.textContent = '';
+            btn.disabled = true; btn.textContent = 'Verificando…';
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email.value.trim(), password: pass.value })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data.ok) {
+                    location.href = next.startsWith('/') ? next : '/';
+                    return;
+                }
+                fail(data.error || 'No se pudo iniciar sesión.');
+            } catch (_) {
+                fail('Error de conexión. Probá de nuevo.');
+            } finally {
+                btn.disabled = false; btn.textContent = 'Ingresar';
+            }
+        });
+
+        [email, pass].forEach(el => el.addEventListener('input', () => { el.classList.remove('shake'); error.textContent = ''; }));
+        setTimeout(() => email.focus(), 120);
+    })();
+    </script>
+</body>
+</html>

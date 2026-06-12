@@ -1,0 +1,7 @@
+{
+  "name": "atomo-dne",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Generador de afiches, certificados y logotipos — DNE/MEC. Static site + auth serverless en Vercel."
+}
