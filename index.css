@@ -2,6 +2,49 @@
    GAFETES PRO EDITORIAL STUDIO — Design System
    ═══════════════════════════════════════════════════════════ */
 
+/* ── Tipografías institucionales — AUTOALOJADAS ──
+   Sora e Inter se sirven desde el propio dominio (variable fonts,
+   mismos archivos que servía Google Fonts). Esto garantiza que:
+   1) la identidad visual no depende de un CDN externo (redes
+      institucionales que bloquean fonts.gstatic.com);
+   2) html-to-image puede leer estas reglas (mismo origen) y
+      embeber la fuente real en los JPG/PDF exportados. */
+@font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('Root/assets/fonts/sora-variable-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('Root/assets/fonts/sora-variable-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('Root/assets/fonts/inter-variable-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('Root/assets/fonts/inter-variable-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /* ── CSS Custom Properties ── */
 :root {
     /* Colors — Light mode */
@@ -251,6 +294,13 @@ body.tab-cert   .canvas-area { padding-bottom: 205px; }
     height: 100%;
     align-items: flex-end;
     padding-right: calc((33.33vw - 340px) / 6);
+    /* La columna es una capa transparente sobre el canvas: dejar pasar
+       el mouse (drag/zoom de Reels) salvo en el panel visible */
+    pointer-events: none;
+}
+
+.side-column--right .sidebar-base {
+    pointer-events: auto;
 }
 
 /* ── Left Sidebar ── */
@@ -1135,18 +1185,28 @@ body.dark .poster {
     width: 100%;
     height: 100%;
     cursor: move;
+    /* el marco recorta solo visualmente: la foto conserva toda su
+       información más allá del canvas y se revela al reencuadrar */
+    overflow: hidden;
 }
 
 .bg-preview {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    top: 50%;
+    left: 50%;
+    /* El tamaño real lo calcula JS (modo cover: cubre 100% del canvas
+       manteniendo proporción). Lo que excede queda fuera del marco,
+       disponible para reencuadrar con arrastre y +/− */
+    max-width: none;
     transform-origin: center center;
     pointer-events: none;
     display: none;
+}
+
+/* Sombra 8% más abajo solo en Historia y Reels (9:16); Posteo sin cambios */
+.poster[data-format="historia"] .shadow-overlay,
+.poster[data-format="reels"] .shadow-overlay {
+    transform: translateY(8%);
 }
 
 /* Format label overlay */
@@ -1324,6 +1384,89 @@ body.dark .poster {
 
 .bold-part {
     font-weight: 800 !important;
+}
+
+/* ── Línea de evento: fecha / hora / lugar ──
+   Último hijo del text-container (anclado al fondo): al aparecer
+   toma el baseline del subtítulo y todo el bloque sube una línea,
+   manteniendo las relaciones etiqueta/título/subtítulo.
+   Los ítems no se parten: si "lugar" no entra en el ancho, baja
+   entero a una línea debajo de fecha y hora (flex-wrap). */
+.event-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 0.45em;
+    font-family: 'Sora', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    color: inherit; /* mismo color que textos y logos */
+}
+
+.event-info.hidden { display: none; }
+
+.event-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    white-space: nowrap; /* nunca se parte en 2 líneas */
+}
+
+.event-item.hidden { display: none; }
+
+.event-icon {
+    width: 1.05em;
+    height: 1.05em;
+    flex-shrink: 0;
+    display: block;
+}
+
+.poster[data-format="posteo"] .event-info { font-size: 12px; }
+
+.poster[data-format="historia"] .event-info,
+.poster[data-format="reels"] .event-info { font-size: 9px; }
+
+/* ── Vista full pantalla del producto (botón Encuadrar) ── */
+.full-preview-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 6000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(14, 14, 18, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    cursor: zoom-out;
+    animation: fullPreviewIn 0.22s ease;
+}
+
+@keyframes fullPreviewIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.full-preview-inner {
+    transform-origin: center center;
+    flex-shrink: 0;
+    pointer-events: none; /* solo visualización */
+}
+
+.full-preview-hint {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 8px 18px;
+    border-radius: 999px;
+    pointer-events: none;
 }
 
 /* ── Baseline 0 System ──
@@ -2811,6 +2954,13 @@ body.dark .ave-canvas {
     background: var(--card-bg, #fff);
     border-radius: 16px;
     gap: 16px;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+
+.logo-card:hover {
+    transform: scale(1.025);
 }
 
 .logo-card-name {
@@ -2833,11 +2983,11 @@ body.dark .ave-canvas {
     text-decoration: none;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: opacity 0.15s;
 }
 
-.logo-card-btn:hover {
-    opacity: 0.7;
+@media (prefers-reduced-motion: reduce) {
+    .logo-card { transition: none; }
+    .logo-card:hover { transform: none; }
 }
 
 body.dark .logo-card-btn {
@@ -2972,13 +3122,38 @@ body.dark .cert-canvas {
     width: 115%;
 }
 
+/* Bloque nombre + CI.
+   Sin CI: el nombre queda en su posición actual.
+   Con CI: la cédula ocupa el baseline actual del nombre y el
+   nombre sube una línea (24px); el margen compensa (30−24=6)
+   para que el detalle de abajo no se mueva. */
+.cert-name-block {
+    margin-top: 30px;
+}
+
+.cert-name-block.has-ci {
+    margin-top: 6px;
+}
+
 .cert-name-display {
     font-family: 'Sora', sans-serif;
     font-size: 20px;           /* 15pt @ 96dpi */
     font-weight: 600;
-    margin-top: 30px;
     line-height: 1.2;
     color: #1d1d1f;
+}
+
+.cert-ci-display {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: rgba(29, 29, 31, 0.6);   /* 60% del color del nombre */
+    display: none;
+}
+
+.cert-name-block.has-ci .cert-ci-display {
+    display: block;
 }
 
 .cert-details-display {
@@ -3020,152 +3195,6 @@ body.dark .cert-canvas {
     max-width: 760px;
     text-align: center;
     white-space: pre-line;
-}
-
-/* ── Toggle Dorso (barra de controles) ── */
-.cert-dorso-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 36px;
-    padding: 0 14px;
-    border: none;
-    border-radius: 999px;
-    background: var(--pill-hover);
-    color: var(--bar-text);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: filter 0.15s ease;
-}
-
-.cert-dorso-toggle:hover { filter: brightness(0.93); }
-
-.cert-dorso-sw {
-    width: 30px;
-    height: 18px;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.20);
-    position: relative;
-    flex-shrink: 0;
-    transition: background 0.18s ease;
-}
-
-.cert-dorso-sw::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #ffffff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    transition: transform 0.18s ease;
-}
-
-.cert-dorso-toggle.is-on .cert-dorso-sw {
-    background: var(--accent-primary, #0097b5);
-}
-
-.cert-dorso-toggle.is-on .cert-dorso-sw::after {
-    transform: translateX(12px);
-}
-
-/* ── Modal descarga certificado (frente / dorso) ── */
-.cert-dl-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: rgba(20, 20, 24, 0.34);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    animation: certDlFade 0.18s ease;
-}
-
-.cert-dl-backdrop[hidden] { display: none; }
-
-.cert-dl-card {
-    width: 100%;
-    max-width: 440px;
-    background: var(--card-bg, #ffffff);
-    border-radius: 30px;
-    padding: 44px 44px 36px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28), 0 2px 10px rgba(0, 0, 0, 0.10);
-    text-align: center;
-    animation: certDlPop 0.24s cubic-bezier(0.34, 1.4, 0.64, 1);
-}
-
-.cert-dl-title {
-    font-family: 'Sora', sans-serif;
-    font-size: 23px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--text-main);
-    margin: 0 0 10px;
-}
-
-.cert-dl-desc {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--text-mute);
-    margin: 0 0 32px;
-}
-
-.cert-dl-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.cert-dl-btn {
-    height: 52px;
-    border: none;
-    border-radius: 18px;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: filter 0.15s ease, background 0.15s ease, transform 0.12s ease;
-}
-
-.cert-dl-btn:active { transform: scale(0.98); }
-
-.cert-dl-btn--primary {
-    background: var(--text-main);
-    color: var(--card-bg, #ffffff);
-}
-.cert-dl-btn--primary:hover { filter: brightness(0.88); }
-
-.cert-dl-btn--tonal {
-    background: var(--pill-hover);
-    color: var(--text-main);
-}
-.cert-dl-btn--tonal:hover { filter: brightness(0.95); }
-
-.cert-dl-btn--ghost {
-    background: transparent;
-    color: var(--text-mute);
-    height: 46px;
-    font-weight: 500;
-}
-.cert-dl-btn--ghost:hover { background: var(--pill-hover); }
-
-@keyframes certDlFade {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-@keyframes certDlPop {
-    from { opacity: 0; transform: translateY(10px) scale(0.96); }
-    to   { opacity: 1; transform: none; }
 }
 
 /* ── Footer (signatures) ── */
@@ -3651,6 +3680,48 @@ body.tab-poster .poster-bars-stack {
     display: flex;
 }
 
+/* ════════════════════════════════════════════════════════════
+   Pantallas chicas disponibles (≈13"–15", 1200–1360px):
+   sidenav más angosta + controles compactos para que la barra
+   inferior recupere ancho y no desborde el card.
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 1360px) {
+    :root { --sidenav-open: 224px; }
+
+    .poster-bars-stack .prompt-photo-btn,
+    .poster-bars-stack .custom-select-btn,
+    .poster-bars-stack .prompt-format-trigger,
+    .poster-bars-stack .prompt-download-btn {
+        padding-left: 14px;
+        padding-right: 14px;
+        font-size: 12.5px;
+    }
+
+    .poster-bars-stack .prompt-scale-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    .poster-bars-stack .prompt-divider {
+        margin: 0 4px;
+    }
+
+    .poster-bars-stack .prompt-color-group {
+        gap: 4px;
+        padding: 0 4px;
+    }
+
+    .poster-bars-stack .prompt-color-dot {
+        width: 20px;
+        height: 20px;
+    }
+
+    .poster-bars-stack .text-bar-field {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
 /* ═══════════════════════════════════════════════
    AVE BARS STACK — contenedor fijo controles AVE
    ═══════════════════════════════════════════════ */
@@ -3718,8 +3789,28 @@ body.tab-cert .cert-bars-stack {
 
 /* Fila 1: Título + Participante */
 .cert-row--text {
-    height: 46px;
+    min-height: 46px;
+    height: auto;
     gap: 0;
+}
+
+.cert-row--text .text-bar-field {
+    /* sin padding lateral: alinea Título y Nombre con el borde izquierdo de Detalle */
+    padding: 10px 0;
+}
+
+/* Fila Participante: nombre + CI + importar lista / navegación a la derecha */
+.cert-row--name {
+    gap: 6px;
+}
+
+.cert-row--name .prompt-photo-btn,
+.cert-row--name .cert-data-preview {
+    flex-shrink: 0;
+}
+
+.cert-row--name .cert-ci-field {
+    flex: 0 0 150px;
 }
 
 /* Fila 2: Detalles (textarea auto-height) */
@@ -3737,13 +3828,15 @@ body.tab-cert .cert-bars-stack {
 .cert-details-input {
     flex: 1;
     min-height: 34px;
-    max-height: 64px;
+    /* auto-expandible: sin tope — el JS ajusta height al contenido
+       y la barra (anclada abajo) crece hacia arriba */
+    max-height: none;
     resize: none;
-    overflow-y: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    font-size: 12.5px;
-    line-height: 1.55;
+    font-size: 18px;
+    line-height: 1.45;
     padding: 0;
     background: transparent;
     border: none;
@@ -3763,15 +3856,10 @@ body.tab-cert .cert-bars-stack {
 .cert-row--controls {
     min-height: 46px;
     height: auto;
-    padding: 5px 16px;
+    /* mismos márgenes que la fila de controles de Redes Sociales */
+    padding: 16px 20px;
     gap: 0;
     align-items: center;
-}
-
-/* Participante field ancho fijo */
-.cert-name-field {
-    max-width: 230px;
-    flex-shrink: 0;
 }
 
 /* Page nav inline */
@@ -4109,6 +4197,26 @@ body.tab-badge .badge-bars-stack {
     -webkit-backdrop-filter: none;
 }
 
+/* Fila evento (fecha/hora/lugar): separador superior inset */
+.poster-text-bar--info {
+    position: relative;
+}
+
+.poster-text-bar--info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: var(--bar-sep);
+}
+
+.poster-text-bar--info .text-bar-field {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
 .text-bar-field {
     display: flex;
     align-items: center;
@@ -4141,6 +4249,24 @@ body.tab-badge .badge-bars-stack {
 
 .text-bar-input::placeholder {
     color: var(--bar-placeholder);
+}
+
+/* Redes Sociales y Certificados: tipografía de escritura más grande.
+   Son <textarea> auto-expandibles: si el texto excede el ancho,
+   envuelven y la barra (anclada abajo) crece hacia arriba,
+   mostrando el 100% del contenido para editar. */
+.poster-text-bar .text-bar-input,
+.cert-bars-stack .cert-row--text .text-bar-input {
+    font-size: 18px;
+    line-height: 1.4;
+    display: block;
+    resize: none;
+    overflow: hidden;
+    height: auto;
+    min-height: 25px;   /* una línea */
+    padding: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .text-bar-sep {
@@ -4315,7 +4441,7 @@ body.tab-badge .badge-bars-stack {
     color: var(--bar-text);
     cursor: pointer;
     border-radius: 999px;
-    background: var(--pill-hover);
+    background: transparent;
     white-space: nowrap;
     flex-shrink: 0;
     font-size: 13px;
@@ -4326,12 +4452,12 @@ body.tab-badge .badge-bars-stack {
 
 .prompt-photo-btn:hover {
     color: var(--bar-text);
-    filter: brightness(0.94);
+    background: var(--pill-hover);
 }
 
 /* Foto scale +/- — M3 icon button */
 .prompt-scale-btn {
-    background: var(--pill-hover);
+    background: transparent;
     border: none;
     color: var(--bar-text);
     font-size: 20px;
@@ -4349,7 +4475,7 @@ body.tab-badge .badge-bars-stack {
 }
 
 .prompt-scale-btn:hover {
-    filter: brightness(0.92);
+    background: var(--pill-hover);
     color: var(--text-main);
 }
 
@@ -4412,7 +4538,7 @@ body.tab-badge .badge-bars-stack {
     align-items: center;
     gap: 6px;
     padding: 20px 20px;
-    background: var(--pill-hover);
+    background: transparent;
     border: none;
     border-radius: 999px;
     color: var(--bar-text);
@@ -4426,7 +4552,7 @@ body.tab-badge .badge-bars-stack {
 }
 
 .custom-select-btn:hover {
-    filter: brightness(0.93);
+    background: var(--pill-hover);
 }
 
 .custom-select-btn svg {
@@ -4540,7 +4666,7 @@ body.tab-badge .badge-bars-stack {
     align-items: center;
     gap: 7px;
     padding: 20px 20px;
-    background: var(--pill-hover);
+    background: transparent;
     border: none;
     border-radius: 999px;
     color: var(--bar-text);
@@ -4549,12 +4675,12 @@ body.tab-badge .badge-bars-stack {
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
-    transition: filter 0.15s;
+    transition: background 0.15s;
     outline: none;
 }
 
 .prompt-format-trigger:hover {
-    filter: brightness(0.93);
+    background: var(--pill-hover);
 }
 
 .prompt-format-chevron {
@@ -4793,6 +4919,89 @@ body.tab-badge .badge-bars-stack {
 .mob-ghost,
 .mob-scard {
     display: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE GATE — la web app está disponible solo en escritorio.
+   Cubre y desactiva toda la app por debajo de 1200px: solo se
+   habilita en laptops/escritorio de ~13" o más; teléfonos, tablets
+   y ventanas chicas ven el cartel. Estilo alineado al login.
+   ════════════════════════════════════════════════════════════ */
+@keyframes mobGateRise {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 1199px) {
+    .mob-desktop-only {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        padding-top: max(24px, env(safe-area-inset-top));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #17171a;
+        background:
+            radial-gradient(circle at 26% 30%, rgba(143, 159, 255, 0.40), transparent 62vw),
+            radial-gradient(circle at 78% 28%, rgba(255, 255, 255, 0.85), transparent 55vw),
+            linear-gradient(120deg, #dfe5ff 0%, #eef1ff 56%, #f8f9ff 100%);
+    }
+
+    .mob-desktop-only__card {
+        width: min(380px, 100%);
+        padding: 38px 30px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.78);
+        border-radius: 28px;
+        box-shadow:
+            0 30px 70px rgba(92, 108, 197, 0.16),
+            0 10px 28px rgba(46, 51, 89, 0.07),
+            inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        animation: mobGateRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .mob-desktop-only__icon {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background: rgba(122, 134, 220, 0.10);
+        color: #5a6486;
+    }
+    .mob-desktop-only__icon svg { width: 28px; height: 28px; }
+
+    .mob-desktop-only__brand {
+        font-family: 'Sora', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #9a9db0;
+        margin-bottom: 12px;
+    }
+
+    .mob-desktop-only__text {
+        font-size: 16px;
+        line-height: 1.55;
+        font-weight: 500;
+        color: #2a2d3a;
+        margin: 0;
+    }
+
+    /* La app detrás no debe hacer scroll */
+    html, body { overflow: hidden; }
+}
+
+@media (max-width: 1199px) and (prefers-reduced-motion: reduce) {
+    .mob-desktop-only__card { animation: none; }
 }
 
 @media (max-width: 640px) {
@@ -5605,36 +5814,6 @@ body.tab-badge .badge-bars-stack {
     }
 
     .mob-export-cancel:active { opacity: 0.5; }
-
-    /* ════════════════════════════
-       DESKTOP-ONLY MESSAGE
-       ════════════════════════════ */
-    .mob-desktop-only {
-        position: absolute;
-        inset: 0;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: var(--bg-global);
-        z-index: 200;
-        padding: 40px;
-        text-align: center;
-        gap: 0;
-    }
-
-    .mob-desktop-only p {
-        font-family: 'Inter', sans-serif;
-        font-size: 15px;
-        font-weight: 400;
-        color: var(--text-mute);
-        line-height: 1.5;
-    }
-
-    body.tab-cert  .mob-desktop-only,
-    body.tab-badge .mob-desktop-only,
-    body.tab-ave   .mob-desktop-only,
-    body.tab-logos .mob-desktop-only { display: flex; }
 
     /* ════════════════════════════
        POSTER STACK FRAME + GHOSTS

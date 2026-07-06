@@ -41,7 +41,7 @@ const FormatManager = (() => {
     };
 
     /* ── State ── */
-    let activeFormats = ['posteo', 'historia']; // Ambos activos por defecto
+    let activeFormats = ['posteo']; // Solo Posteo activo por defecto
 
     /**
      * Get all available formats

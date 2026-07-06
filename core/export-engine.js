@@ -1,19 +1,31 @@
 /**
  * ═══════════════════════════════════════════════════════
  * EXPORT ENGINE — core/export-engine.js
- * PDF batch export with html2canvas + jsPDF
- * PNG single-poster fallback
- * 300dpi quality, A4 landscape for badges
+ * Exportación JPG con html-to-image (autoalojado en /vendor)
+ * Afiches, gafetes (hojas A4), AVE y certificados
+ * Espera tipografías (Sora/Inter) antes de capturar
  * ═══════════════════════════════════════════════════════
  */
 
 const ExportEngine = (() => {
     'use strict';
 
-    /* ── Constants ── */
-    const A4_LANDSCAPE_W = 1123;  // px at 96dpi
-    const A4_LANDSCAPE_H = 794;
-    const MAX_BATCH_SIZE = 50;    // max records per PDF to prevent crash
+    /**
+     * Garantiza que las tipografías institucionales (Sora/Inter) estén
+     * cargadas ANTES de capturar. Sin esto, un usuario rápido (o una red
+     * lenta) puede exportar con la fuente fallback del sistema.
+     */
+    async function waitForFonts() {
+        if (!document.fonts) return; // navegador muy viejo: no bloquear
+        try {
+            const probes = [
+                "300 16px 'Sora'", "400 16px 'Sora'", "600 16px 'Sora'", "800 16px 'Sora'",
+                "400 16px 'Inter'", "500 16px 'Inter'", "600 16px 'Inter'", "700 16px 'Inter'",
+            ];
+            await Promise.all(probes.map(f => document.fonts.load(f)));
+            await document.fonts.ready;
+        } catch (_) { /* nunca bloquear la exportación por esto */ }
+    }
 
     /**
      * Wait for all images in container to load.
@@ -68,6 +80,9 @@ const ExportEngine = (() => {
             if (typeof window.htmlToImage === 'undefined' || !window.htmlToImage.toJpeg) {
                 throw new Error('Librería html-to-image no disponible. Verifica que el CDN esté cargado.');
             }
+
+            // Tipografías listas antes de capturar (identidad institucional)
+            await waitForFonts();
 
             // Export each active format
             for (let i = 0; i < activeFormats.length; i++) {
@@ -211,6 +226,7 @@ const ExportEngine = (() => {
         badgeSheet.style.transform = 'scale(1)';
 
         showProgress(0, `Exportando ${totalPages} hojas A4...`);
+        await waitForFonts();
 
         try {
             for (let i = 0; i < totalPages; i++) {
@@ -259,109 +275,11 @@ const ExportEngine = (() => {
     }
 
     /**
-     * Export badge sheets as PDF (batch processing) - Legacy support.
-     * @param {Object[]} records — all records to export
-     * @param {Object} options — { bgSrc, bgScale }
-     * @returns {Promise<void>}
-     */
-    async function exportBadgesPDF(records, options = {}) {
-        if (!records || records.length === 0) {
-            throw new Error('No hay registros para exportar.');
-        }
-
-        // Check jsPDF
-        if (typeof jspdf === 'undefined' && typeof jsPDF === 'undefined') {
-            throw new Error('jsPDF no está cargado.');
-        }
-
-        const { jsPDF: JsPDF } = typeof jspdf !== 'undefined' ? jspdf : window;
-
-        // Get dynamic grid configuration
-        const grid = BadgeLayout ? BadgeLayout.calculateGrid() : { cols: 4, rows: 2, perPage: 8 };
-        const a4Size = BadgeLayout ? BadgeLayout.getA4SizePx() : { width: A4_LANDSCAPE_W, height: A4_LANDSCAPE_H };
-
-        // Paginate
-        const { pages, totalPages } = DataParser.paginate(
-            records.slice(0, MAX_BATCH_SIZE * grid.perPage),
-            grid.perPage
-        );
-
-        // Create PDF (A4 landscape)
-        const pdf = new JsPDF({
-            orientation: 'landscape',
-            unit: 'px',
-            format: [a4Size.width, a4Size.height],
-            hotfixes: ['px_scaling']
-        });
-
-        const badgeSheet = document.getElementById('badgeSheet');
-        if (!badgeSheet) throw new Error('Badge sheet container not found.');
-
-        // Temporarily set sheet to export scale
-        const origTransform = badgeSheet.style.transform;
-        badgeSheet.style.transform = 'scale(1)';
-
-        showProgress(0, `Exportando ${totalPages} páginas...`);
-
-        try {
-            for (let i = 0; i < totalPages; i++) {
-                // Render page
-                BadgeGenerator.renderPage(pages[i], {
-                    bgSrc: options.bgSrc || BadgeGenerator.getBgSrc(),
-                    bgScale: options.bgScale || 1,
-                    color: ColorManager?.getCurrent()?.color
-                });
-
-                // Wait for DOM render
-                await delay(100);
-
-                // Capture
-                const canvas = await html2canvas(badgeSheet, {
-                    scale: 2,  // 2× for PDF (balance quality/size)
-                    allowTaint: true,
-                    backgroundColor: '#FFFFFF',
-                    logging: false,
-                    width: a4Size.width,
-                    height: a4Size.height
-                });
-
-                // Add to PDF using toBlob
-                await new Promise((resolve) => {
-                    canvas.toBlob((blob) => {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            if (i > 0) pdf.addPage();
-                            pdf.addImage(reader.result, 'JPEG', 0, 0, a4Size.width, a4Size.height);
-                            resolve();
-                        };
-                        reader.readAsDataURL(blob);
-                    }, 'image/jpeg', 0.95);
-                });
-
-                // Update progress
-                const progress = Math.round(((i + 1) / totalPages) * 100);
-                showProgress(progress, `Página ${i + 1} de ${totalPages}`);
-            }
-
-            // Save PDF
-            pdf.save(`gafetes-mec-${Date.now()}.pdf`);
-
-            showProgress(100, '¡PDF descargado!');
-            setTimeout(hideProgress, 2000);
-
-        } finally {
-            // Restore original scale
-            badgeSheet.style.transform = origTransform;
-            // Re-render current page
-            BadgeGenerator.goToPage(APP.currentPage);
-        }
-    }
-
-    /**
      * Main download handler — determines what to export based on current tab.
      */
     async function download() {
         try {
+            await waitForFonts(); // cubre también AVE y Certificados
             if (APP.currentTab === 'poster') {
                 await exportPosterJPG();
                 const activeCount = FormatManager ? FormatManager.getActive().length : 1;
@@ -445,9 +363,9 @@ const ExportEngine = (() => {
         download,
         exportPosterJPG,
         exportBadgesJPG,
-        exportBadgesPDF,
         showProgress,
-        hideProgress
+        hideProgress,
+        waitForFonts
     };
 })();
 

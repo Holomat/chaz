@@ -36,14 +36,18 @@ const DataParser = (() => {
         const ALIASES = {
             nombre: ['nombre', 'name', 'nombres', 'firstname', 'primernombre', 'nombrecompleto'],
             apellido: ['apellido', 'apellidos', 'lastname', 'surname', 'segundonombre'],
-            pais: ['pais', 'country', 'nation', 'nacionalidad', 'paisorigen']
+            pais: ['pais', 'country', 'nation', 'nacionalidad', 'paisorigen'],
+            // CI (cédula de identidad) — columna opcional. "ci" se compara exacto
+            // (con includes() colisionaría con "nacionalidad", "institucion", etc.)
+            ci: ['cedula', 'cedulaidentidad', 'documento', 'dni']
         };
 
         for (const [field, aliases] of Object.entries(ALIASES)) {
-            const idx = normalizedHeaders.findIndex(h => aliases.some(a => h.includes(a)));
+            const idx = normalizedHeaders.findIndex(h =>
+                aliases.some(a => h.includes(a)) || (field === 'ci' && h === 'ci'));
             if (idx !== -1) {
                 mapping[field] = idx;
-            } else {
+            } else if (REQUIRED_COLUMNS.includes(field)) {
                 missing.push(field);
             }
         }
@@ -111,7 +115,8 @@ const DataParser = (() => {
                     _index: i,
                     nombre: mapping.nombre !== undefined ? String(row[mapping.nombre] || '').trim() : '',
                     apellido: mapping.apellido !== undefined ? String(row[mapping.apellido] || '').trim() : '',
-                    pais: mapping.pais !== undefined ? String(row[mapping.pais] || '').trim() : ''
+                    pais: mapping.pais !== undefined ? String(row[mapping.pais] || '').trim() : '',
+                    ci: mapping.ci !== undefined ? String(row[mapping.ci] || '').trim() : ''
                 };
 
                 // Basic validation: at least nombre should be present

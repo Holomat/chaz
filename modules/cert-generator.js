@@ -65,7 +65,9 @@ const CertGenerator = (() => {
 
     function processBold(text) {
         const escaped = (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return escaped.replace(/\*(.*?)\*/g, '<span class="bold-part">$1</span>');
+        return escaped
+            .replace(/\*(.*?)\*/g, '<span class="bold-part">$1</span>')
+            .replace(/\n/g, '<br>'); // Enter = salto de línea en el diseño
     }
 
     function setText(id, text) {
@@ -76,6 +78,7 @@ const CertGenerator = (() => {
     function setInput(id, text) {
         const el = document.getElementById(id);
         if (el) el.value = text;
+        window.growTextFields?.(); // re-medir textareas auto-expandibles
     }
 
     function delay(ms) {
@@ -110,6 +113,12 @@ const CertGenerator = (() => {
         adjustTitleWidth();
         setText('certNameDisplay',    val('certName')    || 'Nombre y Apellido');
         setText('certDetailsDisplay', val('certDetails') || '');
+
+        // CI (opcional): debajo del nombre al 60%; con CI el nombre sube una línea
+        const ciRaw  = (val('certCI') || '').trim();
+        const ciText = ciRaw ? (/^c\.?\s?i\.?/i.test(ciRaw) ? ciRaw : `C.I. ${ciRaw}`) : '';
+        setText('certCIDisplay', ciText);
+        document.getElementById('certNameBlock')?.classList.toggle('has-ci', !!ciRaw);
 
         // Dorso: nombre del curso (= título del frente) + contenidos editables
         setText('certBackTitleDisplay',   val('certTitle')       || 'Nombre de la actividad');
@@ -171,6 +180,8 @@ const CertGenerator = (() => {
         }
         render();
         updateScale();
+        // La fila recién mostrada (Detalle o Dorso) necesita re-medirse
+        requestAnimationFrame(() => window.growTextFields?.());
     }
 
     function toggleDorso() {
@@ -229,6 +240,7 @@ const CertGenerator = (() => {
         const r        = certRecords[certRecordIndex];
         const fullName = [r.nombre, r.apellido].filter(Boolean).join(' ');
         setInput('certName', fullName);
+        setInput('certCI', r.ci || '');
 
         render();
         updateCertNav();
@@ -376,6 +388,7 @@ const CertGenerator = (() => {
                     const r        = certRecords[i];
                     const fullName = [r.nombre, r.apellido].filter(Boolean).join(' ');
                     setInput('certName', fullName);
+                    setInput('certCI', r.ci || '');
                     render();
                     await delay(150);
                     const dataUrl = await captureFace(certCanvas);
@@ -394,41 +407,6 @@ const CertGenerator = (() => {
         }
     }
 
-    /* ── Modal de descarga (frente / dorso / cancelar) ── */
-
-    function showExportDialog() {
-        return new Promise((resolve) => {
-            const backdrop = document.getElementById('certDlBackdrop');
-            const btnFront = document.getElementById('certDlFront');
-            const btnBack  = document.getElementById('certDlBack');
-            const btnCancel= document.getElementById('certDlCancel');
-            if (!backdrop || !btnFront || !btnBack || !btnCancel) { resolve('cancel'); return; }
-
-            backdrop.hidden = false;
-
-            function cleanup(choice) {
-                backdrop.hidden = true;
-                btnFront.removeEventListener('click', onFront);
-                btnBack.removeEventListener('click', onBack);
-                btnCancel.removeEventListener('click', onCancel);
-                backdrop.removeEventListener('click', onBackdrop);
-                document.removeEventListener('keydown', onKey);
-                resolve(choice);
-            }
-            const onFront    = () => cleanup('front');
-            const onBack     = () => cleanup('dorso');
-            const onCancel   = () => cleanup('cancel');
-            const onBackdrop = (e) => { if (e.target === backdrop) cleanup('cancel'); };
-            const onKey      = (e) => { if (e.key === 'Escape') cleanup('cancel'); };
-
-            btnFront.addEventListener('click', onFront);
-            btnBack.addEventListener('click', onBack);
-            btnCancel.addEventListener('click', onCancel);
-            backdrop.addEventListener('click', onBackdrop);
-            document.addEventListener('keydown', onKey);
-        });
-    }
-
     /* ── Public export entry point ── */
 
     async function exportJPG() {
@@ -436,17 +414,15 @@ const CertGenerator = (() => {
             throw new Error('Librería html-to-image no disponible.');
         }
 
-        const choice = await showExportDialog(); // 'front' | 'dorso' | 'cancel'
-        if (choice === 'cancel') return false;
-
+        // Sin diálogo: siempre se exporta el frente del certificado
         ExportEngine.showProgress(0, certRecords.length > 0
             ? `Preparando ${certRecords.length} certificados...`
             : 'Preparando certificado...');
 
         if (certRecords.length > 0) {
-            await exportBatch(choice);
+            await exportBatch('front');
         } else {
-            await exportSingle(choice);
+            await exportSingle('front');
         }
         return true;
     }
@@ -524,7 +500,7 @@ const CertGenerator = (() => {
     function init() {
         const ids = [
             'certProgram',
-            'certTitle', 'certName', 'certDetails', 'certBackContent',
+            'certTitle', 'certName', 'certCI', 'certDetails', 'certBackContent',
             'certR1Name', 'certR1Role', 'certR1Inst',
             'certR2Name', 'certR2Role', 'certR2Inst',
             'certR3Name', 'certR3Role', 'certR3Inst',
