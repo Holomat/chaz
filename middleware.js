@@ -10,8 +10,8 @@
 const DEFAULT_TOKEN = 'atomo-dne-2026-7f3a9c1e5b8d4620'; // debe coincidir con api/login.js
 
 export const config = {
-    // Corre en todo excepto login.html, /api/login y favicon
-    matcher: ['/((?!login\\.html|api/login|favicon\\.ico|robots\\.txt).*)'],
+    // Corre en todo excepto login.html, /api/login y favicons
+    matcher: ['/((?!login\\.html|api/login|favicon\\.ico|favicon\\.svg|robots\\.txt).*)'],
 };
 
 export default function middleware(request) {
