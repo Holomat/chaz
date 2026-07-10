@@ -45,6 +45,7 @@ const LogoEngine = (() => {
         'PAS': { base: 'pas', label: 'Logo PAS' },
         'PNEC': { base: 'pnec', label: 'Logo PNEC' },
         'Cecap': { base: 'cecap', label: 'Logo Cecap' },
+        'Ápice': { base: 'apice', label: 'Logo Ápice' },
         'Secretaría Permanente': { base: 'sp', label: 'Logo Secretaría Permanente' }
     };
 
@@ -55,10 +56,14 @@ const LogoEngine = (() => {
     const LOGO_BASE_PATH = 'Root/assets/logos/';
 
     // Color-specific logo variants
+    // (lima #DDFF9D no necesita variante: es el color del archivo -mono base)
     const COLOR_VARIANTS = {
-        '#E8E0FF': 'lavanda',  // Lavanda
+        '#E8E0FF': 'lavanda',   // Lavanda
         '#FFD0EF': 'rosa',      // Rosa
-        '#C0FFCA': 'verde'      // Verde
+        '#C0FFCA': 'verde',     // Menta/Verde
+        '#FFE3C4': 'durazno',   // Durazno
+        '#FFF3B8': 'manteca',   // Manteca
+        '#C2EEFF': 'celeste'    // Celeste
     };
 
     // Cache for preloaded logo data URLs
@@ -94,7 +99,21 @@ const LogoEngine = (() => {
     async function setProgram(programName) {
         currentProgram = programName;
         await updateLogoSrc();
+        preloadProgramVariants(); // caché tibia: cambiar color no espera al fetch
         console.log(`🏛️ Program logo: ${programName}`);
+    }
+
+    /**
+     * Pre-carga en segundo plano los archivos de logo del programa actual
+     * en TODAS las variantes de color. Así, al cambiar de paleta, el swap
+     * del logo sale de caché y pinta en el mismo frame que los textos.
+     */
+    function preloadProgramVariants() {
+        const config = LOGO_MAP[currentProgram];
+        if (!config || currentProgram === 'DNE Isotipo') return;
+        const suffixes = ['mono', 'color',
+            ...Object.values(COLOR_VARIANTS).map(v => v === 'rosa' ? 'rosa-2' : v)];
+        suffixes.forEach(s => { preloadLogo(`logo-${config.base}-${s}.svg`); });
     }
 
     /**
@@ -190,15 +209,10 @@ const LogoEngine = (() => {
 
             // Fix for rosa logo (use rosa-2 to bypass cache)
             const actualSuffix = suffix === 'rosa' ? 'rosa-2' : suffix;
-            let filename = `logo-${config.base}-${actualSuffix}.svg`;
-
-            // Force cache refresh for lavanda by clearing cache and adding timestamp
-            if (actualSuffix === 'lavanda') {
-                delete logoCache[filename];
-                filename = `${filename}?v=${Date.now()}`;
-            }
+            const filename = `logo-${config.base}-${actualSuffix}.svg`;
 
             // ✨ OPTIMIZATION: Pre-load logo BEFORE hiding current one (prevents flash)
+            // (con la caché tibia de preloadProgramVariants esto resuelve al instante)
             const dataUrl = await preloadLogo(filename);
 
             // Swap instantáneo ahora que el logo está cargado

@@ -1412,21 +1412,28 @@ body.dark .poster {
     align-items: center;
     gap: 0.4em;
     white-space: nowrap; /* nunca se parte en 2 líneas */
+    line-height: 1;      /* la caja de texto abraza las letras:
+                            el centrado del ícono queda anclado a la
+                            palabra, no a la caja de línea */
 }
 
 .event-item.hidden { display: none; }
 
 .event-icon {
-    width: 1.05em;
-    height: 1.05em;
+    /* tamaño en px enteros por formato (con em, 1.05em redondeaba
+       distinto según la densidad del monitor y el ícono bailaba) */
     flex-shrink: 0;
     display: block;
 }
 
 .poster[data-format="posteo"] .event-info { font-size: 12px; }
+.poster[data-format="posteo"] .event-icon { width: 13px; height: 13px; }
 
 .poster[data-format="historia"] .event-info,
 .poster[data-format="reels"] .event-info { font-size: 9px; }
+
+.poster[data-format="historia"] .event-icon,
+.poster[data-format="reels"] .event-icon { width: 10px; height: 10px; }
 
 /* ── Vista full pantalla del producto (botón Encuadrar) ── */
 .full-preview-overlay {

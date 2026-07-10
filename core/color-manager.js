@@ -11,8 +11,11 @@ const ColorManager = (() => {
 
     /* ── Preset Palettes ── Ordenados según rueda cromática */
     const PRESETS = [
-        { id: 'yellow', color: '#DDFF9D', accent: '#9E9D24', label: 'Amarillo' },
-        { id: 'green', color: '#C0FFCA', accent: '#2E7D32', label: 'Verde' },
+        { id: 'peach', color: '#FFE3C4', accent: '#EA580C', label: 'Durazno' },
+        { id: 'butter', color: '#FFF3B8', accent: '#D97706', label: 'Manteca' },
+        { id: 'yellow', color: '#DDFF9D', accent: '#9E9D24', label: 'Lima' },
+        { id: 'green', color: '#C0FFCA', accent: '#2E7D32', label: 'Menta' },
+        { id: 'sky', color: '#C2EEFF', accent: '#0284C7', label: 'Celeste' },
         { id: 'lavender', color: '#E8E0FF', accent: '#7B61FF', label: 'Lavanda' },
         { id: 'pink', color: '#FFD0EF', accent: '#FF61C6', label: 'Rosa' }
     ];
@@ -30,27 +33,20 @@ const ColorManager = (() => {
     function apply(palette) {
         currentPalette = palette;
 
-        // ✨ Batch DOM updates for performance - all changes happen in one reflow
-        requestAnimationFrame(() => {
-            // Sync ALL poster text containers
-            const textContainers = document.querySelectorAll('.text-container');
-            textContainers.forEach(container => {
-                container.style.color = palette.color;
-            });
+        // Aplicación SÍNCRONA: textos y logos se pintan en el mismo frame
+        // (con rAF el texto llegaba un frame después y el lima del template
+        // se veía un microsegundo)
+        const textContainers = document.querySelectorAll('.text-container');
+        textContainers.forEach(container => {
+            container.style.color = palette.color;
+        });
 
-            // Sync ALL SVG logos
-            const logoSvgs = document.querySelectorAll('.logo-svg-inline');
-            logoSvgs.forEach(svg => {
-                svg.style.color = palette.color;
-            });
+        document.querySelectorAll('.logo-svg-inline').forEach(svg => {
+            svg.style.color = palette.color;
+        });
 
-            // Sync ALL logo containers (for mono mode with currentColor)
-            const logoContainers = document.querySelectorAll('.logo-container');
-            logoContainers.forEach(container => {
-                container.style.color = palette.color;
-            });
-
-            console.log(`🎨 Color aplicado a ${textContainers.length} poster(s)`);
+        document.querySelectorAll('.logo-container').forEach(container => {
+            container.style.color = palette.color;
         });
 
         // Set CSS custom properties (no reflow needed)

@@ -31,6 +31,7 @@ const CertGenerator = (() => {
         'PAS':                      'pas',
         'PNEC':                     'pnec',
         'Cecap':                    'cecap',
+        'Ápice':                    'apice',
         'Secretaría Permanente':    'sp'
     };
 

@@ -13,11 +13,32 @@
     --v4-sidebar-gap: 14px;
 }
 
-/* ── Geometría: de barra inferior a columna izquierda ── */
+/* ── Fondo: el mismo lavanda de la pantalla de acreditación ──
+   Va en html (full-bleed) y el body queda transparente, para que
+   el degradé sea continuo — sin el anillo blanco del margen. */
+html {
+    background:
+        radial-gradient(circle at 29% 41%, rgba(143, 159, 255, 0.38), transparent 34vw),
+        radial-gradient(circle at 72% 36%, rgba(255, 255, 255, 0.84), transparent 31vw),
+        linear-gradient(120deg, #dfe5ff 0%, #eef1ff 56%, #f8f9ff 100%);
+    background-attachment: fixed;
+}
+
+body {
+    background: transparent;
+}
+
+/* la aurora anterior queda reemplazada por el fondo del login */
+.aurora-bg {
+    display: none;
+}
+
+/* ── Geometría: de barra inferior a columna DERECHA ──
+   (a la izquierda competía con el menú de navegación) */
 .poster-bars-stack,
 .cert-bars-stack {
-    left: calc(var(--sidenav-open) + var(--v4-sidebar-gap));
-    right: auto;
+    left: auto;
+    right: 20px;
     top: 20px;
     bottom: 20px;
     transform: none;
@@ -29,22 +50,117 @@
     align-content: flex-start;
 }
 
-body.nav-collapsed .poster-bars-stack,
-body.nav-collapsed .cert-bars-stack {
-    left: calc(var(--sidenav-closed) + var(--v4-sidebar-gap));
-}
-
-/* La tarjeta interna de cert ocupa el ancho de la columna */
+/* La tarjeta interna de cert ocupa el ancho Y ALTO de la columna
+   (alto constante respecto a la ventana, como Redes Sociales) */
 .cert-bars-stack .cert-bar {
     width: 100%;
+    min-height: 100%;
+    border-radius: 28px; /* mismo radio que la tarjeta de Redes */
 }
 
-/* ── Canvas: toda la altura, desplazado a la derecha de la sidebar ── */
+/* Firmas: a continuación del Detalle, en flujo (crece hacia abajo) */
+.cert-bars-stack .cert-row--resp {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    align-items: flex-start;
+}
+
+/* Descargar: única fila anclada al pie, con los MISMOS insets que la
+   fila Descargar de Redes (24px lateral, 20px inferior, 16px superior) */
+.cert-bars-stack .cert-row.cert-row--controls {
+    margin-top: auto;
+    padding: 16px 24px 20px;
+    min-height: 0;
+}
+
+/* ── Canvas: toda la altura, desplazado a la izquierda de la sidebar ── */
 body.tab-poster .canvas-area,
 body.tab-cert   .canvas-area,
 body.tab-ave    .canvas-area {
     padding-bottom: 24px;
-    padding-left: calc(var(--v4-sidebar-width) + var(--v4-sidebar-gap) * 2);
+    padding-right: calc(var(--v4-sidebar-width) + var(--v4-sidebar-gap) * 2);
+}
+
+/* ── Selector de logos al tope de la columna ── */
+.v4-logo-row {
+    position: relative;
+    padding: 12px 16px;
+}
+
+.v4-logo-row::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 26px;
+    right: 26px;
+    height: 1px;
+    background: var(--bar-sep);
+}
+
+.v4-logo-row .custom-select {
+    width: 100%;
+    margin: 0;
+}
+
+.v4-logo-row .custom-select-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 14px 16px;
+    font-size: 14px;
+}
+
+/* Nombres largos: elipsis en el botón, texto completo (envuelto) en el panel */
+.v4-logo-row .custom-select-btn span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.v4-logo-row .custom-select-btn svg {
+    flex-shrink: 0;
+}
+
+.v4-logo-row .custom-select-option {
+    white-space: normal;
+    line-height: 1.35;
+}
+
+/* en cert la fila hereda .cert-row: forzar el mismo inset que en redes */
+.cert-bars-stack .cert-row.v4-logo-row {
+    padding: 12px 16px;
+    min-height: 0;
+    height: auto;
+}
+
+/* el separador propio (cert-row-sep) reemplaza al ::after */
+.cert-bars-stack .v4-logo-row::after {
+    display: none;
+}
+
+/* El panel del select abre hacia ABAJO (en v3 abría hacia arriba porque
+   el botón vivía en la barra inferior; al tope de la columna se cortaba) */
+.v4-logo-row .custom-select-panel {
+    bottom: auto;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    transform: none;
+    min-width: 0;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.v4-logo-row .custom-select.open .custom-select-panel {
+    animation: v4SelectFadeIn 0.15s ease;
+}
+
+@keyframes v4SelectFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ═══════════════════════════════════════════════
@@ -56,7 +172,7 @@ body.tab-ave    .canvas-area {
 }
 
 .poster-text-bar .text-bar-field {
-    padding: 14px 20px;
+    padding: 16px 26px;
     width: 100%;
 }
 
@@ -65,17 +181,23 @@ body.tab-ave    .canvas-area {
     width: auto;
     height: 1px;
     align-self: stretch;
-    margin: 0 20px;
+    margin: 0 26px;
 }
 
 .poster-text-bar--info .text-bar-field {
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 13px;
+    padding-bottom: 13px;
 }
 
-/* Controles: envuelven en el ancho de la columna */
+.poster-text-bar--info::before {
+    left: 26px;
+    right: 26px;
+}
+
+/* Controles: anclados al pie de la columna (Descargar es lo último) */
 .poster-prompt-bar {
-    padding: 14px 16px 16px;
+    padding: 16px 20px 20px;
+    margin-top: auto;
 }
 
 .poster-bars-stack .prompt-row--bottom {
@@ -88,14 +210,120 @@ body.tab-ave    .canvas-area {
     display: none;
 }
 
-.poster-bars-stack .prompt-photo-btn,
 .poster-bars-stack .custom-select-btn,
 .poster-bars-stack .prompt-format-trigger {
     padding: 12px 14px;
 }
 
-.poster-bars-stack .prompt-color-group {
-    padding: 0 2px;
+/* ── Filas de control sueltas en la columna (foto, colores) ── */
+.v4-ctrl-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+}
+
+.v4-ctrl-row--sep-after::after,
+.v4-ctrl-row--sep-before::before {
+    content: '';
+    position: absolute;
+    left: 26px;
+    right: 26px;
+    height: 1px;
+    background: var(--bar-sep);
+}
+
+.v4-ctrl-row--sep-after::after { bottom: 0; }
+.v4-ctrl-row--sep-before::before { top: 0; }
+
+/* Foto + escala (− +): a lo ancho, debajo del selector de logos */
+.v4-ctrl-row .prompt-photo-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 12px 14px;
+}
+
+/* Colores: debajo de Lugar, puntos distribuidos a lo ancho */
+.v4-ctrl-row .prompt-color-group {
+    flex: 1 1 100%;
+    justify-content: space-between;
+    padding: 2px 12px;
+}
+
+.poster-bars-stack .prompt-color-dot {
+    width: 24px;
+    height: 24px;
+}
+
+/* Activo: solo el aro interno (sin el doble anillo exterior) */
+.v4-ctrl-row .color-dot.active {
+    box-shadow: none;
+    transform: none;
+}
+
+/* ── Formatos: toggles SIEMPRE visibles, ancho completo, tone-to-tone ──
+   Se fija abierto el panel del dropdown (los botones ya están cableados
+   a FormatManager) y se re-estila como grupo segmentado. */
+.poster-bars-stack .prompt-format-dropdown {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.poster-bars-stack .prompt-format-trigger {
+    display: none;
+}
+
+.poster-bars-stack .prompt-format-panel {
+    display: flex !important;
+    position: static;
+    transform: none;
+    animation: none !important;
+    min-width: 0;
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    gap: 6px;
+    overflow: visible;
+}
+
+.poster-bars-stack .prompt-format-panel .format-toggle-btn {
+    flex: 1;
+    width: auto;
+    justify-content: center;
+    gap: 0;
+    padding: 9px 6px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.poster-bars-stack .prompt-format-panel .format-toggle-btn:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* solo el nombre: sin check ni proporciones */
+.poster-bars-stack .prompt-format-panel .format-opt-check,
+.poster-bars-stack .prompt-format-panel .format-opt-ratio {
+    display: none;
+}
+
+.poster-bars-stack .prompt-format-panel .format-opt-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-mute);
+}
+
+/* Activo: tone-to-tone — fondo oscuro, texto en el color de la paleta */
+.poster-bars-stack .prompt-format-panel .format-toggle-btn.active {
+    background: var(--format-btn-bg, #1d1d1f);
+}
+
+.poster-bars-stack .prompt-format-panel .format-toggle-btn.active .format-opt-name {
+    color: var(--active-color, #DDFF9D);
 }
 
 /* Descargar: botón principal, ancho completo al pie */
@@ -110,6 +338,17 @@ body.tab-ave    .canvas-area {
 /* ═══════════════════════════════════════════════
    CERTIFICADOS — filas adaptadas a la columna
    ═══════════════════════════════════════════════ */
+
+/* Más aire entre la tipografía y el borde de la tarjeta */
+.cert-bars-stack .cert-row {
+    padding-left: 26px;
+    padding-right: 26px;
+}
+
+.cert-bars-stack .cert-row-sep {
+    margin-left: 26px;
+    margin-right: 26px;
+}
 
 /* Participante + CI + importar/nav envuelven */
 .cert-row--name {
@@ -131,6 +370,43 @@ body.tab-ave    .canvas-area {
     flex: 1 1 auto;
 }
 
+/* Navegación de participantes: UNA sola línea, flechas evidentes */
+.cert-bars-stack .cert-data-preview {
+    flex: 1 1 100%;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0 2px;
+}
+
+.cert-bars-stack .cert-data-preview .cert-row-count {
+    flex: 1;
+    font-size: 12.5px;
+}
+
+.cert-bars-stack .cert-data-preview .prompt-var-counter {
+    font-size: 12.5px;
+    min-width: 44px;
+    text-align: center;
+}
+
+.cert-bars-stack .cert-data-preview .prompt-scale-btn {
+    width: 34px;
+    height: 34px;
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-main);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.cert-bars-stack .cert-data-preview .prompt-scale-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.10);
+}
+
+.cert-bars-stack .cert-data-preview .prompt-scale-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
 /* Controles: apilados */
 .cert-row--controls {
     flex-wrap: wrap;
@@ -141,12 +417,68 @@ body.tab-ave    .canvas-area {
     display: none;
 }
 
+/* ── Responsables: una TARJETA por firmante ──
+   2 líneas (Nombre arriba, Cargo + Firma abajo), fondo suave y sin
+   subrayados — la línea solo aparece al enfocar el campo. */
 .cert-resp-group {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .cert-resp-row {
     flex-wrap: wrap;
+    row-gap: 6px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 14px;
+    padding: 12px 14px;
+}
+
+/* el separador entre responsables lo reemplaza la tarjeta */
+#certRespSection2:not(.hidden),
+#certRespSection3:not(.hidden) {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 12px;
+}
+
+.cert-resp-row .cert-resp-input {
+    font-size: 13.5px;
+    padding: 3px 0 4px;
+    border-bottom: 1px solid transparent;
+}
+
+.cert-resp-row .cert-resp-input:focus {
+    border-bottom-color: var(--active-color, #DDFF9D);
+}
+
+.cert-resp-row .cert-resp-input:first-child {
+    flex: 1 1 100%;
+    font-weight: 500;
+}
+
+.cert-resp-row .cert-sig-btn {
+    height: 28px;
+    padding: 0 12px;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+/* +/−: fila propia DEBAJO del último responsable, uno al lado del otro.
+   (antes eran una columna al costado que les robaba ancho a las tarjetas) */
+.cert-bars-stack .cert-resp-ctrl {
+    flex: 1 1 100%;
+    flex-direction: row;
+    gap: 8px;
+    padding: 0;
+    margin-top: 2px;
+}
+
+.cert-bars-stack .cert-resp-icon-btn {
+    flex: 1;
+    width: auto;
+    height: 32px;
+    border-radius: 999px;
 }
 
 .cert-row--controls .prompt-download-btn {

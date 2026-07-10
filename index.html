@@ -35,14 +35,13 @@
         <select id="programSelector">
             <option value="DNE Isotipo">DNE Isotipo</option>
             <option value="MEC - DNE">MEC - DNE</option>
-            <option value="Cultura Científica">Cultura Científica</option>
-            <option value="Cultura Científica (Anep)">Cultura Científica (Anep)</option>
             <option value="CC 40 Anos">Cultura Científica 40 años</option>
             <option value="CC 40 Anos (Anep)">Cultura Científica 40 años (Anep)</option>
             <option value="Ccepi">Ccepi</option>
             <option value="PAS">PAS</option>
             <option value="PNEC">PNEC</option>
             <option value="Cecap">Cecap</option>
+                    <option value="Ápice">Área de Primera Infancia CyE</option>
             <option value="Secretaría Permanente">Secretaría Permanente</option>
         </select>
         <button id="logoColorBtn" class="logo-toggle-btn active">Color</button>
@@ -633,6 +632,35 @@ a certificar (curso, taller o programa)</div>
     <!-- ═══════════════════════════════════════════ -->
     <div class="poster-bars-stack" id="posterBarsStack">
 
+    <!-- V4: selector de logo al tope de la columna -->
+    <div class="v4-logo-row">
+        <select class="prompt-eje-select custom-select-trigger" id="programSelectorBar">
+            <option value="DNE Isotipo">DNE Isotipo</option>
+            <option value="MEC - DNE">MEC - DNE</option>
+            <option value="CC 40 Anos">CC 40 años</option>
+            <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
+            <option value="Ccepi">Ccepi</option>
+            <option value="PAS">PAS</option>
+            <option value="PNEC">PNEC</option>
+            <option value="Cecap">Cecap</option>
+                    <option value="Ápice">Área de Primera Infancia CyE</option>
+            <option value="Secretaría Permanente">Sec. Permanente</option>
+        </select>
+    </div>
+
+    <!-- V4: foto + escala debajo del selector de logos -->
+    <div class="v4-ctrl-row v4-ctrl-row--sep-after" id="v4PhotoRow">
+        <label for="bgInput" class="prompt-photo-btn" id="bgLabel" title="Cargar foto">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span class="prompt-photo-name">Foto</span>
+        </label>
+        <button class="prompt-scale-btn" id="bgScaleMinus" title="Alejar foto">−</button>
+        <button class="prompt-scale-btn" id="bgScalePlus" title="Acercar foto">+</button>
+    </div>
+
     <!-- Barra de texto (textareas auto-expandibles: la barra crece hacia arriba) -->
     <div class="poster-text-bar" id="posterTextBar">
         <div class="text-bar-field">
@@ -663,51 +691,24 @@ a certificar (curso, taller o programa)</div>
         </div>
     </div>
 
+    <!-- V4: colores debajo de Lugar (orden según rueda cromática) -->
+    <div class="v4-ctrl-row v4-ctrl-row--sep-before" id="v4ColorsRow">
+        <div class="prompt-color-group" id="colorPaletteBar">
+            <div class="color-dot prompt-color-dot" style="background:#FFE3C4;" data-color="#FFE3C4" data-accent="#EA580C" title="Durazno"></div>
+            <div class="color-dot prompt-color-dot" style="background:#FFF3B8;" data-color="#FFF3B8" data-accent="#D97706" title="Manteca"></div>
+            <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24" title="Lima"></div>
+            <div class="color-dot prompt-color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32" title="Menta"></div>
+            <div class="color-dot prompt-color-dot" style="background:#C2EEFF;" data-color="#C2EEFF" data-accent="#0284C7" title="Celeste"></div>
+            <div class="color-dot prompt-color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF" title="Lavanda"></div>
+            <div class="color-dot prompt-color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6" title="Rosa"></div>
+        </div>
+    </div>
+
     <!-- Barra de controles -->
     <div class="poster-prompt-bar" id="posterPromptBar">
 
         <!-- Fila: controles + descargar -->
         <div class="prompt-row prompt-row--bottom">
-
-            <!-- Foto + zoom -->
-            <label for="bgInput" class="prompt-photo-btn" id="bgLabel" title="Cargar foto">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                </svg>
-                <span class="prompt-photo-name">Foto</span>
-            </label>
-            <button class="prompt-scale-btn" id="bgScaleMinus" title="Alejar foto">−</button>
-            <button class="prompt-scale-btn" id="bgScalePlus" title="Acercar foto">+</button>
-
-            <div class="prompt-divider"></div>
-
-            <!-- Logo -->
-            <select class="prompt-eje-select custom-select-trigger" id="programSelectorBar">
-                <option value="DNE Isotipo">DNE Isotipo</option>
-                <option value="MEC - DNE">MEC - DNE</option>
-                <option value="Cultura Científica">Cultura Científica</option>
-                <option value="Cultura Científica (Anep)">CC (Anep)</option>
-                <option value="CC 40 Anos">CC 40 años</option>
-                <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
-                <option value="Ccepi">Ccepi</option>
-                <option value="PAS">PAS</option>
-                <option value="PNEC">PNEC</option>
-                <option value="Cecap">Cecap</option>
-                <option value="Secretaría Permanente">Sec. Permanente</option>
-            </select>
-
-            <div class="prompt-divider"></div>
-
-            <!-- Colores -->
-            <div class="prompt-color-group" id="colorPaletteBar">
-                <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24"></div>
-                <div class="color-dot prompt-color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32"></div>
-                <div class="color-dot prompt-color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF"></div>
-                <div class="color-dot prompt-color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6"></div>
-            </div>
-
-            <div class="prompt-divider"></div>
 
             <!-- Formatos — dropdown M3 -->
             <div class="prompt-format-dropdown" id="formatDropdown">
@@ -788,12 +789,11 @@ a certificar (curso, taller o programa)</div>
                 <select class="prompt-eje-select custom-select-trigger" id="aveProgram">
                     <option value="MEC - DNE">MEC - DNE</option>
                     <option value="DNE Isotipo">DNE Isotipo</option>
-                    <option value="Cultura Científica">Cultura Científica</option>
-                    <option value="Cultura Científica (Anep)">CC (Anep)</option>
                     <option value="Ccepi">Ccepi</option>
                     <option value="PAS">PAS</option>
                     <option value="PNEC">PNEC</option>
                     <option value="Cecap">Cecap</option>
+                    <option value="Ápice">Área de Primera Infancia CyE</option>
                     <option value="Secretaría Permanente">Sec. Permanente</option>
                 </select>
 
@@ -801,10 +801,13 @@ a certificar (curso, taller o programa)</div>
 
                 <!-- Colores -->
                 <div class="prompt-color-group" id="colorPaletteAve">
-                    <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24"></div>
-                    <div class="color-dot prompt-color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32"></div>
-                    <div class="color-dot prompt-color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF"></div>
-                    <div class="color-dot prompt-color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#FFE3C4;" data-color="#FFE3C4" data-accent="#EA580C" title="Durazno"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#FFF3B8;" data-color="#FFF3B8" data-accent="#D97706" title="Manteca"></div>
+                    <div class="color-dot prompt-color-dot active" style="background:#DDFF9D;" data-color="#DDFF9D" data-accent="#9E9D24" title="Lima"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#C0FFCA;" data-color="#C0FFCA" data-accent="#2E7D32" title="Menta"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#C2EEFF;" data-color="#C2EEFF" data-accent="#0284C7" title="Celeste"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#E8E0FF;" data-color="#E8E0FF" data-accent="#7B61FF" title="Lavanda"></div>
+                    <div class="color-dot prompt-color-dot" style="background:#FFD0EF;" data-color="#FFD0EF" data-accent="#FF61C6" title="Rosa"></div>
                 </div>
 
                 <div class="prompt-divider"></div>
@@ -843,6 +846,23 @@ a certificar (curso, taller o programa)</div>
     <!-- ═══════════════════════════════════════════ -->
     <div class="cert-bars-stack" id="certBarsStack">
         <div class="cert-bar">
+
+            <!-- V4: selector de logo/programa al tope de la columna -->
+            <div class="cert-row v4-logo-row">
+                <select class="prompt-eje-select custom-select-trigger" id="certProgram">
+                    <option value="MEC - DNE">MEC - DNE</option>
+                    <option value="DNE Isotipo">DNE Isotipo</option>
+                    <option value="CC 40 Anos">CC 40 años</option>
+                    <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
+                    <option value="Ccepi">Ccepi</option>
+                    <option value="PAS">PAS</option>
+                    <option value="PNEC">PNEC</option>
+                    <option value="Cecap">Cecap</option>
+                    <option value="Ápice">Área de Primera Infancia CyE</option>
+                    <option value="Secretaría Permanente">Sec. Permanente</option>
+                </select>
+            </div>
+            <div class="cert-row-sep"></div>
 
             <!-- Fila 1: Título (nombre de la actividad) -->
             <div class="cert-row cert-row--text">
@@ -899,25 +919,8 @@ a certificar (curso, taller o programa)</div>
             </div>
             <div class="cert-row-sep cert-back-sep hidden" id="certBackSep"></div>
 
-            <!-- Fila 4: Controles — logo/programa + responsables + descargar -->
-            <div class="cert-row cert-row--controls">
-
-                <!-- Programa -->
-                <select class="prompt-eje-select custom-select-trigger" id="certProgram">
-                    <option value="MEC - DNE">MEC - DNE</option>
-                    <option value="DNE Isotipo">DNE Isotipo</option>
-                    <option value="Cultura Científica">Cultura Científica</option>
-                    <option value="Cultura Científica (Anep)">CC (Anep)</option>
-                    <option value="CC 40 Anos">CC 40 años</option>
-                    <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
-                    <option value="Ccepi">Ccepi</option>
-                    <option value="PAS">PAS</option>
-                    <option value="PNEC">PNEC</option>
-                    <option value="Cecap">Cecap</option>
-                    <option value="Secretaría Permanente">Sec. Permanente</option>
-                </select>
-
-                <div class="prompt-divider"></div>
+            <!-- Fila 4: Firmas — a continuación del Detalle, crece hacia abajo -->
+            <div class="cert-row cert-row--resp">
 
                 <!-- Responsables -->
                 <div class="cert-resp-group">
@@ -960,8 +963,10 @@ a certificar (curso, taller o programa)</div>
                     <button id="certRemoveResponsible" class="cert-resp-icon-btn cert-resp-icon-btn--remove hidden" title="Quitar responsable">−</button>
                 </div>
 
-                <div class="prompt-divider"></div>
+            </div>
 
+            <!-- Fila 5: Descargar — anclado al pie de la columna -->
+            <div class="cert-row cert-row--controls">
                 <!-- Descargar -->
                 <button id="certDownloadBtn" class="prompt-download-btn">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1641,14 +1646,13 @@ a certificar (curso, taller o programa)</div>
             <select class="mob-program-sel" id="mobProgramSel">
                 <option value="DNE Isotipo">DNE Isotipo</option>
                 <option value="MEC - DNE" selected>MEC - DNE</option>
-                <option value="Cultura Científica">Cultura Científica</option>
-                <option value="Cultura Científica (Anep)">CC (Anep)</option>
                 <option value="CC 40 Anos">CC 40 años</option>
                 <option value="CC 40 Anos (Anep)">CC 40 años (Anep)</option>
                 <option value="Ccepi">Ccepi</option>
                 <option value="PAS">PAS</option>
                 <option value="PNEC">PNEC</option>
                 <option value="Cecap">Cecap</option>
+                    <option value="Ápice">Área de Primera Infancia CyE</option>
                 <option value="Secretaría Permanente">Sec. Permanente</option>
             </select>
         </div>

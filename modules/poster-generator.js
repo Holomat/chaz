@@ -77,13 +77,18 @@ const PosterGenerator = (() => {
         poster.style.width = `${format.displayWidth}px`;
         poster.style.height = `${format.displayHeight}px`;
 
+        // Nace pintado con la paleta vigente (evita el flash lima del template)
+        const activeColor = (typeof ColorManager !== 'undefined')
+            ? ColorManager.getCurrent().color
+            : '#DDFF9D';
+
         poster.innerHTML = `
             <div class="bg-wrapper" data-format="${format.id}">
                 <img class="bg-preview" src="${bgDataUrl || ''}" alt="" style="display: ${bgDataUrl ? 'block' : 'none'};">
             </div>
             <img class="shadow-overlay" src="Root/assets/sombra-post-story.png" alt="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; z-index: 1; display: block;">
-            <div class="logo-container">
-                <svg class="logo-svg-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 53.84 90.93" style="display: block;">
+            <div class="logo-container" style="color: ${activeColor};">
+                <svg class="logo-svg-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 53.84 90.93" style="display: block; color: ${activeColor};">
                     <polygon fill="currentColor" points="45.57 24.06 45.57 19.42 31.62 19.42 26.98 19.42 26.98 24.06 26.98 28.72 26.98 33.36 26.98 38.02 26.98 42.66 31.62 42.66 45.57 42.66 45.57 38.02 31.62 38.02 31.62 33.36 45.57 33.36 45.57 28.72 31.62 28.72 31.62 24.06 45.57 24.06"/>
                     <path fill="currentColor" d="M15.36,19.42c-3.87,0-7,3.13-7,7s3.13,7,7,7,7-3.13,7-7-3.13-7-7-7ZM15.36,28.76c-1.29,0-2.34-1.05-2.34-2.34s1.05-2.34,2.34-2.34,2.34,1.05,2.34,2.34-1.05,2.34-2.34,2.34Z"/>
                     <rect fill="currentColor" x="8.36" y="38.02" width="14" height="4.67"/>
@@ -91,7 +96,7 @@ const PosterGenerator = (() => {
                 </svg>
                 <img class="logo-image" src="" alt="Logo Institucional" style="display: none;">
             </div>
-            <div class="text-container">
+            <div class="text-container" style="color: ${activeColor};">
                 <div class="etiqueta"></div>
                 <div class="title"></div>
                 <div class="subtitle"></div>
@@ -129,6 +134,13 @@ const PosterGenerator = (() => {
 
         // Sync text to all posters
         syncText();
+
+        // Los posters recién creados nacen con el lima default del template:
+        // re-aplicar la paleta vigente (tiñe textos, logo inline y dispara
+        // LogoEngine para recargar el archivo de logo en la variante correcta)
+        if (typeof ColorManager !== 'undefined') {
+            ColorManager.apply(ColorManager.getCurrent());
+        }
 
         // Mobile: recalculate zoom after new format(s) are in DOM
         setTimeout(() => updateScale(), 50);
