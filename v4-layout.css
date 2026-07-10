@@ -1,0 +1,175 @@
+/* ═══════════════════════════════════════════════════════════
+   ÁTOMO V4 — LAYOUT SIDEBAR
+   La barra de carga de contenidos pasa del fondo (estilo chat)
+   a una columna vertical fija a la izquierda, junto al nav.
+   El canvas recupera toda la altura de la pantalla.
+
+   Solo overrides de layout: los IDs, la lógica JS y el lenguaje
+   visual (tarjetas glass, pills, tipografía) no cambian.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+    --v4-sidebar-width: 350px;
+    --v4-sidebar-gap: 14px;
+}
+
+/* ── Geometría: de barra inferior a columna izquierda ── */
+.poster-bars-stack,
+.cert-bars-stack {
+    left: calc(var(--sidenav-open) + var(--v4-sidebar-gap));
+    right: auto;
+    top: 20px;
+    bottom: 20px;
+    transform: none;
+    width: var(--v4-sidebar-width);
+    max-width: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    align-content: flex-start;
+}
+
+body.nav-collapsed .poster-bars-stack,
+body.nav-collapsed .cert-bars-stack {
+    left: calc(var(--sidenav-closed) + var(--v4-sidebar-gap));
+}
+
+/* La tarjeta interna de cert ocupa el ancho de la columna */
+.cert-bars-stack .cert-bar {
+    width: 100%;
+}
+
+/* ── Canvas: toda la altura, desplazado a la derecha de la sidebar ── */
+body.tab-poster .canvas-area,
+body.tab-cert   .canvas-area,
+body.tab-ave    .canvas-area {
+    padding-bottom: 24px;
+    padding-left: calc(var(--v4-sidebar-width) + var(--v4-sidebar-gap) * 2);
+}
+
+/* ═══════════════════════════════════════════════
+   REDES SOCIALES — campos apilados en vertical
+   ═══════════════════════════════════════════════ */
+.poster-text-bar {
+    flex-direction: column;
+    padding: 0;
+}
+
+.poster-text-bar .text-bar-field {
+    padding: 14px 20px;
+    width: 100%;
+}
+
+/* separadores: de verticales a horizontales */
+.poster-text-bar .text-bar-sep {
+    width: auto;
+    height: 1px;
+    align-self: stretch;
+    margin: 0 20px;
+}
+
+.poster-text-bar--info .text-bar-field {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+/* Controles: envuelven en el ancho de la columna */
+.poster-prompt-bar {
+    padding: 14px 16px 16px;
+}
+
+.poster-bars-stack .prompt-row--bottom {
+    flex-wrap: wrap;
+    gap: 6px;
+    row-gap: 10px;
+}
+
+.poster-bars-stack .prompt-divider {
+    display: none;
+}
+
+.poster-bars-stack .prompt-photo-btn,
+.poster-bars-stack .custom-select-btn,
+.poster-bars-stack .prompt-format-trigger {
+    padding: 12px 14px;
+}
+
+.poster-bars-stack .prompt-color-group {
+    padding: 0 2px;
+}
+
+/* Descargar: botón principal, ancho completo al pie */
+.poster-bars-stack .prompt-row--bottom .prompt-download-btn {
+    margin-left: 0;
+    margin-top: 6px;
+    width: 100%;
+    height: 44px;
+    justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════
+   CERTIFICADOS — filas adaptadas a la columna
+   ═══════════════════════════════════════════════ */
+
+/* Participante + CI + importar/nav envuelven */
+.cert-row--name {
+    flex-wrap: wrap;
+    row-gap: 4px;
+    padding-top: 4px;
+    padding-bottom: 6px;
+}
+
+.cert-row--name .text-bar-field:first-child {
+    flex: 1 1 100%;
+}
+
+.cert-row--name .text-bar-sep {
+    display: none;
+}
+
+.cert-row--name .cert-ci-field {
+    flex: 1 1 auto;
+}
+
+/* Controles: apilados */
+.cert-row--controls {
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cert-bars-stack .prompt-divider {
+    display: none;
+}
+
+.cert-resp-group {
+    width: 100%;
+}
+
+.cert-resp-row {
+    flex-wrap: wrap;
+}
+
+.cert-row--controls .prompt-download-btn {
+    margin-left: 0;
+    margin-top: 6px;
+    width: 100%;
+    height: 44px;
+    justify-content: center;
+}
+
+/* ── Scrollbar discreta para la columna ── */
+.poster-bars-stack::-webkit-scrollbar,
+.cert-bars-stack::-webkit-scrollbar {
+    width: 6px;
+}
+
+.poster-bars-stack::-webkit-scrollbar-thumb,
+.cert-bars-stack::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 999px;
+}
+
+.poster-bars-stack::-webkit-scrollbar-track,
+.cert-bars-stack::-webkit-scrollbar-track {
+    background: transparent;
+}
