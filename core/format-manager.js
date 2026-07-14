@@ -37,6 +37,15 @@ const FormatManager = (() => {
             height: 1920,
             displayWidth: 243,  // idéntico a Historia (9:16)
             displayHeight: 432
+        },
+        horizontal: {
+            id: 'horizontal',
+            label: 'Horizontal',
+            ratio: '16:9',
+            width: 1920,
+            height: 1080,
+            displayWidth: 768,  // 16:9 alineado en altura con los demás
+            displayHeight: 432
         }
     };
 
@@ -65,22 +74,24 @@ const FormatManager = (() => {
     }
 
     /**
-     * Toggle format on/off
+     * Toggle format on/off.
+     * Horizontal (16:9) es EXCLUSIVO: se visualiza solo.
+     * Posteo/Historia/Reels pueden convivir (hasta los 3 a la vez).
      */
     function toggle(formatId) {
-        const index = activeFormats.indexOf(formatId);
+        const isOn = activeFormats.includes(formatId);
 
-        if (index > -1) {
-            // Remove if active
-            activeFormats.splice(index, 1);
+        if (formatId === 'horizontal') {
+            // Encender horizontal apaga el resto; apagarlo vuelve a posteo
+            activeFormats = isOn ? ['posteo'] : ['horizontal'];
+        } else if (activeFormats.includes('horizontal')) {
+            // Encender un vertical estando horizontal activo lo reemplaza
+            activeFormats = [formatId];
+        } else if (isOn) {
+            activeFormats = activeFormats.filter(f => f !== formatId);
+            if (activeFormats.length === 0) activeFormats = ['posteo'];
         } else {
-            // Add if inactive
             activeFormats.push(formatId);
-        }
-
-        // Ensure at least one format is active
-        if (activeFormats.length === 0) {
-            activeFormats = ['posteo'];
         }
 
         notifyChange();

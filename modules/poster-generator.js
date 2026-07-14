@@ -479,7 +479,7 @@ const PosterGenerator = (() => {
         } else if (state.bgScale !== undefined || state.bgPosX !== undefined) {
             // Compatibilidad con estados guardados con encuadre global
             bgTransforms = {};
-            ['posteo', 'historia', 'reels'].forEach(f => {
+            ['posteo', 'historia', 'reels', 'horizontal'].forEach(f => {
                 bgTransforms[f] = {
                     x: state.bgPosX ?? 0,
                     y: state.bgPosY ?? 0,

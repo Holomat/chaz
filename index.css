@@ -1386,6 +1386,69 @@ body.dark .poster {
     font-weight: 800 !important;
 }
 
+/* ═══════════════════════════════════════════════
+   HORIZONTAL (16:9 — 1920×1080, display 768×432)
+   Mismos campos y sombras; logo solo en versión
+   mono (Redes fuerza mono). Composición según
+   referencia: texto abajo-izquierda, logo debajo.
+   ═══════════════════════════════════════════════ */
+.poster[data-format="horizontal"] .text-container {
+    left: 38px;
+    right: 230px;   /* el texto ocupa ~2/3: el resto respira la foto */
+    bottom: 92px;   /* despeja el logo al doble de tamaño */
+    gap: 6px;
+}
+
+.poster[data-format="horizontal"] .etiqueta,
+.poster[data-format="horizontal"] .subtitle {
+    font-size: 14.7px;   /* +5% */
+}
+
+.poster[data-format="horizontal"] .title {
+    font-size: 29.4px;   /* +5% */
+    margin-left: -3px;   /* compensación óptica del bearing a este cuerpo */
+}
+
+.poster[data-format="horizontal"] .event-info {
+    font-size: 14.7px;   /* +5% */
+}
+
+.poster[data-format="horizontal"] .event-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Logo alineado al MISMO borde izquierdo que los textos (38px),
+   sin corrimientos ópticos heredados de otros formatos */
+.poster[data-format="horizontal"] .logo-container {
+    left: 38px;
+    bottom: 14px;
+    margin: 0;
+}
+
+.poster[data-format="horizontal"] .logo-image {
+    height: 58px;   /* doble −10% */
+    margin: 0;
+}
+
+.poster[data-format="horizontal"] .logo-svg-inline {
+    height: 79px;   /* doble −10% */
+    /* compensa el aire interno del isotipo a esta escala (≈7px):
+       la tinta del ºE cae en el mismo x que la primera letra del texto,
+       como en posteo */
+    transform: translate(-7px, 8px);
+}
+
+.poster[data-format="horizontal"] .logo-container.logo-iso .logo-svg-inline {
+    height: 79px;
+}
+
+/* Sombra: estirada al 100% de ancho Y alto del canvas horizontal
+   (misma distribución del degradé que en posteo, sin recorte cover) */
+.poster[data-format="horizontal"] .shadow-overlay {
+    object-fit: fill;
+}
+
 /* ── Línea de evento: fecha / hora / lugar ──
    Último hijo del text-container (anclado al fondo): al aparecer
    toma el baseline del subtítulo y todo el bloque sube una línea,
